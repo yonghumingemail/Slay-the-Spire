@@ -1,0 +1,832 @@
+fileFormatVersion: 2
+guid: 0b84b816a7004954faa687c164b99800
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7194511679411584322
+    second: Champ_0
+  - first:
+      213: -1888389926966165219
+    second: Champ_1
+  - first:
+      213: -3523769032966552255
+    second: Champ_2
+  - first:
+      213: 4721578582727670147
+    second: Champ_3
+  - first:
+      213: -7442691599304777492
+    second: Champ_4
+  - first:
+      213: -8847448940301030381
+    second: Champ_5
+  - first:
+      213: 4493949884893168607
+    second: Champ_6
+  - first:
+      213: 3164994108188008031
+    second: Champ_7
+  - first:
+      213: 6343497209826563821
+    second: Champ_8
+  - first:
+      213: -2725098696515735199
+    second: Champ_9
+  - first:
+      213: 269137894889720151
+    second: Champ_10
+  - first:
+      213: -2021900747972002655
+    second: Champ_11
+  - first:
+      213: -4313343407717164582
+    second: Champ_12
+  - first:
+      213: -1137897672314832643
+    second: Champ_13
+  - first:
+      213: -3615062235705368977
+    second: Champ_14
+  - first:
+      213: 239242962907269605
+    second: Champ_15
+  - first:
+      213: 5432126885161444565
+    second: Champ_16
+  - first:
+      213: -5750282040773167992
+    second: Champ_17
+  - first:
+      213: 6021956512579387473
+    second: Champ_18
+  - first:
+      213: 4379438682544896589
+    second: Champ_19
+  - first:
+      213: -7872774787326802216
+    second: Champ_20
+  - first:
+      213: 842421367799254592
+    second: Champ_21
+  - first:
+      213: -3212034467095738984
+    second: Champ_22
+  - first:
+      213: 7338902963190679356
+    second: Champ_23
+  - first:
+      213: 7780974381807457877
+    second: Champ_24
+  - first:
+      213: 1728678751938780733
+    second: Champ_25
+  - first:
+      213: -2256141753789342044
+    second: Champ_26
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Champ_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 418
+        width: 70
+        height: 91
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb20648eeb5f72c90800000000000000
+      internalID: -7194511679411584322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_1
+      rect:
+        serializedVersion: 2
+        x: 77
+        y: 418
+        width: 94
+        height: 88
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1181c5dd571bc5e0800000000000000
+      internalID: -1888389926966165219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_2
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 429
+        width: 52
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 145c187fbbe091fc0800000000000000
+      internalID: -3523769032966552255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_3
+      rect:
+        serializedVersion: 2
+        x: 231
+        y: 429
+        width: 32
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 389339a74ba668140800000000000000
+      internalID: 4721578582727670147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_4
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 428
+        width: 31
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce0a7aa6c6f36b890800000000000000
+      internalID: -7442691599304777492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_5
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 292
+        width: 187
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31c63f8801c873580800000000000000
+      internalID: -8847448940301030381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_6
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 391
+        width: 68
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd3077f3c97bd5e30800000000000000
+      internalID: 4493949884893168607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_7
+      rect:
+        serializedVersion: 2
+        x: 266
+        y: 391
+        width: 36
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5e10ce5f515ceb20800000000000000
+      internalID: 3164994108188008031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_8
+      rect:
+        serializedVersion: 2
+        x: 306
+        y: 387
+        width: 40
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de6d4616a11a80850800000000000000
+      internalID: 6343497209826563821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_9
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 292
+        width: 106
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 161bc487c218e2ad0800000000000000
+      internalID: -2725098696515735199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_10
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 313
+        width: 46
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7598f7c4d7b2cb300800000000000000
+      internalID: 269137894889720151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_11
+      rect:
+        serializedVersion: 2
+        x: 354
+        y: 313
+        width: 27
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ac38027bf3c0f3e0800000000000000
+      internalID: -2021900747972002655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_12
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 276
+        width: 25
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad9deb4160de324c0800000000000000
+      internalID: -4313343407717164582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_13
+      rect:
+        serializedVersion: 2
+        x: 308
+        y: 256
+        width: 73
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df83eea88106530f0800000000000000
+      internalID: -1137897672314832643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_14
+      rect:
+        serializedVersion: 2
+        x: 385
+        y: 256
+        width: 65
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6e1adfcc08b4ddc0800000000000000
+      internalID: -3615062235705368977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_15
+      rect:
+        serializedVersion: 2
+        x: 308
+        y: 125
+        width: 159
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e9891b0536f15300800000000000000
+      internalID: 239242962907269605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_16
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 92
+        width: 52
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d4a5e41f9ac26b40800000000000000
+      internalID: 5432126885161444565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_17
+      rect:
+        serializedVersion: 2
+        x: 308
+        y: 3
+        width: 171
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 884386143f4e230b0800000000000000
+      internalID: -5750282040773167992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_18
+      rect:
+        serializedVersion: 2
+        x: 483
+        y: 3
+        width: 113
+        height: 115
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1500521ea89429350800000000000000
+      internalID: 6021956512579387473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_19
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 3
+        width: 58
+        height: 85
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4a71bc4744e6cc30800000000000000
+      internalID: 4379438682544896589
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_20
+      rect:
+        serializedVersion: 2
+        x: 662
+        y: 3
+        width: 63
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d60cbcea094eb290800000000000000
+      internalID: -7872774787326802216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_21
+      rect:
+        serializedVersion: 2
+        x: 729
+        y: 3
+        width: 69
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04e8fda45c1e0bb00800000000000000
+      internalID: 842421367799254592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_22
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 50
+        width: 20
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89582769baf8c63d0800000000000000
+      internalID: -3212034467095738984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_23
+      rect:
+        serializedVersion: 2
+        x: 973
+        y: 3
+        width: 46
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c37ca02ac5509d560800000000000000
+      internalID: 7338902963190679356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_24
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 3
+        width: 301
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5565c0299f29bfb60800000000000000
+      internalID: 7780974381807457877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_25
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 3
+        width: 84
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3e931c7a208df710800000000000000
+      internalID: 1728678751938780733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Champ_26
+      rect:
+        serializedVersion: 2
+        x: 890
+        y: 3
+        width: 79
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ae957a470390b0e0800000000000000
+      internalID: -2256141753789342044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Champ_0: -7194511679411584322
+      Champ_1: -1888389926966165219
+      Champ_10: 269137894889720151
+      Champ_11: -2021900747972002655
+      Champ_12: -4313343407717164582
+      Champ_13: -1137897672314832643
+      Champ_14: -3615062235705368977
+      Champ_15: 239242962907269605
+      Champ_16: 5432126885161444565
+      Champ_17: -5750282040773167992
+      Champ_18: 6021956512579387473
+      Champ_19: 4379438682544896589
+      Champ_2: -3523769032966552255
+      Champ_20: -7872774787326802216
+      Champ_21: 842421367799254592
+      Champ_22: -3212034467095738984
+      Champ_23: 7338902963190679356
+      Champ_24: 7780974381807457877
+      Champ_25: 1728678751938780733
+      Champ_26: -2256141753789342044
+      Champ_3: 4721578582727670147
+      Champ_4: -7442691599304777492
+      Champ_5: -8847448940301030381
+      Champ_6: 4493949884893168607
+      Champ_7: 3164994108188008031
+      Champ_8: 6343497209826563821
+      Champ_9: -2725098696515735199
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

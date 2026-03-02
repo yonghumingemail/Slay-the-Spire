@@ -1,0 +1,1170 @@
+fileFormatVersion: 2
+guid: a37f623eb3aa71d4a83479f879f946b2
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2088928115897272047
+    second: sprite (1)_0
+  - first:
+      213: -2852215473556317058
+    second: sprite (1)_1
+  - first:
+      213: -4026454052572769427
+    second: sprite (1)_2
+  - first:
+      213: 6033589026585861069
+    second: sprite (1)_3
+  - first:
+      213: 3811953709245043337
+    second: sprite (1)_4
+  - first:
+      213: -6798561444376846696
+    second: sprite (1)_5
+  - first:
+      213: -4803164465094525758
+    second: sprite (1)_6
+  - first:
+      213: -6363865577676946996
+    second: sprite (1)_7
+  - first:
+      213: -7142652482047474671
+    second: sprite (1)_8
+  - first:
+      213: 1631985706510763772
+    second: sprite (1)_9
+  - first:
+      213: -2722609306172064569
+    second: sprite (1)_10
+  - first:
+      213: 1985339883841907606
+    second: sprite (1)_11
+  - first:
+      213: 2130507281527140282
+    second: sprite (1)_12
+  - first:
+      213: 8067548171345406285
+    second: sprite (1)_13
+  - first:
+      213: 6574142087231314048
+    second: sprite (1)_14
+  - first:
+      213: 2808893359327255207
+    second: sprite (1)_15
+  - first:
+      213: 693304946017195797
+    second: sprite (1)_16
+  - first:
+      213: 6834678072750707453
+    second: sprite (1)_17
+  - first:
+      213: 8596041175929715367
+    second: sprite (1)_18
+  - first:
+      213: -48890630838777526
+    second: sprite (1)_19
+  - first:
+      213: 6838091130551016159
+    second: sprite (1)_20
+  - first:
+      213: 6648473313987683457
+    second: sprite (1)_21
+  - first:
+      213: 5061721725185080510
+    second: sprite (1)_22
+  - first:
+      213: -2258828325574616700
+    second: sprite (1)_23
+  - first:
+      213: -3950818064980559815
+    second: sprite (1)_24
+  - first:
+      213: 5850614521724399514
+    second: sprite (1)_25
+  - first:
+      213: -7184376028802339211
+    second: sprite (1)_26
+  - first:
+      213: -1800395217576256239
+    second: sprite (1)_27
+  - first:
+      213: 2277619138933152673
+    second: sprite (1)_28
+  - first:
+      213: 2983639694280758417
+    second: sprite (1)_29
+  - first:
+      213: -1193780709028483924
+    second: sprite (1)_30
+  - first:
+      213: -4465771072472801775
+    second: sprite (1)_31
+  - first:
+      213: 7657325544776773782
+    second: sprite (1)_32
+  - first:
+      213: -4908841953159208532
+    second: sprite (1)_33
+  - first:
+      213: 3778978110093193408
+    second: sprite (1)_34
+  - first:
+      213: -1299136743372151033
+    second: sprite (1)_35
+  - first:
+      213: 8466730487427555285
+    second: sprite (1)_36
+  - first:
+      213: -3591679243794831276
+    second: sprite (1)_37
+  - first:
+      213: 1548885201245619844
+    second: sprite (1)_38
+  - first:
+      213: 6585793470568554232
+    second: sprite (1)_39
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: characters _ronclad_idle_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1715
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0586fa8f637129e44859e6480550e1c0
+      internalID: 1139752242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_1
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 1715
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c60ae451e1d24547bbe8460eb116999
+      internalID: 1145117604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_2
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 1715
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2d3860083ddae34e9709f18e224a114
+      internalID: -2022733409
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_3
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 1715
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d535016ad7b92e842838020ca1ef6611
+      internalID: -803642012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_4
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 1715
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d841074dd8436d4b8d1df7158fd3f71
+      internalID: -275336908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1470
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b14935b520bde824c8bf4ab534f7c79b
+      internalID: 1243728498
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_6
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 1470
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b5c22532325d284ab2e1ddd5408e1b4
+      internalID: -1763800260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_7
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 1470
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 462a26e6e767f904b923d48def856cbd
+      internalID: -122429477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_8
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 1470
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e3edc9e680af18449bd7ca92292d5875
+      internalID: -803112399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_9
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 1470
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49d38e26b307b1942b8f7229365d6382
+      internalID: 634020718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1225
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e03668382797b2499297d92683ef17e
+      internalID: 1975878679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_11
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 1225
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5ed8bb124c589349b1a4ee27c249023
+      internalID: -1367264119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_12
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 1225
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f85bd72261129042a25f43c8c92a319
+      internalID: -10034754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_13
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 1225
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd4f8272ce0b37b4ea3ca8a036bb48e9
+      internalID: 259244870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_14
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 1225
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 18bd8ba187fe5464cae1f5fd048008a5
+      internalID: -1630046727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 980
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 05d34c43e9278974c9a937eaa623361e
+      internalID: -152960312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_16
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 980
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0f7691809d65e48498fd3bb7568b59db
+      internalID: 1339476553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_17
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 980
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 720c16b9bb3dd3e4494c2bed5ac3a242
+      internalID: 1261410017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_18
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 980
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 554abeb8b2122464dbcc4b518c413a19
+      internalID: -205581173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_19
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 980
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b64b46185ea8e9439a19fbcadd07bdb
+      internalID: 1192603331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 735
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d778a3fa7085f241831f4893f70b12c
+      internalID: 1103581441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_21
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 735
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7d6d08201ba0924d8a45d873490658b
+      internalID: -988584549
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_22
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 735
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e1c618dd9959f7439fa374fe33fb8d6
+      internalID: -1838490012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_23
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 735
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5499482e7d4a9a4b8a46527c663a732
+      internalID: 554953014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_24
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 735
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd8ed24dae8f7a14bb1ac41951110161
+      internalID: -822994780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_25
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 490
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b7c63426de18ed40a7c7a3360e93525
+      internalID: 1560563940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_26
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 490
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb7748a0416ff21488079f87bfdb2051
+      internalID: 1686527020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_27
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 490
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1442493460e7bb49bd3572e78a7caaa
+      internalID: -1984676260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_28
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 490
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e453833b409401d4a8864a6ea0c46c9a
+      internalID: -909307702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_29
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 490
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ca36df9a475214419be7e0073b85fc5
+      internalID: 1115396568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_30
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 245
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ae92545662f752f49a170969bc298353
+      internalID: 1285506290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_31
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 245
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0e89838eb0f9cd4491504b0390b8623
+      internalID: -718085728
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_32
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 245
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2cc20eed394eace4a901086eab6b5141
+      internalID: -1034600743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_33
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 245
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ff8c7888f8c99443b7e01b8eae76cc7
+      internalID: 180251326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_34
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 245
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0204c64fe8571f4419fa185bf56678dc
+      internalID: -2038063420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_35
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73f84d82b94785a42b465534bc12cd86
+      internalID: -800495759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_36
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 0
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 340221e4be98a7540a7f7d0933a19753
+      internalID: -1667724737
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_37
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 0
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6cf78b5a234a1046a3e065372652b61
+      internalID: -286989732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_38
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 0
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f740ee80cd9207148aa5f4ec68179b75
+      internalID: -476293431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: characters _ronclad_idle_39
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 0
+        width: 352
+        height: 245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 89e0dd86433af064d8911bc0de6d4134
+      internalID: 941691952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 1893a955039787e4ca833be2f17ce27d
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      characters _ronclad_idle_0: 1139752242
+      characters _ronclad_idle_1: 1145117604
+      characters _ronclad_idle_10: 1975878679
+      characters _ronclad_idle_11: -1367264119
+      characters _ronclad_idle_12: -10034754
+      characters _ronclad_idle_13: 259244870
+      characters _ronclad_idle_14: -1630046727
+      characters _ronclad_idle_15: -152960312
+      characters _ronclad_idle_16: 1339476553
+      characters _ronclad_idle_17: 1261410017
+      characters _ronclad_idle_18: -205581173
+      characters _ronclad_idle_19: 1192603331
+      characters _ronclad_idle_2: -2022733409
+      characters _ronclad_idle_20: 1103581441
+      characters _ronclad_idle_21: -988584549
+      characters _ronclad_idle_22: -1838490012
+      characters _ronclad_idle_23: 554953014
+      characters _ronclad_idle_24: -822994780
+      characters _ronclad_idle_25: 1560563940
+      characters _ronclad_idle_26: 1686527020
+      characters _ronclad_idle_27: -1984676260
+      characters _ronclad_idle_28: -909307702
+      characters _ronclad_idle_29: 1115396568
+      characters _ronclad_idle_3: -803642012
+      characters _ronclad_idle_30: 1285506290
+      characters _ronclad_idle_31: -718085728
+      characters _ronclad_idle_32: -1034600743
+      characters _ronclad_idle_33: 180251326
+      characters _ronclad_idle_34: -2038063420
+      characters _ronclad_idle_35: -800495759
+      characters _ronclad_idle_36: -1667724737
+      characters _ronclad_idle_37: -286989732
+      characters _ronclad_idle_38: -476293431
+      characters _ronclad_idle_39: 941691952
+      characters _ronclad_idle_4: -275336908
+      characters _ronclad_idle_5: 1243728498
+      characters _ronclad_idle_6: -1763800260
+      characters _ronclad_idle_7: -122429477
+      characters _ronclad_idle_8: -803112399
+      characters _ronclad_idle_9: 634020718
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

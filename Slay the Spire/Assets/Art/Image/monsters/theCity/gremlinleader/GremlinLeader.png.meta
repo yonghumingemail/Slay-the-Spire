@@ -1,0 +1,910 @@
+fileFormatVersion: 2
+guid: 6e917d730d066894fa248434fe3eb30b
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7998104310847391840
+    second: GremlinLeader_0
+  - first:
+      213: 8415120739925190049
+    second: GremlinLeader_1
+  - first:
+      213: -7976906374756487862
+    second: GremlinLeader_2
+  - first:
+      213: -9068991262932879852
+    second: GremlinLeader_3
+  - first:
+      213: -5081837593750969108
+    second: GremlinLeader_4
+  - first:
+      213: -7714406521625851789
+    second: GremlinLeader_5
+  - first:
+      213: 2394974736813138528
+    second: GremlinLeader_6
+  - first:
+      213: 991646747119269010
+    second: GremlinLeader_7
+  - first:
+      213: 2452881079908486470
+    second: GremlinLeader_8
+  - first:
+      213: 8155077619322776299
+    second: GremlinLeader_9
+  - first:
+      213: -3673963143442066789
+    second: GremlinLeader_10
+  - first:
+      213: 2233293230518893100
+    second: GremlinLeader_11
+  - first:
+      213: 6439101857381215947
+    second: GremlinLeader_12
+  - first:
+      213: 7675511422769874665
+    second: GremlinLeader_13
+  - first:
+      213: -2161084963221022573
+    second: GremlinLeader_14
+  - first:
+      213: 7813872962357102526
+    second: GremlinLeader_15
+  - first:
+      213: -998613091783719859
+    second: GremlinLeader_16
+  - first:
+      213: -1481611297951221628
+    second: GremlinLeader_17
+  - first:
+      213: 7915002373723781524
+    second: GremlinLeader_18
+  - first:
+      213: 1670873288787311058
+    second: GremlinLeader_19
+  - first:
+      213: -3175017468760097059
+    second: GremlinLeader_20
+  - first:
+      213: -5375763826996876524
+    second: GremlinLeader_21
+  - first:
+      213: -7077408062432685656
+    second: GremlinLeader_22
+  - first:
+      213: 8359649043251561519
+    second: GremlinLeader_23
+  - first:
+      213: 3901171465705501249
+    second: GremlinLeader_24
+  - first:
+      213: 8660221347226406784
+    second: GremlinLeader_25
+  - first:
+      213: -4789332457264075183
+    second: GremlinLeader_26
+  - first:
+      213: -3204011996752126236
+    second: GremlinLeader_27
+  - first:
+      213: -2041290118278383649
+    second: GremlinLeader_28
+  - first:
+      213: -5684904754670116323
+    second: GremlinLeader_29
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: GremlinLeader_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 103
+        width: 58
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0684494be79fefe60800000000000000
+      internalID: 7998104310847391840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_1
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 103
+        width: 41
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a5634d4ab388c470800000000000000
+      internalID: 8415120739925190049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_2
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 103
+        width: 20
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4d27166ae55c4190800000000000000
+      internalID: -7976906374756487862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_3
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 103
+        width: 20
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 416b3c5fe78742280800000000000000
+      internalID: -9068991262932879852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_4
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 103
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce46f3a12afa979b0800000000000000
+      internalID: -5081837593750969108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_5
+      rect:
+        serializedVersion: 2
+        x: 173
+        y: 80
+        width: 88
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 378c889242ce0f490800000000000000
+      internalID: -7714406521625851789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_6
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 80
+        width: 75
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06228c185d8ac3120800000000000000
+      internalID: 2394974736813138528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_7
+      rect:
+        serializedVersion: 2
+        x: 353
+        y: 30
+        width: 88
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29437b8667903cd00800000000000000
+      internalID: 991646747119269010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_8
+      rect:
+        serializedVersion: 2
+        x: 445
+        y: 30
+        width: 46
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64dc834a8526a0220800000000000000
+      internalID: 2452881079908486470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_9
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 105
+        width: 44
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: beae87723e7ac2170800000000000000
+      internalID: 8155077619322776299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_10
+      rect:
+        serializedVersion: 2
+        x: 543
+        y: 105
+        width: 28
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b92124d8cf5730dc0800000000000000
+      internalID: -3673963143442066789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_11
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 3
+        width: 166
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2afc545c504efe10800000000000000
+      internalID: 2233293230518893100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_12
+      rect:
+        serializedVersion: 2
+        x: 173
+        y: 3
+        width: 176
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bcee3c106094c5950800000000000000
+      internalID: 6439101857381215947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_13
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 30
+        width: 31
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e6c6afe8f4e48a60800000000000000
+      internalID: 7675511422769874665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_14
+      rect:
+        serializedVersion: 2
+        x: 530
+        y: 39
+        width: 33
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 398d5c50da84202e0800000000000000
+      internalID: -2161084963221022573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_15
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 39
+        width: 26
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb703514f04707c60800000000000000
+      internalID: 7813872962357102526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_16
+      rect:
+        serializedVersion: 2
+        x: 597
+        y: 66
+        width: 8
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d444d241fa63422f0800000000000000
+      internalID: -998613091783719859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_17
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 47
+        width: 8
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 488796adf52407be0800000000000000
+      internalID: -1481611297951221628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_18
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 48
+        width: 13
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 499fd2239bcb7dd60800000000000000
+      internalID: 7915002373723781524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_19
+      rect:
+        serializedVersion: 2
+        x: 794
+        y: 3
+        width: 83
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d93bda4762203710800000000000000
+      internalID: 1670873288787311058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_20
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 39
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ddef4e22f6210f3d0800000000000000
+      internalID: -3175017468760097059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_21
+      rect:
+        serializedVersion: 2
+        x: 618
+        y: 39
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41be47708437565b0800000000000000
+      internalID: -5375763826996876524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_22
+      rect:
+        serializedVersion: 2
+        x: 632
+        y: 39
+        width: 17
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a1d63c6ddef7cd90800000000000000
+      internalID: -7077408062432685656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_23
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 3
+        width: 118
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2481f57380730470800000000000000
+      internalID: 8359649043251561519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_24
+      rect:
+        serializedVersion: 2
+        x: 881
+        y: 43
+        width: 43
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 142344d57ceb32630800000000000000
+      internalID: 3901171465705501249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_25
+      rect:
+        serializedVersion: 2
+        x: 928
+        y: 43
+        width: 25
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08f4fa57e694f2870800000000000000
+      internalID: 8660221347226406784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_26
+      rect:
+        serializedVersion: 2
+        x: 353
+        y: 3
+        width: 176
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15ea68d418fd88db0800000000000000
+      internalID: -4789332457264075183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_27
+      rect:
+        serializedVersion: 2
+        x: 533
+        y: 3
+        width: 135
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4eedf7580101983d0800000000000000
+      internalID: -3204011996752126236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_28
+      rect:
+        serializedVersion: 2
+        x: 881
+        y: 3
+        width: 75
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd77080e371eba3e0800000000000000
+      internalID: -2041290118278383649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GremlinLeader_29
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 3
+        width: 50
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1265fbde392b11b0800000000000000
+      internalID: -5684904754670116323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      GremlinLeader_0: 7998104310847391840
+      GremlinLeader_1: 8415120739925190049
+      GremlinLeader_10: -3673963143442066789
+      GremlinLeader_11: 2233293230518893100
+      GremlinLeader_12: 6439101857381215947
+      GremlinLeader_13: 7675511422769874665
+      GremlinLeader_14: -2161084963221022573
+      GremlinLeader_15: 7813872962357102526
+      GremlinLeader_16: -998613091783719859
+      GremlinLeader_17: -1481611297951221628
+      GremlinLeader_18: 7915002373723781524
+      GremlinLeader_19: 1670873288787311058
+      GremlinLeader_2: -7976906374756487862
+      GremlinLeader_20: -3175017468760097059
+      GremlinLeader_21: -5375763826996876524
+      GremlinLeader_22: -7077408062432685656
+      GremlinLeader_23: 8359649043251561519
+      GremlinLeader_24: 3901171465705501249
+      GremlinLeader_25: 8660221347226406784
+      GremlinLeader_26: -4789332457264075183
+      GremlinLeader_27: -3204011996752126236
+      GremlinLeader_28: -2041290118278383649
+      GremlinLeader_29: -5684904754670116323
+      GremlinLeader_3: -9068991262932879852
+      GremlinLeader_4: -5081837593750969108
+      GremlinLeader_5: -7714406521625851789
+      GremlinLeader_6: 2394974736813138528
+      GremlinLeader_7: 991646747119269010
+      GremlinLeader_8: 2452881079908486470
+      GremlinLeader_9: 8155077619322776299
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

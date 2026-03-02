@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Art
+  m_EditorClassIdentifier: 
+  m_GroupName: Art
+  m_GUID: 07cdf7cb463a74442b06117616179c58
+  m_SerializeEntries:
+  - m_GUID: 33b4154e36dae7548866dd2c5af972e5
+    m_Address: Assets/ScriptableObject
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c8f259ace08c0c04aa0c3fcfc860c9eb
+    m_Address: Assets/Art/Image
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e949eb7246157e14ab264bedbab53fb6
+    m_Address: Assets/Art/Image/SpriteAtlas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ea09bc3a78c4ae643aa1141b13e9c186
+    m_Address: Assets/Art
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 94cd96a45e632ec4aad82984c6d1960e, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 23ff16bc81df1d346b799a43bf8ee3d4, type: 2}
+    - {fileID: 11400000, guid: 1a34b81834c69a74485b0c9c3cce771e, type: 2}
