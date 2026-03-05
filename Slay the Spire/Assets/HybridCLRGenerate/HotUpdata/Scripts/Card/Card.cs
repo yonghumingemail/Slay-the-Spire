@@ -8,8 +8,11 @@ using Z_Tools;
 
 public enum CardRecycleType
 {
-    Destroy,DiscardPile,DrawPile
+    Destroy,
+    DiscardPile,
+    DrawPile
 }
+
 public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     IPointerDownHandler, IPointerUpHandler
 {
@@ -17,7 +20,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     public bool cardUIEffect;
 
-    //卡牌在屏幕中的位置信息
+    //卡牌排列的位置信息
     public Vector3 _scale;
     public Quaternion _rotation;
     public Vector3 _position;
@@ -28,7 +31,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     public EventCenter<string> _eventCenter { get; private set; } = new EventCenter<string>();
 
     public HandPile handPile;
-    private CardDragLine cardDragLine;
+
     private DiscardPile discardPile;
     private Outline outline;
 
@@ -50,14 +53,21 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         _eventCenter.AddEvent<Func<Card>>("Card", () => this);
         _eventCenter.AddEvent<Action>("OnTriggerCardEvent", OnTriggerCardEvent);
         _eventCenter.AddEvent<Action>("UnTriggerCardEvent", RegressPoint);
-        _eventCenter.AddEvent<Action>("OnCardDataUpdated", () => { CardFactory.Instance.UpdateCardUI(this).Forget(); });
+        _eventCenter.AddEvent<Action>("OnCardDataUpdated", () => { CardFactory.Instance.UpdateCardUI(this, cardEvent).Forget(); });
 
         handPile = GetComponentInParent<HandPile>();
         enterP.z = -0.1f * handPile.maxHandSize - 0.1f;
-        enterP.y = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0)).y + _infoComponent._background.bounds.size.y / 2;
+        enterP.y = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0)).y + _infoComponent._background.sprite.textureRect.y/_infoComponent._background.sprite.pixelsPerUnit / 2;
+      
+        print(_infoComponent._background.sprite.textureRect.x);
+        print(_infoComponent._background.sprite.textureRect.y);
 
-        EventCenter_Singleton.Instance.GetEvent<Func<CardDragLine>>("CardDragLine",
-            action => { cardDragLine = action.Invoke(); });
+        print(_infoComponent._background.sprite.textureRect.width);
+        print(_infoComponent._background.sprite.textureRect.height);
+        
+        print(_infoComponent._background.sprite.textureRect.size);
+
+
         EventCenter_Singleton.Instance.GetEvent<Func<DiscardPile>>("DiscardPile",
             action => { discardPile = action.Invoke(); });
     }
@@ -74,25 +84,6 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     {
         cardUIEffect = false;
         handPile.cardInstances.Remove(this);
-    }
-
-    private void DestroyCardAnimator()
-    {
-        Vector3 screenCenter = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
-        screenCenter.z = transform.position.z;
-
-        DOTween.To(() => transform.position, value => { transform.position = value; }, screenCenter, move_speed).onComplete += () =>
-        {
-            gameObject.SetActive(false);
-            transform.position = screenCenter;
-            transform.localScale = _scale;
-            //改,不是所有卡牌都回弃牌堆
-            discardPile.AddCard(this).Forget();
-        };
-    }
-
-    private void RecycleAnimator(CardRecycleType  recycleType)
-    {
         //改用动画实现
         Vector3 screenCenter = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
         screenCenter.z = transform.position.z;
@@ -119,10 +110,11 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
             };
         };
     }
-    
+
 
     public async UniTask<bool> Initialized(CardEvent_Abs cardEventAbs)
     {
+        cardEvent?.OnDestroy();
         cardEvent = cardEventAbs;
         cardEventAbs.EventRegister(_eventCenter);
 
@@ -136,7 +128,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         else
         {
             _drag.SetDragEnabled(false);
-            cardDragLine.Register(_eventCenter);
+            handPile.cardDragLine.Register(_eventCenter);
         }
 
         return await CardFactory.Instance.UpdateCardUI(this, cardEventAbs);
@@ -144,7 +136,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
 
     private float magnification_speed = 0.15f;
-    private float move_speed = 0.2f;
+    private float move_speed = 0.15f;
     private float rotation_speed = 0.15f;
 
     /// <summary>
@@ -184,6 +176,8 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
         handPile.isDragging = true;
         handPile.selectedCard = this;
+
+        _eventCenter.GetEvent<Action<PointerEventData>>("OnPointerDown")?.Invoke(eventData);
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -191,15 +185,14 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         if (!cardUIEffect) return;
         handPile.isDragging = false;
         handPile.selectedCard = null;
-
         _eventCenter.GetEvent<Action<PointerEventData>>("OnPointerUp")?.Invoke(eventData);
-        handPile.AddAsyncCardEvent(cardEvent);
     }
 
 
     private void OnDestroy()
     {
         _eventCenter.Clear();
+        cardEvent?.OnDestroy();
         transform.DOKill();
     }
 }

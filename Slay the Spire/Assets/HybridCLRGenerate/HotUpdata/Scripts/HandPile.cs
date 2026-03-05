@@ -35,10 +35,11 @@ public class HandPile : MonoBehaviour
 
         EventCenter_Singleton.Instance.GetEvent<Func<DrawPile>>("DrawPile", (action) => { drawPile = action.Invoke(); });
         EventCenter_Singleton.Instance.AddEvent<Func<HandPile>>("HandPile", () => this);
+
         EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action>("OnRoundEnd", OnRoundEnd, 0);
         EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action>("OnRoundStart", OnRoundStart, 0);
-     
     }
+
     public float speed2;
 
 
@@ -59,7 +60,7 @@ public class HandPile : MonoBehaviour
     {
     }
 
-    private async UniTaskVoid Test()
+    public async UniTaskVoid Test()
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -91,15 +92,14 @@ public class HandPile : MonoBehaviour
     private async UniTask ExecuteQueue()
     {
         isExecute = true;
-        CardEvent_Abs current = triggerQueue.Dequeue();
 
-        while (current != null)
+        while (triggerQueue.Count != 0)
         {
+            var current = triggerQueue.Dequeue();
             await current.Trigger();
             EventCenter_Singleton.Instance.GetEvent<Action<CardEvent_Abs>>("OnTriggerCardEvent")?.Invoke(current);
-            current = triggerQueue.Dequeue();
         }
-        
+
         UpdateCardPositions();
         isExecute = false;
     }

@@ -13,7 +13,7 @@ public struct CardInfoComponent
     
     public TextMeshPro _name;
     public TextMeshPro _typeName;
-    public TextMeshPro _point;
+    public TextMeshPro _orbValue;
     public TextMeshPro _describe;
     
     public CardInfoComponent(Card card)
@@ -26,7 +26,7 @@ public struct CardInfoComponent
 
         _name = card.transform.Find("UI/Head/Frame/Banners/CardName").GetComponent<TextMeshPro>();
         _typeName = card.transform.Find("UI/Head/Frame/TypeName").GetComponent<TextMeshPro>();
-        _point = card.transform.Find("UI/Head/Orb/Point").GetComponent<TextMeshPro>();
+        _orbValue = card.transform.Find("UI/Head/Orb/Point").GetComponent<TextMeshPro>();
         _describe = card.transform.Find("UI/Describe").GetComponent<TextMeshPro>();
     }
 }

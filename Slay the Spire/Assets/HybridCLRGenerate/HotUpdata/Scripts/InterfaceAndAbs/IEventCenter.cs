@@ -7,7 +7,7 @@ using UnityEngine;
 /// <typeparam name="T">访问事件的参数类型，例：string、Enum</typeparam>
 public interface IEventCenter<in T>
 {
-    bool AddEvent<D>(T eventName, D _delegate) where D : Delegate;
+    bool AddEvent<D>(T eventKey, D _delegate) where D : Delegate;
     /// <summary>
     /// 禁止存储返回的委托，否则容易造成内存泄漏
     /// </summary>
@@ -15,7 +15,7 @@ public interface IEventCenter<in T>
     /// <typeparam name="D"></typeparam>
     /// <returns></returns>
     D GetEvent<D>(T name) where D : Delegate;
-    bool RemoveEvent(T eventName);
+    bool RemoveEvent(T eventKey);
     bool Clear();
     void Show();
 }

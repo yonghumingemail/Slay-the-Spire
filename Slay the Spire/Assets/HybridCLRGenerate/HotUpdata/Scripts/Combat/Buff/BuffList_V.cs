@@ -58,7 +58,7 @@ public class BuffList_V : MonoBehaviour, IBuffList_V
         buffVPrefab = results[1] as GameObject;       // 第二个结果是预设体
         
         // 获取布局组件引用
-        layout2D = transform.Find("Buff").GetComponent<Layout2D>();
+        layout2D = GetComponent<Layout2D>();
     }
 
     /// <summary>

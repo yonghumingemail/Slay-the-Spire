@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd57e1429a3a9604a85f2c329cf60005, type: 3}
   m_Name: Ironclad_Bash
   m_EditorClassIdentifier: 
-  cardName: 0
-  type: 0
-  colour: 0
-  rarity: 0
-  image: {fileID: 21300000, guid: 5dce36bdfb5a968439dc18501158d901, type: 3}
+  cardName: "\u91CD\u51FB"
+  orbValue: 2
+  canStrengthen: 1
+  cardType: 0
   isDirected: 1
+  banner: {fileID: 21300000, guid: 3281e1ffcd904ab429573c9243d64432, type: 3}
+  background: {fileID: 21300000, guid: 4a143330cfedfd543aec9268573ff111, type: 3}
+  orb: {fileID: 21300000, guid: b5a5411153a60b044b20efd2a4915856, type: 3}
+  frame: {fileID: 21300000, guid: ccc91815c868ab9448e2fd4a3f88b110, type: 3}
+  image: {fileID: 21300000, guid: 5dce36bdfb5a968439dc18501158d901, type: 3}

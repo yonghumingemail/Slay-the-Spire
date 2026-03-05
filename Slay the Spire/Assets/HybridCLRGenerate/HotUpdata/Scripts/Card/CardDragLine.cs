@@ -1,12 +1,12 @@
 using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Z_Tools;
 
 public class CardDragLine : MonoBehaviour
 {
-    [SerializeField] private bool Enabled = true;
-
     public GameObject[] lines;
     public SpriteRenderer[] sprites;
 
@@ -39,7 +39,7 @@ public class CardDragLine : MonoBehaviour
 
     public void Register(EventCenter<string> eventCenter)
     {
-        eventCenter.AddEvent<Action<Transform>>("OnBeginDrag", (instanceObj) =>
+        eventCenter.AddEvent<Action<PointerEventData>>("OnPointerDown", (instanceObj) =>
         {
             transform.position = instanceObj.position;
             gameObject.SetActive(true);
@@ -47,36 +47,16 @@ public class CardDragLine : MonoBehaviour
             {
                 t.gameObject.SetActive(true);
             }
+
+            Trigger(instanceObj).Forget();
         });
 
-        eventCenter.AddEvent<Action<Transform>>("OnDrag", (instanceObj) =>
+        eventCenter.AddEvent<Action<PointerEventData>>("OnPointerUp", (instanceObj) =>
         {
-            float inverseLinesLength = 1f / lines.Length;
-            // 缓存常用向量计算
-            Vector2 startPoint = instanceObj.position;
-            Vector2 endPoint = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 midPoint = new Vector2(startPoint.x, (startPoint.y + endPoint.y) * 0.5f); // 优化：直接计算中点
-
-            // 优化：减少循环中的计算量
-            for (int i = lines.Length - 2; i > -1; i--)
-            {
-                float t = i * inverseLinesLength; // 使用预计算的倒数
-
-                Vector3 pointPosition = GetQuadraticPoint(startPoint, midPoint, endPoint, t);
-                lines[i].transform.position = pointPosition + Vector3.back * (1 / transform.localScale.x);
-
-
-                Vector3 direction = lines[i + 1].transform.position - pointPosition;
-                float angle = FastAtan2(direction.y, direction.x); // 使用优化版的Atan2
-                lines[i].transform.eulerAngles = new Vector3(0, 0, angle - 90f);
-            }
-
-            Vector3 lastPoint = GetQuadraticPoint(startPoint, midPoint, endPoint, (lines.Length - 1f) * inverseLinesLength);
-            lines[^1].transform.position = lastPoint + Vector3.back;
-            lines[^1].transform.eulerAngles = lines[^2].transform.eulerAngles;
-        });
-        eventCenter.AddEvent<Action<Transform>>("OnEndDrag", (instanceObj) =>
-        {
+            _tokenSource?.Cancel();
+            _tokenSource?.Dispose();
+            
+            
             gameObject.SetActive(false);
             foreach (var t in sprites)
             {
@@ -84,6 +64,48 @@ public class CardDragLine : MonoBehaviour
                 t.transform.localPosition = Vector3.zero;
             }
         });
+    }
+
+    private CancellationTokenSource _tokenSource;
+
+    private async UniTaskVoid Trigger(PointerEventData _data)
+    {
+        float inverseLinesLength = 1f / lines.Length;
+        // 缓存常用向量计算
+        Vector2 startPoint = mainCamera.ScreenToWorldPoint(_data.pressPosition);
+        print(startPoint);
+        Vector2 endPoint = mainCamera.ScreenToWorldPoint(_data.position);
+        Vector2 midPoint = new Vector2(startPoint.x, (startPoint.y + endPoint.y) * 0.5f); // 优化：直接计算中点
+
+        Vector3 pointPosition;
+        Vector3 lastPoint;
+        Vector3 direction;
+
+        _tokenSource = new CancellationTokenSource();
+        CancellationToken  _token = _tokenSource.Token;
+        while (!_token.IsCancellationRequested)
+        {
+            endPoint = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            midPoint.y =  (startPoint.y + endPoint.y) * 0.5f;
+            // 优化：减少循环中的计算量
+            for (int i = lines.Length - 2; i > -1; i--)
+            {
+                float t = i * inverseLinesLength; // 使用预计算的倒数
+
+                pointPosition = GetQuadraticPoint(startPoint, midPoint, endPoint, t);
+                lines[i].transform.position = pointPosition + Vector3.back * (1 / transform.localScale.x);
+
+
+                direction = lines[i + 1].transform.position - pointPosition;
+                float angle = FastAtan2(direction.y, direction.x); 
+                lines[i].transform.eulerAngles = new Vector3(0, 0, angle - 90f);
+            }
+
+            lastPoint = GetQuadraticPoint(startPoint, midPoint, endPoint, (lines.Length - 1f) * inverseLinesLength);
+            lines[^1].transform.position = lastPoint + Vector3.back;
+            lines[^1].transform.eulerAngles = lines[^2].transform.eulerAngles; 
+            await UniTask.Yield(PlayerLoopTiming.PreLateUpdate);;
+        }
     }
 
     public void TriggerEnter()
@@ -117,5 +139,4 @@ public class CardDragLine : MonoBehaviour
         var u = 1 - t;
         return u * u * p0 + 2 * u * t * p1 + t * t * p2;
     }
-    
 }

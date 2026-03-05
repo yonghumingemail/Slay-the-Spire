@@ -7,18 +7,9 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    public Vector3 temp2;
-    public Vector3 Localtemp2;
-    
-
-    private void Start()
-    {
-        
-    }
-
-    private void Update()
-    {
-        temp2 = transform.position;
-        Localtemp2 = transform.localPosition;
-    }
+   //事件叠加测试
+   private void Start()
+   {
+      
+   }
 }

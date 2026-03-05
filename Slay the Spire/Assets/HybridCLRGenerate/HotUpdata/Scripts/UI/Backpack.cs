@@ -26,27 +26,28 @@ public class Backpack : Pile
 
     private async UniTaskVoid Test()
     {
+
         List<UniTask<Card>> tasks = new List<UniTask<Card>>()
         {
-            CardFactory.Instance.CreateCardInstanceAsync(await CardEvent_Abs.Create<CardEvent_Ironclad_Strike>(),
+            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Strike()).Initialize(),
                 _handPile.transform),
-            CardFactory.Instance.CreateCardInstanceAsync(await CardEvent_Abs.Create<CardEvent_Ironclad_Strike>(),
+            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Strike()).Initialize(),
                 _handPile.transform),
-            CardFactory.Instance.CreateCardInstanceAsync(await CardEvent_Abs.Create<CardEvent_Ironclad_Strike>(),
+            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Strike()).Initialize(),
                 _handPile.transform),
-            CardFactory.Instance.CreateCardInstanceAsync(await CardEvent_Abs.Create<CardEvent_Ironclad_Strike>(),
+            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Strike()).Initialize(),
                 _handPile.transform),
-            CardFactory.Instance.CreateCardInstanceAsync(await CardEvent_Abs.Create<CardEvent_Ironclad_Strike>(),
+            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Strike()).Initialize(),
                 _handPile.transform),
-            CardFactory.Instance.CreateCardInstanceAsync(await CardEvent_Abs.Create<CardEvent_Ironclad_Bash>(),
+            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Bash()).Initialize(),
                 _handPile.transform),
-            CardFactory.Instance.CreateCardInstanceAsync(await CardEvent_Abs.Create<CardEvent_Ironclad_Bash>(),
+            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Bash()).Initialize(),
                 _handPile.transform),
-            CardFactory.Instance.CreateCardInstanceAsync(await CardEvent_Abs.Create<CardEvent_Ironclad_Bash>(),
+            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Bash()).Initialize(),
                 _handPile.transform),
-            CardFactory.Instance.CreateCardInstanceAsync(await CardEvent_Abs.Create<CardEvent_Ironclad_Bash>(),
+            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Bash()).Initialize(),
                 _handPile.transform),
-            CardFactory.Instance.CreateCardInstanceAsync(await CardEvent_Abs.Create<CardEvent_Ironclad_Bash>(),
+            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Bash()).Initialize(),
                 _handPile.transform),
         };
 

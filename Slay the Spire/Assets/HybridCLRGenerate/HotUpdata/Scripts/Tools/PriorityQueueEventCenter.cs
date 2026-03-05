@@ -10,7 +10,7 @@ public struct PriorityEvent
 
 public class PriorityQueueEventCenter
 {
-    private Dictionary<string, List<PriorityEvent>> Event_Dic = new Dictionary<string, List<PriorityEvent>>();
+    private Dictionary<string, List<PriorityEvent>> Event_Dic = new ();
 
     public void AddEvent<D>(string eventName, D _delegate, int priority) where D : Delegate
     {
