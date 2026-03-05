@@ -25,6 +25,8 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     public HandPile handPile;
 
+    private Camera _mainCamera;
+    
     private DiscardPile discardPile;
     private DrawPile drawPile;
     private Outline outline;
@@ -41,7 +43,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         _drag = GetComponent<IDrag>();
 
         outline = transform.Find("Outline").GetComponent<Outline>();
-
+        
         _eventCenter.AddEvent<Func<Card>>("Card", () => this);
         _eventCenter.AddEvent<Action>("EnableCardOutlineEffect", () => outline.Enable().Forget());
         _eventCenter.AddEvent<Action>("DisableCardOutlineEffect", () => outline.Disable());
@@ -56,13 +58,19 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         _eventCenter.AddEvent<Func<UniTask<bool>>>("OnCardDataUpdated", UpdateCardUI);
 
         handPile = GetComponentInParent<HandPile>();
-        enterP.z = -0.1f * handPile.maxHandSize - 0.1f;
-        enterP.y = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0)).y +
-                   _infoComponent._background.bounds.size.y / 2;
+        
         EventCenter_Singleton.Instance.GetEvent<Func<DiscardPile>>("DiscardPile",
             action => { discardPile = action.Invoke(); });
         EventCenter_Singleton.Instance.GetEvent<Func<DrawPile>>("drawPile",
             action => { drawPile = action.Invoke(); });
+    }
+
+    private void Start()
+    {
+        _mainCamera=EventCenter_Singleton.Instance.GetEvent<Func<Camera>>("MainCamera").Invoke();
+        enterP.z = -0.1f * handPile.maxHandSize - 0.1f;
+        enterP.y = _mainCamera.ViewportToWorldPoint(new Vector3(0.5f, 0)).y +
+                   _infoComponent._background.bounds.size.y / 2;
     }
 
     public void RecordPositionInfo(Quaternion rotation, Vector3 position)
@@ -78,7 +86,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     private void MoveToScreenCenter(Action callback)
     {
         Vector3 screenCenter =
-            Camera.main.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
+            _mainCamera.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
         screenCenter.z = transform.position.z;
 
         DOTween.To(() => transform.position, value => { transform.position = value; }, screenCenter, move_speed)
@@ -87,7 +95,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     private void Recycle_DiscardPile(Action callback)
     {
-        Vector3 screenRightDown = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0f));
+        Vector3 screenRightDown = _mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0f));
         screenRightDown.z = transform.position.z;
         DOTween.To(() => transform.position, value => { transform.position = value; },
             screenRightDown,
@@ -97,7 +105,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
             move_speed).onComplete += () =>
         {
             Vector3 screenCenter =
-                Camera.main.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
+                _mainCamera.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
             screenCenter.z = transform.position.z;
 
             gameObject.SetActive(false);
@@ -110,7 +118,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     private void Recycle_DrawPile(Action callback)
     {
-        Vector3 screenLeftDown = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0f));
+        Vector3 screenLeftDown = _mainCamera.ScreenToWorldPoint(new Vector3(0, 0, 0f));
         screenLeftDown.z = transform.position.z;
         DOTween.To(() => transform.position, value => { transform.position = value; },
             screenLeftDown,
@@ -120,7 +128,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
             move_speed).onComplete += () =>
         {
             Vector3 screenCenter =
-                Camera.main.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
+                _mainCamera.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
             screenCenter.z = transform.position.z;
 
             gameObject.SetActive(false);
