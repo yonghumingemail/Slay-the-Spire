@@ -17,16 +17,7 @@ public abstract class CardEvent_Abs
     {
         EventCenter_Singleton.Instance.GetEvent<Func<Energy>>("Energy", (action) => { energy = action.Invoke(); });
     }
-
-    //待删除
-    public static async UniTask<T> Create<T>() where T : CardEvent_Abs, new()
-    {
-        T instance = new T();
-        var value = await AddressablesMgr.Instance.LoadAssetAsync<CardParameter>(instance.defaultDataPtah);
-        instance.parameter = value.Copy();
-        return instance;
-    }
-
+    
     protected Energy energy;
 
     public EventCenter<string> _eventCenter;
@@ -81,6 +72,8 @@ namespace CardEvent_Ironclad
             {
                 _inflictDamage.Trigger(null, target.collider.gameObject, _damage);
                 target = default;
+                
+                _eventCenter.GetEvent<Action<Action>>("MoveToScreenCenter")?.Invoke(()=>{_eventCenter.GetEvent<Action<Action>>("Recycle_DiscardPile")?.Invoke(null);});
                 _eventCenter.GetEvent<Action>("OnTriggerCardEvent")?.Invoke();
             }
             else
@@ -142,6 +135,8 @@ namespace CardEvent_Ironclad
                 _inflictDamage.Trigger(null, target.collider.gameObject, _damage);
                 _vulnerableState.Trigger(null, target.collider.gameObject, _stack);
                 target = default;
+                
+                _eventCenter.GetEvent<Action<Action>>("MoveToScreenCenter")?.Invoke(()=>{_eventCenter.GetEvent<Action<Action>>("Recycle_DiscardPile")?.Invoke(null);});
                 _eventCenter.GetEvent<Action>("OnTriggerCardEvent")?.Invoke();
             }
             else

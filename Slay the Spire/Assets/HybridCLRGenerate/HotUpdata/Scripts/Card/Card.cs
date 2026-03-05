@@ -6,13 +6,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Z_Tools;
 
-public enum CardRecycleType
-{
-    Destroy,
-    DiscardPile,
-    DrawPile
-}
-
 public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     IPointerDownHandler, IPointerUpHandler
 {
@@ -33,11 +26,12 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     public HandPile handPile;
 
     private DiscardPile discardPile;
+    private DrawPile drawPile;
     private Outline outline;
 
     private IDrag _drag;
 
-    private Vector3 enterP; //鼠标进入卡牌后的位置
+    [SerializeField] private Vector3 enterP; //鼠标进入卡牌后的位置
 
     private void Awake()
     {
@@ -47,29 +41,28 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         _drag = GetComponent<IDrag>();
 
         outline = transform.Find("Outline").GetComponent<Outline>();
+
+        _eventCenter.AddEvent<Func<Card>>("Card", () => this);
         _eventCenter.AddEvent<Action>("EnableCardOutlineEffect", () => outline.Enable().Forget());
         _eventCenter.AddEvent<Action>("DisableCardOutlineEffect", () => outline.Disable());
 
-        _eventCenter.AddEvent<Func<Card>>("Card", () => this);
         _eventCenter.AddEvent<Action>("OnTriggerCardEvent", OnTriggerCardEvent);
         _eventCenter.AddEvent<Action>("UnTriggerCardEvent", RegressPoint);
-        _eventCenter.AddEvent<Action>("OnCardDataUpdated", () => { CardFactory.Instance.UpdateCardUI(this, cardEvent).Forget(); });
+
+        _eventCenter.AddEvent<Action<Action>>("Recycle_DiscardPile", Recycle_DiscardPile);
+        _eventCenter.AddEvent<Action<Action>>("Recycle_DrawPile", Recycle_DrawPile);
+        _eventCenter.AddEvent<Action<Action>>("MoveToScreenCenter", MoveToScreenCenter);
+
+        _eventCenter.AddEvent<Func<UniTask<bool>>>("OnCardDataUpdated", UpdateCardUI);
 
         handPile = GetComponentInParent<HandPile>();
         enterP.z = -0.1f * handPile.maxHandSize - 0.1f;
-        enterP.y = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0)).y + _infoComponent._background.sprite.textureRect.y/_infoComponent._background.sprite.pixelsPerUnit / 2;
-      
-        print(_infoComponent._background.sprite.textureRect.x);
-        print(_infoComponent._background.sprite.textureRect.y);
-
-        print(_infoComponent._background.sprite.textureRect.width);
-        print(_infoComponent._background.sprite.textureRect.height);
-        
-        print(_infoComponent._background.sprite.textureRect.size);
-
-
+        enterP.y = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0)).y +
+                   _infoComponent._background.bounds.size.y / 2;
         EventCenter_Singleton.Instance.GetEvent<Func<DiscardPile>>("DiscardPile",
             action => { discardPile = action.Invoke(); });
+        EventCenter_Singleton.Instance.GetEvent<Func<DrawPile>>("drawPile",
+            action => { drawPile = action.Invoke(); });
     }
 
     public void RecordPositionInfo(Quaternion rotation, Vector3 position)
@@ -80,39 +73,79 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         enterP.x = position.x;
     }
 
+    #region DOTween动画
+
+    private void MoveToScreenCenter(Action callback)
+    {
+        Vector3 screenCenter =
+            Camera.main.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
+        screenCenter.z = transform.position.z;
+
+        DOTween.To(() => transform.position, value => { transform.position = value; }, screenCenter, move_speed)
+            .onComplete += () => { callback?.Invoke(); };
+    }
+
+    private void Recycle_DiscardPile(Action callback)
+    {
+        Vector3 screenRightDown = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0f));
+        screenRightDown.z = transform.position.z;
+        DOTween.To(() => transform.position, value => { transform.position = value; },
+            screenRightDown,
+            move_speed);
+
+        DOTween.To(() => transform.localScale, value => { transform.localScale = value; }, Vector3.zero,
+            move_speed).onComplete += () =>
+        {
+            Vector3 screenCenter =
+                Camera.main.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
+            screenCenter.z = transform.position.z;
+
+            gameObject.SetActive(false);
+            transform.position = screenCenter;
+            transform.localScale = _scale;
+            discardPile.AddCard(this).Forget();
+            callback?.Invoke();
+        };
+    }
+
+    private void Recycle_DrawPile(Action callback)
+    {
+        Vector3 screenLeftDown = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0f));
+        screenLeftDown.z = transform.position.z;
+        DOTween.To(() => transform.position, value => { transform.position = value; },
+            screenLeftDown,
+            move_speed);
+
+        DOTween.To(() => transform.localScale, value => { transform.localScale = value; }, Vector3.zero,
+            move_speed).onComplete += () =>
+        {
+            Vector3 screenCenter =
+                Camera.main.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
+            screenCenter.z = transform.position.z;
+
+            gameObject.SetActive(false);
+            transform.position = screenCenter;
+            transform.localScale = _scale;
+            drawPile.AddCard(this).Forget();
+            callback?.Invoke();
+        };
+    }
+
+    #endregion
+
+
     private void OnTriggerCardEvent()
     {
         cardUIEffect = false;
         handPile.cardInstances.Remove(this);
-        //改用动画实现
-        Vector3 screenCenter = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
-        screenCenter.z = transform.position.z;
-
-        DOTween.To(() => transform.position, value => { transform.position = value; }, screenCenter, move_speed).onComplete += () =>
-        {
-            Vector3 screenRightDown = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0f));
-            screenRightDown.z = transform.position.z;
-            DOTween.To(() => transform.position, value => { transform.position = value; },
-                screenRightDown,
-                move_speed);
-
-            DOTween.To(() => transform.localScale, value => { transform.localScale = value; }, Vector3.zero,
-                move_speed).onComplete += () =>
-            {
-                Vector3 screenCenter = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
-                screenCenter.z = transform.position.z;
-
-                gameObject.SetActive(false);
-                transform.position = screenCenter;
-                transform.localScale = _scale;
-                //改,不是所有卡牌都回弃牌堆
-                discardPile.AddCard(this).Forget();
-            };
-        };
     }
 
+    private UniTask<bool> UpdateCardUI()
+    {
+        return CardFactory.Instance.UpdateCardUI(this, cardEvent);
+    }
 
-    public async UniTask<bool> Initialized(CardEvent_Abs cardEventAbs)
+    public UniTask<bool> Initialized(CardEvent_Abs cardEventAbs)
     {
         cardEvent?.OnDestroy();
         cardEvent = cardEventAbs;
@@ -131,13 +164,15 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
             handPile.cardDragLine.Register(_eventCenter);
         }
 
-        return await CardFactory.Instance.UpdateCardUI(this, cardEventAbs);
+        return UpdateCardUI();
     }
 
 
-    private float magnification_speed = 0.15f;
-    private float move_speed = 0.15f;
+    [Header("DOTween动画播放速度")] [SerializeField]
     private float rotation_speed = 0.15f;
+
+    [SerializeField] private float move_speed = 0.15f;
+    [SerializeField] private float magnification_speed = 0.15f;
 
     /// <summary>
     /// 回到原位置
@@ -151,6 +186,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         DOTween.To(() => transform.localScale, value => { transform.localScale = value; }, _scale, magnification_speed);
     }
 
+    #region 鼠标事件
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -187,6 +223,8 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         handPile.selectedCard = null;
         _eventCenter.GetEvent<Action<PointerEventData>>("OnPointerUp")?.Invoke(eventData);
     }
+
+    #endregion
 
 
     private void OnDestroy()

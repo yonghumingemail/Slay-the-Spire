@@ -55,8 +55,8 @@ public class CardDragLine : MonoBehaviour
         {
             _tokenSource?.Cancel();
             _tokenSource?.Dispose();
-            
-            
+
+
             gameObject.SetActive(false);
             foreach (var t in sprites)
             {
@@ -72,8 +72,7 @@ public class CardDragLine : MonoBehaviour
     {
         float inverseLinesLength = 1f / lines.Length;
         // 缓存常用向量计算
-        Vector2 startPoint = mainCamera.ScreenToWorldPoint(_data.pressPosition);
-        print(startPoint);
+        Vector2 startPoint = _data.pointerEnter.transform.position;
         Vector2 endPoint = mainCamera.ScreenToWorldPoint(_data.position);
         Vector2 midPoint = new Vector2(startPoint.x, (startPoint.y + endPoint.y) * 0.5f); // 优化：直接计算中点
 
@@ -82,11 +81,11 @@ public class CardDragLine : MonoBehaviour
         Vector3 direction;
 
         _tokenSource = new CancellationTokenSource();
-        CancellationToken  _token = _tokenSource.Token;
+        CancellationToken _token = _tokenSource.Token;
         while (!_token.IsCancellationRequested)
         {
             endPoint = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            midPoint.y =  (startPoint.y + endPoint.y) * 0.5f;
+            midPoint.y = (startPoint.y + endPoint.y) * 0.5f;
             // 优化：减少循环中的计算量
             for (int i = lines.Length - 2; i > -1; i--)
             {
@@ -97,14 +96,15 @@ public class CardDragLine : MonoBehaviour
 
 
                 direction = lines[i + 1].transform.position - pointPosition;
-                float angle = FastAtan2(direction.y, direction.x); 
+                float angle = FastAtan2(direction.y, direction.x);
                 lines[i].transform.eulerAngles = new Vector3(0, 0, angle - 90f);
             }
 
             lastPoint = GetQuadraticPoint(startPoint, midPoint, endPoint, (lines.Length - 1f) * inverseLinesLength);
             lines[^1].transform.position = lastPoint + Vector3.back;
-            lines[^1].transform.eulerAngles = lines[^2].transform.eulerAngles; 
-            await UniTask.Yield(PlayerLoopTiming.PreLateUpdate);;
+            lines[^1].transform.eulerAngles = lines[^2].transform.eulerAngles;
+            await UniTask.Yield(PlayerLoopTiming.PreLateUpdate);
+            ;
         }
     }
 
