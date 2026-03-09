@@ -146,7 +146,7 @@ public class CardArrangement
 
             Transform temp = cards[i].transform;
 
-            cards[i].RecordPositionInfo(rotation, splineWorldPos);
+            cards[i].RecordPositionInfo(splineWorldPos,rotation);
             var positionAnimator = DOTween
                 .To(() => temp.position, value => { temp.position = value; }, splineWorldPos, speed)
                 .SetEase(Ease.OutQuad);

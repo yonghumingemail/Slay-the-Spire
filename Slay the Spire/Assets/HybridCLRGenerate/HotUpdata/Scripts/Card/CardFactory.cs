@@ -12,24 +12,16 @@ public class CardFactory : SingletonBase<CardFactory>
 {
     public async UniTask<Card> CreateCardInstanceAsync(CardEvent_Abs cardEventAbs, Transform parent, bool isActive = false)
     {
-
         // 1. 异步加载并实例化预制体
         var prefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/Card/Card.prefab");
         var cardInstance = Object.Instantiate(prefab, parent);
 
         //注册卡牌信息，并更新卡牌UI
         var card = cardInstance.GetComponent<Card>();
-        GameObject UI = card._infoComponent._background.gameObject;
+        GameObject UI = card.cardView._background.gameObject;
         UI.SetActive(false);
 
-        bool succeed = await card.Initialized(cardEventAbs);
-        if (!succeed)
-        {
-            //需要修改，回收
-            Object.Destroy(cardInstance);
-            Debug.Log("初始化失败，卡牌回收");
-            return null;
-        }
+        card.Initialized(cardEventAbs);
 
         cardInstance.SetActive(isActive);
         UI.SetActive(true);
@@ -61,24 +53,7 @@ public class CardFactory : SingletonBase<CardFactory>
         return cardInstance;
     }
 
-    public async UniTask<bool> UpdateCardUI(Card card, CardEvent_Abs cardEventAbs)
-    {
-        card._infoComponent._background.sprite = cardEventAbs.parameter.background;
-        card._infoComponent._frame.sprite = cardEventAbs.parameter.frame;
-        card._infoComponent._banners.sprite = cardEventAbs.parameter.banner;
-        card._infoComponent._image.sprite = cardEventAbs.parameter.image;
-        card._infoComponent._orb.sprite = cardEventAbs.parameter.orb;
-
-        card._infoComponent._name.SetText(cardEventAbs.parameter.cardName);
-        card._infoComponent._typeName.SetText(Enum.GetName(cardEventAbs.parameter.cardType.GetType(), cardEventAbs.parameter.cardType));
-        card._infoComponent._orbValue.SetText(cardEventAbs.orbValue.ToString());
-        card._infoComponent._describe.SetText(cardEventAbs.describe);
-
-        // 确保UI布局正确更新
-        await UniTask.NextFrame();
-        return true;
-    }
-
+   
     public async UniTask<bool> UpdateCardUI(UICard uiCard, CardEvent_Abs cardEventAbs)
     {
         uiCard._infoComponent._background.sprite = cardEventAbs.parameter.background;

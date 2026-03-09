@@ -1,9 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using Z_Tools;
-
 
 public abstract class CardEvent_Abs
 {
