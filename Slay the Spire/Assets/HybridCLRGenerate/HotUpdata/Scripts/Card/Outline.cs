@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -33,6 +34,11 @@ public class Outline : MonoBehaviour
     }
 
     public void Disable()
+    {
+        isExecute = false;
+    }
+
+    private void OnDestroy()
     {
         isExecute = false;
     }

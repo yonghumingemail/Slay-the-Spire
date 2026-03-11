@@ -31,8 +31,8 @@ namespace CardEvent_Ironclad
                 _vulnerableState.Trigger(null, target.collider.gameObject, _stack);
                 target = default;
                 
-                _eventCenter.GetEvent<Action<Action>>("MoveToScreenCenter")?.Invoke(()=>{_eventCenter.GetEvent<Action<Action>>("Recycle_DiscardPile")?.Invoke(null);});
                 _eventCenter.GetEvent<Action>("OnTriggerCardEvent")?.Invoke();
+                _eventCenter.GetEvent<Action>("RecycleCard_DiscardPile")?.Invoke();
             }
             else
             {
@@ -43,7 +43,7 @@ namespace CardEvent_Ironclad
         }
 
 
-        public override void EventRegister(EventCenter<string> eventCenter)
+        public override void EventRegister(IEventCenter<string> eventCenter)
         {
             _eventCenter = eventCenter;
             _eventCenter.AddEvent<Action<PointerEventData>>("OnPointerUp", _data =>

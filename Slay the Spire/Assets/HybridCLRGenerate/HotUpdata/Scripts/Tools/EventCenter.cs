@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace Z_Tools
 {
-    [SuppressMessage("ReSharper", "Unity.PerformanceCriticalCodeInvocation")]
     //Key为存储事件的参数的类型
     public class EventCenter<Key> : IEventCenter<Key>
     {
@@ -76,7 +75,7 @@ namespace Z_Tools
         /// <param name="eventKey">事件名</param>
         /// <param name="_delegate">需要移除的行为</param>
         /// <returns></returns>
-        public bool RemoveEvent<T>(Key eventKey, T _delegate) where T : Delegate
+        public bool RemoveEvent(Key eventKey, Delegate _delegate) 
         {
             if (!Event_Dic.TryGetValue(eventKey, out var value)) return false;
             

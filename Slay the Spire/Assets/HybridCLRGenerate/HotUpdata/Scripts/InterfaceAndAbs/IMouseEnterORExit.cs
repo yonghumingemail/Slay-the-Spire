@@ -1,8 +1,9 @@
 using System;
+using UnityEngine.EventSystems;
 
 
 public interface IMouseEnterORExit
 {
-    Action OnMouseEnter { get; set; }
-    Action OnMouseExit { get; set; }
+    Action<PointerEventData> OnMouseEnter { get; set; }
+    Action<PointerEventData> OnMouseExit { get; set; }
 }

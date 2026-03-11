@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Splines;
+using Z_Tools;
 
 public class CardArrangement
 {
@@ -92,6 +93,7 @@ public class CardArrangement
     // }
     public void UpdateCardPositions(SplineContainer splineContainer, List<Card> cards, Action callBack)
     {
+        EventCenter_Singleton.Instance.GetEvent<Action>("OnStartCardArrangement")?.Invoke();
         // 检查卡牌列表是否为空，为空则直接返回避免后续计算
         if (cards.Count == 0)
             return;
@@ -146,7 +148,7 @@ public class CardArrangement
 
             Transform temp = cards[i].transform;
 
-            cards[i].RecordPositionInfo(splineWorldPos,rotation);
+            cards[i].cardInteraction.RecordPositionInfo(splineWorldPos,rotation);
             var positionAnimator = DOTween
                 .To(() => temp.position, value => { temp.position = value; }, splineWorldPos, speed)
                 .SetEase(Ease.OutQuad);
@@ -160,12 +162,7 @@ public class CardArrangement
 
         _sequence.onComplete += () =>
         {
-            //改
-            foreach (var VARIABLE in cards)
-            {
-                VARIABLE.cardUIEffect = true;
-            }
-
+            EventCenter_Singleton.Instance.GetEvent<Action>("OnCardArrangementComplete")?.Invoke();
             callBack?.Invoke();
         };
     }

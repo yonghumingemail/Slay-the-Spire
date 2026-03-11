@@ -14,13 +14,13 @@ namespace Z_Tools
         /// <summary>
         /// 添加事件
         /// </summary>
-        /// <param name="eventName">事件名</param>
+        /// <param name="eventKey">事件名</param>
         /// <param name="_delegate">事件</param>
-        public void AddEvent<T>(string eventName, T _delegate)
+        public void AddEvent<T>(string eventKey, T _delegate)
             where T : Delegate
         {
-            EventCenter.AddEvent(eventName + typeof(T), _delegate);
-            if (!UnregisteredEnum.TryGetValue(eventName, out Delegate eventData)) return;
+            EventCenter.AddEvent(eventKey + typeof(T), _delegate);
+            if (!UnregisteredEnum.TryGetValue(eventKey, out Delegate eventData)) return;
 
             if (eventData is Action<T> action)
             {
@@ -28,37 +28,37 @@ namespace Z_Tools
             }
             else
             {
-                Debug.Log($"数据类型不匹配{eventName}类型为" + _delegate.GetType() + "| 原事件类型" + eventData.GetType());
+                Debug.Log($"数据类型不匹配{eventKey}类型为" + _delegate.GetType() + "| 原事件类型" + eventData.GetType());
             }
 
-            UnregisteredEnum.Remove(eventName);
+            UnregisteredEnum.Remove(eventKey);
         }
 
         /// <summary>
         /// 获取事件实例
         /// </summary>
-        /// <param name="eventName">事件名</param>
+        /// <param name="eventKey">事件名</param>
         /// <param name="callBack">回调函数</param>
         /// <returns></returns>
-        public void GetEvent<T>(string eventName, Action<T> callBack) where T : Delegate
+        public void GetEvent<T>(string eventKey, Action<T> callBack) where T : Delegate
         {
-            T ret = EventCenter.GetEvent<T>(eventName + typeof(T));
+            T ret = EventCenter.GetEvent<T>(eventKey + typeof(T));
             if (ret == null)
             {
-                if (UnregisteredEnum.TryGetValue(eventName, out Delegate eventData))
+                if (UnregisteredEnum.TryGetValue(eventKey, out Delegate eventData))
                 {
                     if (eventData is Action<T> eventDelegate)
                     {
-                        UnregisteredEnum[eventName] = Delegate.Combine(eventDelegate, callBack);
+                        UnregisteredEnum[eventKey] = Delegate.Combine(eventDelegate, callBack);
                     }
                     else
                     {
-                        Debug.Log($"事件类型错误{eventData.GetType()},{typeof(T)},{eventName}");
+                        Debug.Log($"事件类型错误{eventData.GetType()},{typeof(T)},{eventKey}");
                     }
                 }
                 else
                 {
-                    UnregisteredEnum.Add(eventName, callBack);
+                    UnregisteredEnum.Add(eventKey, callBack);
                 }
             }
             else
@@ -67,15 +67,21 @@ namespace Z_Tools
             }
         }
         
-        public T GetEvent<T>(string eventName) where T : Delegate
+        public T GetEvent<T>(string eventKey) where T : Delegate
         {
-           return EventCenter.GetEvent<T>(eventName + typeof(T));
+           return EventCenter.GetEvent<T>(eventKey + typeof(T));
         }
 
-        public bool RemoveEvent(string eventName)
+        public bool RemoveEvent(string eventKey)
         {
-            return EventCenter.RemoveEvent(eventName);
+            return EventCenter.RemoveEvent(eventKey);
         }
+
+        public bool RemoveEvent<T>(string eventKey, T _delegate) where T : Delegate
+        {
+            return EventCenter.RemoveEvent(eventKey, _delegate);
+        }
+        
 
         public void Clear()
         {

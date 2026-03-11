@@ -18,7 +18,7 @@ public abstract class CardEvent_Abs
     
     protected Energy energy;
 
-    public EventCenter<string> _eventCenter;
+    public IEventCenter<string> _eventCenter;
     public CardParameter parameter { get; private set; }
     public string defaultDataPtah { get; protected set; }
 
@@ -35,7 +35,7 @@ public abstract class CardEvent_Abs
     /// <returns></returns>
     public abstract UniTask Trigger(bool conditionCheck = true);
 
-    public abstract void EventRegister(EventCenter<string> eventCenter);
+    public abstract void EventRegister(IEventCenter<string> eventCenter);
     public abstract void Strengthen();
     public abstract void OnDestroy();
 

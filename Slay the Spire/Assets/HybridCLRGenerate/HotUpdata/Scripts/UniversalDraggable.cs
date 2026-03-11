@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 /// 通用可拖拽组件 - 可挂载到任何需要拖拽的对象上
 /// 支持3D对象、2D对象和UI元素
 /// </summary>
-public class UniversalDraggable : MonoBehaviour, IDrag, IPointerDownHandler, IPointerUpHandler, IDragHandler
+public class UniversalDraggable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,IDrag
 {
     [Header("拖拽设置")] [Tooltip("拖拽是否启用")] [SerializeField]
     private bool dragEnabled = true;
@@ -102,12 +102,7 @@ public class UniversalDraggable : MonoBehaviour, IDrag, IPointerDownHandler, IPo
 
         StopDragging();
     }
-
-    // 实现 IDragHandler 以获得更好的拖拽事件支持
-    public void OnDrag(PointerEventData eventData)
-    {
-        // 这个接口可以辅助检测拖拽，但主要逻辑还是在我们的任务中
-    }
+    
 
     /// <summary>
     /// 计算拖拽偏移量

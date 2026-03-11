@@ -35,9 +35,7 @@ public class HandPile : MonoBehaviour
 
         EventCenter_Singleton.Instance.GetEvent<Func<DrawPile>>("DrawPile", (action) => { drawPile = action.Invoke(); });
         EventCenter_Singleton.Instance.AddEvent<Func<HandPile>>("HandPile", () => this);
-
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action>("OnRoundEnd", OnRoundEnd, 0);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action>("OnRoundStart", OnRoundStart, 0);
+        
     }
 
     public float speed2;
@@ -48,17 +46,6 @@ public class HandPile : MonoBehaviour
         Test().Forget();
     }
 
-    private void OnRoundEnd()
-    {
-        foreach (var card in cardInstances)
-        {
-            card.cardUIEffect = false;
-        }
-    }
-
-    private void OnRoundStart()
-    {
-    }
 
     public async UniTaskVoid Test()
     {
@@ -68,7 +55,7 @@ public class HandPile : MonoBehaviour
             cardArrangement.speed = speed;
             foreach (var card in cards)
             {
-                card.cardUIEffect = false;
+                card.cardInteraction._isInteractable = false;
                 card.gameObject.SetActive(true);
                 cardInstances.Add(card);
                 UpdateCardPositions();

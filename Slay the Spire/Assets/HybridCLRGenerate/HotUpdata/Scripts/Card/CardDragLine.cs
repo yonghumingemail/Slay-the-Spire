@@ -37,7 +37,7 @@ public class CardDragLine : MonoBehaviour
     }
 
 
-    public void Register(EventCenter<string> eventCenter)
+    public void Register(IEventCenter<string> eventCenter)
     {
         eventCenter.AddEvent<Action<PointerEventData>>("OnPointerDown", (instanceObj) =>
         {
