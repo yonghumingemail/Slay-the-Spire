@@ -7,12 +7,13 @@ using Z_Tools;
 public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IEventCenterObject<string>
 {
     public IEventCenter<string> eventCenter { get; } = new EventCenter<string>(); //用于提供接口对象
-    public PriorityQueueEventCenter _priorityEventCenter { get; private set; } = new PriorityQueueEventCenter(); //用于记录buff事件
+
+    public PriorityQueueEventCenter _priorityEventCenter { get; private set; } =
+        new PriorityQueueEventCenter(); //用于记录buff事件
 
     public EnemySpawner enemySpawner;
     public SpriteRenderer spriteRenderer;
 
-    private HandPile _handPile;
     [SerializeField] private SimpleHealth _health;
     private IHealth_V health_V;
     [SerializeField] private SimpleBuffList _buffList;
@@ -21,12 +22,14 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
     [SerializeField] private SimpleShield _shield;
     private IShieldV shield_V;
 
+    private AlertBox _alertBox;
 
     private void Awake()
     {
+        _alertBox = transform.Find("AlertBox").GetComponent<AlertBox>();
         enemySpawner = transform.parent.GetComponent<EnemySpawner>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        
+
         health_V = transform.Find("HP").GetComponent<IHealth_V>();
         _health = new SimpleHealth(50, 100, health_V, _priorityEventCenter);
         eventCenter.AddEvent<Func<IHealth>>("IHealth", () => _health);
@@ -40,10 +43,8 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         buffList_V = transform.Find("BuffList").GetComponent<IBuffList_V>();
         _buffList = new SimpleBuffList(buffList_V, _priorityEventCenter);
         eventCenter.AddEvent<Func<IBuffList>>("IBuffList", () => _buffList);
-        
-        eventCenter.AddEvent<Func<PriorityQueueEventCenter>>("PriorityQueueEventCenter",()=>_priorityEventCenter);
-        
-        EventCenter_Singleton.Instance.GetEvent<Func<HandPile>>("HandPile", action => { _handPile = action.Invoke(); });
+
+        eventCenter.AddEvent<Func<PriorityQueueEventCenter>>("PriorityQueueEventCenter", () => _priorityEventCenter);
     }
 
     public int Choose(float[] list)
@@ -76,14 +77,17 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (_handPile.selectedCard != null)
+        if (EventCenter_Singleton.Instance.GetEvent<Func<GameObject>>("SelectCard")?.Invoke() != null)
         {
-            enemySpawner.eventCenter.GetEvent<Action<Transform, Sprite>>("OnSelectEnemy")?.Invoke(transform, spriteRenderer.sprite);
+            _alertBox.Show(transform,spriteRenderer.sprite);
+            enemySpawner.eventCenter.GetEvent<Action<Transform, Sprite>>("OnSelectEnemy")
+                ?.Invoke(transform, spriteRenderer.sprite);
         }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        _alertBox.Close();
         enemySpawner.eventCenter.GetEvent<Action>("OnDeSelectEnemy")?.Invoke();
     }
 }

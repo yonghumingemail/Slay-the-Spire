@@ -102,16 +102,16 @@ public class Pile : MonoBehaviour
     public virtual async UniTask AddCard(Card card)
     {
         // 如果卡牌不在滚动视图字典中，则创建UI实例
-        if (!cardScrollView.cardDic.ContainsKey(card.cardEvent))
+        if (!cardScrollView.cardDic.ContainsKey(card.CardEvent))
         {
             var instance =
-                await CardFactory.Instance.CreateCardInstanceAsync(card.cardEvent, cardScrollView.content);
+                await CardFactory.Instance.CreateCardInstanceAsync(card.CardEvent, cardScrollView.content);
 
-            cardScrollView.cardDic.Add(card.cardEvent, (card, instance.GetComponent<UICard>()));
+            cardScrollView.cardDic.Add(card.CardEvent, (card, instance.GetComponent<UICard>()));
         }
 
         // 添加到卡牌列表
-        cardList.Add(card.cardEvent);
+        cardList.Add(card.CardEvent);
 
         // 更新计数显示
         countText.SetText(cardList.Count.ToString());

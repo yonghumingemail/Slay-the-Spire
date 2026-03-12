@@ -851,7 +851,6 @@ GameObject:
   - component: {fileID: 4104195811871373348}
   - component: {fileID: 5467967157565807851}
   - component: {fileID: 6201803845615211843}
-  - component: {fileID: 7731439373164371875}
   m_Layer: 0
   m_Name: TypeName
   m_TagString: Untagged
@@ -1017,19 +1016,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 5467967157565807851}
   m_maskType: 0
---- !u!114 &7731439373164371875
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5220126367319876412}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1bdfe8722e29c974fb0bfe59b216f467, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  testcard: {fileID: 0}
 --- !u!1 &6564031438802943616
 GameObject:
   m_ObjectHideFlags: 0
@@ -1190,6 +1176,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5b7375abba1b604bb362046f7d48c42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardView:
+    _background: {fileID: 0}
+    _frame: {fileID: 0}
+    _banners: {fileID: 0}
+    _image: {fileID: 0}
+    _orb: {fileID: 0}
+    _name: {fileID: 0}
+    _typeName: {fileID: 0}
+    _orbValue: {fileID: 0}
+    _describe: {fileID: 0}
+    cardOutline: {fileID: 0}
+  cardAnimator:
+    _animator: {fileID: 0}
+    move_speed: 0
+  cardInteraction:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 0}
+    _scale: {x: 0, y: 0, z: 0}
+    MouseOverPosition: {x: 0, y: 0, z: 0}
+    MouseOverScale: {x: 0, y: 0, z: 0}
+    isInteractable: 0
+    magnification: 0
+    rotation_speed: 0
+    move_speed: 0
+    magnification_speed: 0
   handPile: {fileID: 0}
 --- !u!114 &4870365042342976565
 MonoBehaviour:

@@ -20,35 +20,32 @@ namespace CardEvent_Ironclad
         }
 
 
-        public override UniTask Trigger(bool conditionCheck = true)
+        public override async UniTask Trigger(bool conditionCheck = true)
         {
             if (target.collider != null && (!conditionCheck || energy.SetEnergy(energy._energy - orbValue)))
             {
+                Debug.Log("Trigger");
                 _inflictDamage.Trigger(null, target.collider.gameObject, _damage);
+                await _eventCenter.GetEvent<Func<UniTask>>("RecycleCard_DiscardPile").Invoke();
                 target = default;
-
-                _eventCenter.GetEvent<Action>("OnTriggerCardEvent")?.Invoke(); 
-                _eventCenter.GetEvent<Func<UniTask>>("RecycleCard_DiscardPile").Invoke();
             }
             else
             {
+                Debug.Log("UnTrigger");
                 _eventCenter.GetEvent<Action>("UnTriggerCardEvent")?.Invoke();
             }
-
-            return UniTask.CompletedTask;
         }
 
 
         public override void EventRegister(IEventCenter<string> eventCenter)
         {
-            _eventCenter = eventCenter;
+            base.EventRegister(eventCenter);
             //卡牌事件监听卡牌的点击事件，当鼠标抬起时进行检测
             _eventCenter.AddEvent<Action<PointerEventData>>("OnPointerUp", _data =>
             {
                 target = Physics2D.Raycast(_data.pressEventCamera.ScreenToWorldPoint(_data.position), Vector3.forward,
                     15,
                     1 << LayerMask.NameToLayer("Enemy"));
-                EventCenter_Singleton.Instance.GetEvent<Func<HandPile>>("HandPile")?.Invoke().AddAsyncCardEvent(this);
             });
         }
 

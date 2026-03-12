@@ -19,8 +19,6 @@ public class AlertBox : MonoBehaviour
 
     private void Awake()
     {
-        EventCenter_Singleton.Instance.GetEvent<Func<EnemySpawner>>("EnemySpawner",action => { enemySpawner = action.Invoke(); });
-        
         LeftUp = transform.Find("LeftUp").GetComponent<SpriteRenderer>();
         LeftDown = transform.Find("LeftDown").GetComponent<SpriteRenderer>();
         RightDown = transform.Find("RightDown").GetComponent<SpriteRenderer>();
@@ -34,12 +32,9 @@ public class AlertBox : MonoBehaviour
         RightDown.color = defaultColor;
         RightUp.color = defaultColor;
         
-        enemySpawner.eventCenter.AddEvent<Action<Transform,Sprite>>("OnSelectEnemy", Show);
-        enemySpawner.eventCenter.AddEvent<Action>("OnDeSelectEnemy", Close);
-
     }
 
-    private void Show(Transform _transform, Sprite sprite)
+    public void Show(Transform _transform, Sprite sprite)
     {
         transform.gameObject.SetActive(true);
         LeftUp.gameObject.SetActive(true);
@@ -61,7 +56,7 @@ public class AlertBox : MonoBehaviour
         RightUp.transform.localPosition = new Vector2(size.x / 2 / sprite.pixelsPerUnit, size.y / 2 / sprite.pixelsPerUnit);
     }
 
-    private void Close()
+    public void Close()
     {
         LeftUp.color = defaultColor;
         LeftDown.color = defaultColor;

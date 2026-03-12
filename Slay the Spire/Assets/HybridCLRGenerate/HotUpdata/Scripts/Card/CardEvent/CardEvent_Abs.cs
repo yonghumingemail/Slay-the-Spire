@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Z_Tools;
 
+[Serializable]
 public abstract class CardEvent_Abs
 {
     public string describe;
@@ -15,11 +16,12 @@ public abstract class CardEvent_Abs
     {
         EventCenter_Singleton.Instance.GetEvent<Func<Energy>>("Energy", (action) => { energy = action.Invoke(); });
     }
-    
+
     protected Energy energy;
 
     public IEventCenter<string> _eventCenter;
-    public CardParameter parameter { get; private set; }
+   [SerializeField] protected CardParameter parameter;
+    public CardParameter Parameter => parameter;
     public string defaultDataPtah { get; protected set; }
 
 
@@ -35,7 +37,12 @@ public abstract class CardEvent_Abs
     /// <returns></returns>
     public abstract UniTask Trigger(bool conditionCheck = true);
 
-    public abstract void EventRegister(IEventCenter<string> eventCenter);
+    public virtual void EventRegister(IEventCenter<string> eventCenter)
+    {
+        _eventCenter = eventCenter;
+        _eventCenter.AddEvent<Action>("OnDestroy", OnDestroy);
+    }
+
     public abstract void Strengthen();
     public abstract void OnDestroy();
 
@@ -47,4 +54,3 @@ public abstract class CardEvent_Abs
         return this;
     }
 }
-

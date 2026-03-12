@@ -33,4 +33,12 @@ public class MouseInteraction : MonoBehaviour,
     {
         OnMouseUp?.Invoke(eventData);
     }
+
+    private void OnDestroy()
+    {
+        OnMouseEnter = null;
+        OnMouseExit = null;
+        OnMouseEnter = null;
+        OnMouseExit = null;
+    }
 }

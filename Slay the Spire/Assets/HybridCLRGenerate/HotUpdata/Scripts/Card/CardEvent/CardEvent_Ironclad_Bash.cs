@@ -23,35 +23,32 @@ namespace CardEvent_Ironclad
         }
 
 
-        public override UniTask Trigger(bool conditionCheck = true)
+        public override async UniTask Trigger(bool conditionCheck = true)
         {
             if (target.collider != null && (!conditionCheck || energy.SetEnergy(energy._energy - orbValue)))
             {
+                Debug.Log("Trigger");
                 _inflictDamage.Trigger(null, target.collider.gameObject, _damage);
                 _vulnerableState.Trigger(null, target.collider.gameObject, _stack);
-                target = default;
                 
-                _eventCenter.GetEvent<Action>("OnTriggerCardEvent")?.Invoke();
-                _eventCenter.GetEvent<Action>("RecycleCard_DiscardPile")?.Invoke();
+                await _eventCenter.GetEvent<Func<UniTask>>("RecycleCard_DiscardPile").Invoke();
+                target = default;
             }
             else
             {
+                Debug.Log("UnTrigger");
                 _eventCenter.GetEvent<Action>("UnTriggerCardEvent")?.Invoke();
             }
-
-            return UniTask.CompletedTask;
         }
 
 
         public override void EventRegister(IEventCenter<string> eventCenter)
         {
-            _eventCenter = eventCenter;
+            base.EventRegister(eventCenter);
             _eventCenter.AddEvent<Action<PointerEventData>>("OnPointerUp", _data =>
             {
                 target = Physics2D.Raycast(_data.pressEventCamera.ScreenToWorldPoint(_data.position), Vector3.forward, 15,
                     1 << LayerMask.NameToLayer("Enemy"));
-
-                EventCenter_Singleton.Instance.GetEvent<Func<HandPile>>("HandPile")?.Invoke().AddAsyncCardEvent(this);
             });
         }
 

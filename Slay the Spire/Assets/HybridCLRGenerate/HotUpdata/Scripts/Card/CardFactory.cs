@@ -15,17 +15,12 @@ public class CardFactory : SingletonBase<CardFactory>
         // 1. 异步加载并实例化预制体
         var prefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/Card/Card.prefab");
         var cardInstance = Object.Instantiate(prefab, parent);
-        
+       
         //注册卡牌信息，并更新卡牌UI
         var card = cardInstance.GetComponent<Card>();
-        GameObject UI = card.cardView._background.gameObject;
-        UI.SetActive(false);
-        cardInstance.SetActive(true);
-       await UniTask.Yield();
         card.Initialized(cardEventAbs);
 
         cardInstance.SetActive(isActive);
-        UI.SetActive(true);
         return card;
     }
 
@@ -57,14 +52,14 @@ public class CardFactory : SingletonBase<CardFactory>
 
     public async UniTask<bool> UpdateCardUI(UICard uiCard, CardEvent_Abs cardEventAbs)
     {
-        uiCard._infoComponent._background.sprite = cardEventAbs.parameter.background;
-        uiCard._infoComponent._frame.sprite = cardEventAbs.parameter.frame;
-        uiCard._infoComponent._banners.sprite = cardEventAbs.parameter.banner;
-        uiCard._infoComponent._orb.sprite = cardEventAbs.parameter.orb;
-        uiCard._infoComponent._image.sprite = cardEventAbs.parameter.image;
+        uiCard._infoComponent._background.sprite = cardEventAbs.Parameter.background;
+        uiCard._infoComponent._frame.sprite = cardEventAbs.Parameter.frame;
+        uiCard._infoComponent._banners.sprite = cardEventAbs.Parameter.banner;
+        uiCard._infoComponent._orb.sprite = cardEventAbs.Parameter.orb;
+        uiCard._infoComponent._image.sprite = cardEventAbs.Parameter.image;
 
-        uiCard._infoComponent._name.SetText(cardEventAbs.parameter.cardName);
-        uiCard._infoComponent._typeName.SetText(Enum.GetName(cardEventAbs.parameter.cardType.GetType(), cardEventAbs.parameter.cardType));
+        uiCard._infoComponent._name.SetText(cardEventAbs.Parameter.cardName);
+        uiCard._infoComponent._typeName.SetText(Enum.GetName(cardEventAbs.Parameter.cardType.GetType(), cardEventAbs.Parameter.cardType));
         uiCard._infoComponent._point.SetText(cardEventAbs.orbValue.ToString());
         uiCard._infoComponent._describe.SetText(cardEventAbs.describe);
 

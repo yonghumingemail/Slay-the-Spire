@@ -9,12 +9,9 @@ using Z_Tools;
 public class HandPile : MonoBehaviour
 {
     private CardArrangement cardArrangement;
-    public AlertBox alertBox { get; private set; }
-
+    
     private SplineContainer spline;
     private DrawPile drawPile;
-
-    public Card selectedCard;
     public CardDragLine cardDragLine { get; private set; }
     public List<Card> cardInstances = new List<Card>();
 
@@ -29,13 +26,12 @@ public class HandPile : MonoBehaviour
     private void Awake()
     {
         cardArrangement = new CardArrangement(maxHandSize);
-        alertBox = transform.Find("AlertBox").GetComponent<AlertBox>();
         spline = transform.Find("Spline").GetComponent<SplineContainer>();
         cardDragLine = transform.Find("DragLineUI").GetComponent<CardDragLine>();
 
-        EventCenter_Singleton.Instance.GetEvent<Func<DrawPile>>("DrawPile", (action) => { drawPile = action.Invoke(); });
+        EventCenter_Singleton.Instance.GetEvent<Func<DrawPile>>("DrawPile",
+            (action) => { drawPile = action.Invoke(); });
         EventCenter_Singleton.Instance.AddEvent<Func<HandPile>>("HandPile", () => this);
-        
     }
 
     public float speed2;
@@ -55,7 +51,7 @@ public class HandPile : MonoBehaviour
             cardArrangement.speed = speed;
             foreach (var card in cards)
             {
-                card.cardInteraction._isInteractable = false;
+                card.CardInteraction.isInteractable = false;
                 card.gameObject.SetActive(true);
                 cardInstances.Add(card);
                 UpdateCardPositions();
@@ -64,10 +60,10 @@ public class HandPile : MonoBehaviour
         }
     }
 
-    private Queue<CardEvent_Abs> triggerQueue = new Queue<CardEvent_Abs>();
+    private Queue<Card> triggerQueue = new Queue<Card>();
     public bool isExecute;
 
-    public void AddAsyncCardEvent(CardEvent_Abs action)
+    public void AddAsyncCardEvent(Card action)
     {
         triggerQueue.Enqueue(action);
         if (!isExecute)
@@ -83,8 +79,8 @@ public class HandPile : MonoBehaviour
         while (triggerQueue.Count != 0)
         {
             var current = triggerQueue.Dequeue();
-            await current.Trigger();
-            EventCenter_Singleton.Instance.GetEvent<Action<CardEvent_Abs>>("OnTriggerCardEvent")?.Invoke(current);
+            EventCenter_Singleton.Instance.GetEvent<Action<Card>>("OnTriggerCardEvent")?.Invoke(current);
+            await current.CardEvent.Trigger();
         }
 
         UpdateCardPositions();
