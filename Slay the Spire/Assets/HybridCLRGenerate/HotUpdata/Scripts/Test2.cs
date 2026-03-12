@@ -1,15 +1,16 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Test2 : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class Test2 : MonoBehaviour
 {
-    public void OnPointerDown(PointerEventData eventData)
+    private void Awake()
     {
-        print("Test2Down");
+        print("Awake");
     }
 
-    public void OnPointerUp(PointerEventData eventData)
+    private void Start()
     {
-        print("Test2Up");
+        print("Start");
     }
 }

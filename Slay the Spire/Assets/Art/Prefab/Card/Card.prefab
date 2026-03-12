@@ -1029,6 +1029,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bdfe8722e29c974fb0bfe59b216f467, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  testcard: {fileID: 0}
 --- !u!1 &6564031438802943616
 GameObject:
   m_ObjectHideFlags: 0
@@ -1130,9 +1131,7 @@ GameObject:
   - component: {fileID: -8632270315364346999}
   - component: {fileID: 1920900573492121346}
   - component: {fileID: 4870365042342976565}
-  - component: {fileID: 8762880285762569507}
-  - component: {fileID: 53256219718320625}
-  - component: {fileID: 426507418722227548}
+  - component: {fileID: 3370231055186512107}
   m_Layer: 0
   m_Name: Card
   m_TagString: Untagged
@@ -1192,7 +1191,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handPile: {fileID: 0}
-  enterP: {x: 0, y: 0, z: 0}
 --- !u!114 &4870365042342976565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1210,7 +1208,7 @@ MonoBehaviour:
   smoothTime: 0.1
   bringToFront: 1
   leftClickOnly: 1
---- !u!114 &8762880285762569507
+--- !u!114 &3370231055186512107
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1219,39 +1217,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7722627056249905881}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3c2fcb73cbc29749b67e3d626ff61bc, type: 3}
+  m_Script: {fileID: 11500000, guid: 6096e87f3e5e9ef489c2deb33b7b395a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magnification: 1.1
-  _isInteractable: 1
-  rotation_speed: 0.15
-  move_speed: 0.15
-  magnification_speed: 0.15
---- !u!114 &53256219718320625
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7722627056249905881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ba488bc1b03cad49a63d75d69d86f85, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &426507418722227548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7722627056249905881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 676fcc861f5b4a5439054719bd4a4696, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  move_speed: 0.15
 --- !u!1 &8855185122200895538
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,29 +7,24 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    private async void Start()
+    public GameObject testcard;
+
+    private void Start()
     {
-        print(Time.time);
-        await Test22();
-        print(Time.time);
+       
     }
 
-    public UniTask Test22()
+    private void Update()
     {
-        var completionSource = new UniTaskCompletionSource();
-
-        MoveToScreenCenter(() => { completionSource.TrySetResult(); });
-
-        return completionSource.Task;
+        if (Input.GetMouseButtonDown(0))
+        {
+            OnMouseOver2();
+        }
     }
 
-    public void MoveToScreenCenter(Action callback)
+    public void OnMouseOver2()
     {
-        Vector3 screenCenter =
-            Camera.main.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
-        screenCenter.z = transform.position.z;
-
-        DOTween.To(() => transform.position, value => { transform.position = value; }, screenCenter, 1)
-            .onComplete += () => { callback?.Invoke(); };
+        GameObject temp = Instantiate(testcard, transform);
+        temp.SetActive(false);
     }
 }

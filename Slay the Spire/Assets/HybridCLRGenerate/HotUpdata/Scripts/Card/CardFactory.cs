@@ -15,12 +15,13 @@ public class CardFactory : SingletonBase<CardFactory>
         // 1. 异步加载并实例化预制体
         var prefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/Card/Card.prefab");
         var cardInstance = Object.Instantiate(prefab, parent);
-
+        
         //注册卡牌信息，并更新卡牌UI
         var card = cardInstance.GetComponent<Card>();
         GameObject UI = card.cardView._background.gameObject;
         UI.SetActive(false);
-
+        cardInstance.SetActive(true);
+       await UniTask.Yield();
         card.Initialized(cardEventAbs);
 
         cardInstance.SetActive(isActive);
@@ -53,7 +54,7 @@ public class CardFactory : SingletonBase<CardFactory>
         return cardInstance;
     }
 
-   
+
     public async UniTask<bool> UpdateCardUI(UICard uiCard, CardEvent_Abs cardEventAbs)
     {
         uiCard._infoComponent._background.sprite = cardEventAbs.parameter.background;

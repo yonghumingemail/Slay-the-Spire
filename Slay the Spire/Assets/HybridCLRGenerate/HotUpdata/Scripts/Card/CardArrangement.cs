@@ -147,8 +147,7 @@ public class CardArrangement
             Quaternion rotation = Quaternion.LookRotation(up, Vector3.Cross(up, forward).normalized);
 
             Transform temp = cards[i].transform;
-
-            cards[i].cardInteraction.RecordPositionInfo(splineWorldPos,rotation);
+            
             var positionAnimator = DOTween
                 .To(() => temp.position, value => { temp.position = value; }, splineWorldPos, speed)
                 .SetEase(Ease.OutQuad);
