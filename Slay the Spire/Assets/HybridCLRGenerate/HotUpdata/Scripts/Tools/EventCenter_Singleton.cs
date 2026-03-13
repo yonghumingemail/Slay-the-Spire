@@ -19,6 +19,7 @@ namespace Z_Tools
         public void AddEvent<T>(string eventKey, T _delegate)
             where T : Delegate
         {
+           // Debug.Log(eventKey);
             EventCenter.AddEvent(eventKey + typeof(T), _delegate);
             if (!UnregisteredEnum.TryGetValue(eventKey, out Delegate eventData)) return;
 

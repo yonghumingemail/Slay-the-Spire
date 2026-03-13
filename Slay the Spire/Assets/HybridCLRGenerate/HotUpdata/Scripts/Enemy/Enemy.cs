@@ -23,7 +23,7 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
     private IShieldV shield_V;
 
     private AlertBox _alertBox;
-
+    private bool isSelectCard;
     private void Awake()
     {
         _alertBox = transform.Find("AlertBox").GetComponent<AlertBox>();
@@ -45,6 +45,14 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         eventCenter.AddEvent<Func<IBuffList>>("IBuffList", () => _buffList);
 
         eventCenter.AddEvent<Func<PriorityQueueEventCenter>>("PriorityQueueEventCenter", () => _priorityEventCenter);
+        EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnSelectCard", (card) =>
+        {
+            isSelectCard = true;
+        });
+        EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnUnSelectCard", (card) =>
+        {
+            isSelectCard = false;
+        });
     }
 
     public int Choose(float[] list)
@@ -77,7 +85,8 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (EventCenter_Singleton.Instance.GetEvent<Func<GameObject>>("SelectCard")?.Invoke() != null)
+        
+        if (isSelectCard)
         {
             _alertBox.Show(transform,spriteRenderer.sprite);
             enemySpawner.eventCenter.GetEvent<Action<Transform, Sprite>>("OnSelectEnemy")

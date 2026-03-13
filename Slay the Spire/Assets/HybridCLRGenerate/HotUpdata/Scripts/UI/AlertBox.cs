@@ -6,7 +6,7 @@ using Z_Tools;
 public class AlertBox : MonoBehaviour
 {
     private EnemySpawner enemySpawner;
-    
+
     private SpriteRenderer LeftUp;
     private SpriteRenderer LeftDown;
     private SpriteRenderer RightDown;
@@ -16,6 +16,7 @@ public class AlertBox : MonoBehaviour
     private Color targetColor;
 
     private float speed;
+    public Vector3 offset;
 
     private void Awake()
     {
@@ -31,7 +32,7 @@ public class AlertBox : MonoBehaviour
         LeftDown.color = defaultColor;
         RightDown.color = defaultColor;
         RightUp.color = defaultColor;
-        
+   
     }
 
     public void Show(Transform _transform, Sprite sprite)
@@ -49,11 +50,15 @@ public class AlertBox : MonoBehaviour
 
 
         Vector2 size = sprite.rect.size * _transform.localScale;
-        transform.position = _transform.position;
-        LeftUp.transform.localPosition = new Vector2(-size.x / 2 / sprite.pixelsPerUnit, size.y / 2 / sprite.pixelsPerUnit);
-        LeftDown.transform.localPosition = new Vector2(-size.x / 2 / sprite.pixelsPerUnit, -size.y / 2 / sprite.pixelsPerUnit);
-        RightDown.transform.localPosition = new Vector2(size.x / 2 / sprite.pixelsPerUnit, -size.y / 2 / sprite.pixelsPerUnit);
-        RightUp.transform.localPosition = new Vector2(size.x / 2 / sprite.pixelsPerUnit, size.y / 2 / sprite.pixelsPerUnit);
+        transform.position = _transform.position + offset;
+        LeftUp.transform.localPosition =
+            new Vector2(-size.x / 2 / sprite.pixelsPerUnit, size.y / 2 / sprite.pixelsPerUnit);
+        LeftDown.transform.localPosition =
+            new Vector2(-size.x / 2 / sprite.pixelsPerUnit, -size.y / 2 / sprite.pixelsPerUnit);
+        RightDown.transform.localPosition =
+            new Vector2(size.x / 2 / sprite.pixelsPerUnit, -size.y / 2 / sprite.pixelsPerUnit);
+        RightUp.transform.localPosition =
+            new Vector2(size.x / 2 / sprite.pixelsPerUnit, size.y / 2 / sprite.pixelsPerUnit);
     }
 
     public void Close()
