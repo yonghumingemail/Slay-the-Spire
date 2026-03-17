@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Z_Tools;
@@ -6,24 +7,33 @@ using Z_Tools;
 [Serializable]
 public abstract class CardEvent_Abs
 {
-    public string describe;
-    public int orbValue;
-    public bool canStrengthen = true;
+    public string cardName { get; protected set; }
+    public CardType cardType { get; protected set; }
+    public bool isDirected { get; protected set; }
+    public string defaultDataPtah { get; protected set; }
 
-    public RaycastHit2D target;
+    public string describe { get; set; }
+    public int orbValue { get; set; }
+    public bool canStrengthen { get; set; }
+
+    protected Energy energy;
+
+    public IEventCenter<string> _eventCenter;
+    [SerializeField] protected CardSpriteData spriteData;
+    public CardSpriteData SpriteData => spriteData;
+    public List<ICardEntry> cardEntries { get; protected set; } = new List<ICardEntry>();
 
     protected CardEvent_Abs()
     {
         EventCenter_Singleton.Instance.GetEvent<Func<Energy>>("Energy", (action) => { energy = action.Invoke(); });
     }
 
-    protected Energy energy;
-
-    public IEventCenter<string> _eventCenter;
-   [SerializeField] protected CardParameter parameter;
-    public CardParameter Parameter => parameter;
-    public string defaultDataPtah { get; protected set; }
-
+    public void AddCardEntry(ICardEntry entry)
+    {
+        cardEntries.Add(entry);
+        describe += entry.GetDescription();
+        _eventCenter.GetEvent<Action>("OnCardUpdateUI")?.Invoke();
+    }
 
     public virtual bool CanBeTriggered()
     {
@@ -48,9 +58,8 @@ public abstract class CardEvent_Abs
 
     public virtual async UniTask<CardEvent_Abs> Initialize()
     {
-        var value = await AddressablesMgr.Instance.LoadAssetAsync<CardParameter>(defaultDataPtah);
-        parameter = value.Copy();
-        orbValue = parameter.orbValue;
+        var value = await AddressablesMgr.Instance.LoadAssetAsync<CardSpriteData>(defaultDataPtah);
+        spriteData = value.Copy();
         return this;
     }
 }

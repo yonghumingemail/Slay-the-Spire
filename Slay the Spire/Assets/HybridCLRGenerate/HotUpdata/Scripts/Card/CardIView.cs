@@ -65,19 +65,19 @@ public class CardView
 
     public void UpdateCardTextUI(CardEvent_Abs cardEventAbs)
     {
-        _name.SetText(cardEventAbs.Parameter.cardName);
-        _typeName.SetText(Enum.GetName(cardEventAbs.Parameter.cardType.GetType(), cardEventAbs.Parameter.cardType));
-        _orbValue.SetText(cardEventAbs.Parameter.orbValue.ToString());
+        _name.SetText(cardEventAbs.cardName);
+        _typeName.SetText(Enum.GetName(cardEventAbs.cardType.GetType(), cardEventAbs.cardType));
+        _orbValue.SetText(cardEventAbs.orbValue.ToString());
         _describe.SetText(cardEventAbs.describe);
     }
 
     public void UpdateCardSpriteUI(CardEvent_Abs cardEventAbs)
     {
-        _background.sprite = cardEventAbs.Parameter.background;
-        _frame.sprite = cardEventAbs.Parameter.frame;
-        _banners.sprite = cardEventAbs.Parameter.banner;
-        _image.sprite = cardEventAbs.Parameter.image;
-        _orb.sprite = cardEventAbs.Parameter.orb;
+        _background.sprite = cardEventAbs.SpriteData.background;
+        _frame.sprite = cardEventAbs.SpriteData.frame;
+        _banners.sprite = cardEventAbs.SpriteData.banner;
+        _image.sprite = cardEventAbs.SpriteData.image;
+        _orb.sprite = cardEventAbs.SpriteData.orb;
     }
 
     public void UpdateCardUI(CardEvent_Abs cardEventAbs)

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -16,7 +17,6 @@ public class Card : MonoBehaviour, IEventCenterObject<string>
     [SerializeField] private CardAnimator cardAnimator;
     [SerializeField] private CardInteraction cardInteraction;
     private CardEvent_Abs cardEvent;
-
     public IEventCenter<string> eventCenter { get; private set; } = new EventCenter<string>();
     public HandPile handPile;
 
@@ -27,31 +27,23 @@ public class Card : MonoBehaviour, IEventCenterObject<string>
     public Camera _mainCamera { get; private set; }
 
     private IDrag _drag;
-    private MouseInteraction _mouseInteraction;
+    public MouseInteraction _mouseInteraction { get;private set; }
 
     private void Awake()
     {
+        CancellationTokenSource source = new CancellationTokenSource();
+        
         _drag = GetComponent<IDrag>();
         _mouseInteraction = GetComponent<MouseInteraction>();
         handPile = GetComponentInParent<HandPile>();
-
-        _mouseInteraction.OnMouseEnter += data =>
-        {
-            eventCenter.GetEvent<Action<PointerEventData>>("OnPointerEnter")?.Invoke(data);
-        };
-        _mouseInteraction.OnMouseExit += data =>
-        {
-            eventCenter.GetEvent<Action<PointerEventData>>("OnPointerExit")?.Invoke(data);
-        };
+        
         _mouseInteraction.OnMouseDown += data =>
         {
             EventCenter_Singleton.Instance.GetEvent<Action<Card>>("OnSelectCard")?.Invoke(this);
-            eventCenter.GetEvent<Action<PointerEventData>>("OnPointerDown")?.Invoke(data);
         };
         _mouseInteraction.OnMouseUp += data =>
         {
             EventCenter_Singleton.Instance.GetEvent<Action<Card>>("OnUnSelectCard")?.Invoke(this);
-            eventCenter.GetEvent<Action<PointerEventData>>("OnPointerUp")?.Invoke(data);
             handPile.AddAsyncCardEvent(this);
         };
 
@@ -62,9 +54,7 @@ public class Card : MonoBehaviour, IEventCenterObject<string>
         cardView.Enable(false);
 
         eventCenter.AddEvent<Action>("OnCardUpdateUI", () => cardView.UpdateCardUI(cardEvent));
-
-        eventCenter.AddEvent<Func<UniTask>>("RecycleCard_DiscardPile", OnRecycleCard_DiscardPile);
-        eventCenter.AddEvent<Func<UniTask>>("OnRecycleCard_DrawPile", OnRecycleCard_DrawPile);
+        eventCenter.AddEvent<Func<UniTask>>("CardTriggerAnimator", OnRecycleCard_DiscardPile);
         eventCenter.AddEvent<Action>("UnTriggerCardEvent", () =>
         {
             // 未触发就回到手牌中的位置
@@ -74,6 +64,7 @@ public class Card : MonoBehaviour, IEventCenterObject<string>
                 cardInteraction.rotation,
                 cardInteraction.scale);
         });
+        eventCenter.AddEvent<Func<Card>>("Card", () => this);
 
 
         EventCenter_Singleton.Instance.GetEvent<Func<DiscardPile>>("DiscardPile",
@@ -109,28 +100,6 @@ public class Card : MonoBehaviour, IEventCenterObject<string>
     }
 
 
-    private UniTask OnRecycleCard_DrawPile()
-    {
-        handPile.cardInstances.Remove(this);
-        var source = new UniTaskCompletionSource();
-        cardAnimator.MoveToScreenCenter(gameObject, () =>
-        {
-            cardAnimator.Recycle_DrawPile(gameObject, () =>
-            {
-                gameObject.SetActive(false);
-
-                Vector3 screenCenter =
-                    _mainCamera.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
-                screenCenter.z = transform.position.z;
-                transform.position = screenCenter;
-                transform.localScale = cardInteraction.scale;
-                source.TrySetResult();
-                drawPile.AddCard(this).Forget();
-            });
-        });
-        return source.Task;
-    }
-
     public void Initialized(CardEvent_Abs cardEventAbs)
     {
         gameObject.SetActive(true);
@@ -141,7 +110,7 @@ public class Card : MonoBehaviour, IEventCenterObject<string>
 
         _drag.ClearEvent();
 
-        if (!cardEvent.Parameter.isDirected)
+        if (!cardEvent.isDirected)
         {
             _drag.SetDragEnabled(true);
         }
@@ -158,7 +127,7 @@ public class Card : MonoBehaviour, IEventCenterObject<string>
 
     private void OnDestroy()
     {
-        print("OnDestroy");
+       // print("OnDestroy");
         eventCenter.GetEvent<Action>("OnDestroy")?.Invoke();
         eventCenter.Clear();
         transform.DOKill();

@@ -39,11 +39,12 @@ public class CardInteraction
             y = card._mainCamera.ViewportToWorldPoint(new Vector3(0.5f, 0)).y +
                 card.CardView.Background.bounds.size.y / 2
         };
+
+        card._mouseInteraction.OnMouseDown += OnPointerDown;
+        card._mouseInteraction.OnMouseUp += OnPointerUp;
+        card._mouseInteraction.OnMouseEnter += OnPointerEnter;
+        card._mouseInteraction.OnMouseExit += OnPointerExit;
         
-        _eventCenter.AddEvent<Action<PointerEventData>>("OnPointerEnter", OnPointerEnter);
-        _eventCenter.AddEvent<Action<PointerEventData>>("OnPointerExit", OnPointerExit);
-        _eventCenter.AddEvent<Action<PointerEventData>>("OnPointerDown", OnPointerDown);
-        _eventCenter.AddEvent<Action<PointerEventData>>("OnPointerUp", OnPointerUp);
         _eventCenter.AddEvent<Action>("OnDestroy", OnDestroy);
 
         EventCenter_Singleton.Instance.AddEvent<Action>("OnCardArrangementComplete", OnCardArrangementComplete);

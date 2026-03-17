@@ -20,6 +20,7 @@ namespace Z_Tools
 
         bool RemoveEvent(T eventKey);
         bool RemoveEvent(T eventKey, Delegate _delegate);
+        bool Change(T eventKey,Delegate _delegate);
         bool Clear();
         void Show();
     }

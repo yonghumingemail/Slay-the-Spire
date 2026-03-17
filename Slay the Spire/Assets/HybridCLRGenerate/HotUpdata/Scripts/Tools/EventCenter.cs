@@ -95,6 +95,13 @@ namespace Z_Tools
             return true;
         }
 
+        public bool Change(Key eventKey, Delegate _delegate)
+        {
+            if (!Event_Dic.TryGetValue(eventKey, out var value)) return false;
+            Event_Dic[eventKey]=_delegate;
+            return true;
+        }
+
         public bool Clear()
         {
             Event_Dic.Clear();

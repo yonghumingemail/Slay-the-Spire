@@ -7,6 +7,7 @@ public class Power_BuffObj : BuffObj
     {
         _name =BuffName_E.strength;
         name = Enum.GetName(typeof(BuffName_E), _name);
+        priority =5;
     }
 
     private void Effect(ChangeValueInfo info)

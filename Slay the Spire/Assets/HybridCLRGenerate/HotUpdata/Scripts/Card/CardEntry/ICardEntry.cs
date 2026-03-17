@@ -1,8 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public interface ICardEntry
 {
-    void Trigger(GameObject sender, [NotNull] GameObject receiver, int stack);
-    string GetDescription(int stack);
+    UniTask Trigger(GameObject sender, [NotNull] GameObject receiver);
+    string GetDescription();
 }

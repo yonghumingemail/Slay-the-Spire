@@ -52,14 +52,14 @@ public class CardFactory : SingletonBase<CardFactory>
 
     public async UniTask<bool> UpdateCardUI(UICard uiCard, CardEvent_Abs cardEventAbs)
     {
-        uiCard._infoComponent._background.sprite = cardEventAbs.Parameter.background;
-        uiCard._infoComponent._frame.sprite = cardEventAbs.Parameter.frame;
-        uiCard._infoComponent._banners.sprite = cardEventAbs.Parameter.banner;
-        uiCard._infoComponent._orb.sprite = cardEventAbs.Parameter.orb;
-        uiCard._infoComponent._image.sprite = cardEventAbs.Parameter.image;
+        uiCard._infoComponent._background.sprite = cardEventAbs.SpriteData.background;
+        uiCard._infoComponent._frame.sprite = cardEventAbs.SpriteData.frame;
+        uiCard._infoComponent._banners.sprite = cardEventAbs.SpriteData.banner;
+        uiCard._infoComponent._orb.sprite = cardEventAbs.SpriteData.orb;
+        uiCard._infoComponent._image.sprite = cardEventAbs.SpriteData.image;
 
-        uiCard._infoComponent._name.SetText(cardEventAbs.Parameter.cardName);
-        uiCard._infoComponent._typeName.SetText(Enum.GetName(cardEventAbs.Parameter.cardType.GetType(), cardEventAbs.Parameter.cardType));
+        uiCard._infoComponent._name.SetText(cardEventAbs.cardName);
+        uiCard._infoComponent._typeName.SetText(Enum.GetName(cardEventAbs.cardType.GetType(), cardEventAbs.cardType));
         uiCard._infoComponent._point.SetText(cardEventAbs.orbValue.ToString());
         uiCard._infoComponent._describe.SetText(cardEventAbs.describe);
 
