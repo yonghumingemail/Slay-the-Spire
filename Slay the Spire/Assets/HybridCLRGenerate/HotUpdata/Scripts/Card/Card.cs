@@ -1,42 +1,61 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Z_Tools;
+[Serializable]
+public struct CardTextInfo
+{
+    public string cardName;
+    public CardType cardType;
+    public string defaultDataPtah;
+    public string describe;
+    public int orbValue;
+    public bool isStrengthen;
+    public List<ICardEntry> cardEntries;
 
-public class Card : MonoBehaviour, IEventCenterObject<string>
+    public CardTextInfo(string cardName, CardType cardType, string defaultDataPtah, string describe, int orbValue, bool isStrengthen)
+    {
+        this.cardName = cardName;
+        this.cardType = cardType;
+        this.defaultDataPtah = defaultDataPtah;
+        this.describe = describe;
+        this.orbValue = orbValue;
+        this.isStrengthen = isStrengthen;
+        cardEntries = new List<ICardEntry>();
+    }
+}
+
+public abstract class Card : MonoBehaviour, IEventCenterObject<string>
 {
     public CardView CardView => cardView;
     public CardAnimator CardAnimator => cardAnimator;
     public CardInteraction CardInteraction => cardInteraction;
-    public CardEvent_Abs CardEvent => cardEvent;
+    public CardTextInfo CardTextInfo => cardTextInfo;
 
-    [SerializeField] private CardView cardView;
-    [SerializeField] private CardAnimator cardAnimator;
-    [SerializeField] private CardInteraction cardInteraction;
-    private CardEvent_Abs cardEvent;
-    public IEventCenter<string> eventCenter { get; private set; } = new EventCenter<string>();
+    [SerializeField] protected CardView cardView;
+    [SerializeField] protected CardAnimator cardAnimator;
+    [SerializeField] protected CardInteraction cardInteraction;
+    [SerializeField] protected CardTextInfo cardTextInfo;
+    public IEventCenter<string> eventCenter { get; protected set; } = new EventCenter<string>();
     public HandPile handPile;
 
-    private DiscardPile discardPile;
-    private DrawPile drawPile;
-    private Outline outline;
+    protected DiscardPile discardPile;
+    [SerializeField] protected CardSpriteInfo spriteInfo;
+    public CardSpriteInfo SpriteInfo => spriteInfo;
 
-    public Camera _mainCamera { get; private set; }
+    public Camera _mainCamera { get; protected set; }
+    public MouseInteraction _mouseInteraction { get; protected set; }
+    protected Energy energy;
 
-    private IDrag _drag;
-    public MouseInteraction _mouseInteraction { get;private set; }
-
-    private void Awake()
+    protected virtual void Awake()
     {
-        CancellationTokenSource source = new CancellationTokenSource();
-        
-        _drag = GetComponent<IDrag>();
         _mouseInteraction = GetComponent<MouseInteraction>();
         handPile = GetComponentInParent<HandPile>();
-        
+
         _mouseInteraction.OnMouseDown += data =>
         {
             EventCenter_Singleton.Instance.GetEvent<Action<Card>>("OnSelectCard")?.Invoke(this);
@@ -44,40 +63,54 @@ public class Card : MonoBehaviour, IEventCenterObject<string>
         _mouseInteraction.OnMouseUp += data =>
         {
             EventCenter_Singleton.Instance.GetEvent<Action<Card>>("OnUnSelectCard")?.Invoke(this);
-            handPile.AddAsyncCardEvent(this);
         };
 
         _mainCamera = Camera.main;
         cardView = new CardView(eventCenter, gameObject);
         cardAnimator = new CardAnimator(eventCenter, gameObject, _mainCamera);
         cardInteraction = new CardInteraction(eventCenter, this);
-        cardView.Enable(false);
 
-        eventCenter.AddEvent<Action>("OnCardUpdateUI", () => cardView.UpdateCardUI(cardEvent));
-        eventCenter.AddEvent<Func<UniTask>>("CardTriggerAnimator", OnRecycleCard_DiscardPile);
-        eventCenter.AddEvent<Action>("UnTriggerCardEvent", () =>
-        {
-            // 未触发就回到手牌中的位置
-            cardInteraction.TransformEffect(
-                gameObject,
-                cardInteraction.position,
-                cardInteraction.rotation,
-                cardInteraction.scale);
-        });
-        eventCenter.AddEvent<Func<Card>>("Card", () => this);
-
+        EventCenter_Singleton.Instance.GetEvent<Func<Energy>>("Energy", (action) => { energy = action.Invoke(); });
 
         EventCenter_Singleton.Instance.GetEvent<Func<DiscardPile>>("DiscardPile",
             action => { discardPile = action.Invoke(); });
-        EventCenter_Singleton.Instance.GetEvent<Func<DrawPile>>("drawPile",
-            action => { drawPile = action.Invoke(); });
     }
 
-    private void Start()
+    public void AddCardEntry<T>(T entry) where T : ICardEntry
     {
+        cardTextInfo.cardEntries.Add(entry);
+        cardTextInfo.describe += entry.GetDescription();
+        cardView.UpdateCardUI(this);
     }
 
-    private UniTask OnRecycleCard_DiscardPile()
+    public virtual CardTextInfo CopyCard()
+    {
+        var returnValue = new CardTextInfo();
+        returnValue.cardName = cardTextInfo.cardName;
+        returnValue.cardType = cardTextInfo.cardType;
+        returnValue.defaultDataPtah = cardTextInfo.defaultDataPtah;
+        returnValue.describe = cardTextInfo.describe;
+        returnValue.orbValue = cardTextInfo.orbValue;
+        returnValue.isStrengthen = cardTextInfo.isStrengthen;
+        returnValue.cardEntries = new List<ICardEntry>();
+        foreach (var VARIABLE in cardTextInfo.cardEntries)
+        {
+            returnValue.cardEntries.Add(VARIABLE);
+        }
+
+        return returnValue;
+    }
+
+    public virtual bool CanBeTriggered()
+    {
+        return energy._energy - cardTextInfo.orbValue >= 0;
+    }
+
+    public abstract UniTask Trigger(CancellationToken cancellationToken, bool conditionCheck = true);
+    public abstract void Strengthen();
+    public abstract UniTask Initialized();
+
+    protected virtual UniTask CardTriggerAnimator()
     {
         handPile.cardInstances.Remove(this);
         var source = new UniTaskCompletionSource();
@@ -99,35 +132,22 @@ public class Card : MonoBehaviour, IEventCenterObject<string>
         return source.Task;
     }
 
-
-    public void Initialized(CardEvent_Abs cardEventAbs)
+    protected virtual async UniTask Initialized(string cardName, CardType cardType, int orbValue,
+        string defaultDataPtah)
     {
-        gameObject.SetActive(true);
+        cardTextInfo.cardName = cardName;
+        cardTextInfo.cardType = cardType;
+        cardTextInfo.orbValue = orbValue;
+        cardTextInfo.defaultDataPtah = defaultDataPtah;
+        cardTextInfo.isStrengthen = false;
+        cardTextInfo.cardEntries = new List<ICardEntry>();
 
-        cardEvent?.OnDestroy();
-        cardEvent = cardEventAbs;
-        cardEventAbs.EventRegister(eventCenter);
-
-        _drag.ClearEvent();
-
-        if (!cardEvent.isDirected)
-        {
-            _drag.SetDragEnabled(true);
-        }
-        else
-        {
-            _drag.SetDragEnabled(false);
-            handPile.cardDragLine.Register(eventCenter);
-        }
-
-        cardView.UpdateCardUI(cardEventAbs);
-        cardView.Enable(true);
+        spriteInfo = await AddressablesMgr.Instance.LoadAssetAsync<CardSpriteInfo>(defaultDataPtah);
+        cardView.UpdateCardUI(this);
     }
 
-
-    private void OnDestroy()
+    protected virtual void OnDestroy()
     {
-       // print("OnDestroy");
         eventCenter.GetEvent<Action>("OnDestroy")?.Invoke();
         eventCenter.Clear();
         transform.DOKill();

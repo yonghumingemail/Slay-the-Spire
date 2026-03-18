@@ -11,7 +11,7 @@ using Random = System.Random;
 public class Pile : MonoBehaviour
 {
     // 当前堆中的卡牌事件列表
-    public List<CardEvent_Abs> cardList { get; protected set; } = new List<CardEvent_Abs>();
+    public List<Card> cardList { get; protected set; } = new List<Card>();
 
     // UI引用
     protected Button returnUI;          // 返回按钮
@@ -62,65 +62,65 @@ public class Pile : MonoBehaviour
     // 显示UI卡牌视图
     public virtual void ShowUICard()
     {
-        isEnable = true;
-        View.blocksRaycasts = true;  // 启用射线检测（可交互）
-        View.alpha = 1;              // 完全显示
-        
-        // 同时显示卡牌滚动视图
-        cardScrollView.canvasGroup.blocksRaycasts = true;
-        cardScrollView.canvasGroup.alpha = 1;
-
-        // 将卡牌按顺序添加到滚动视图中
-        int i = 0;
-        foreach (var card in cardList)
-        {
-            cardScrollView.cardDic[card].uiCard.transform.SetSiblingIndex(i);
-            cardScrollView.cardDic[card].uiCard.gameObject.SetActive(true);
-            i++;
-        }
+        // isEnable = true;
+        // View.blocksRaycasts = true;  // 启用射线检测（可交互）
+        // View.alpha = 1;              // 完全显示
+        //
+        // // 同时显示卡牌滚动视图
+        // cardScrollView.canvasGroup.blocksRaycasts = true;
+        // cardScrollView.canvasGroup.alpha = 1;
+        //
+        // // 将卡牌按顺序添加到滚动视图中
+        // int i = 0;
+        // foreach (var card in cardList)
+        // {
+        //     cardScrollView.cardDic[card].transform.SetSiblingIndex(i);
+        //     cardScrollView.cardDic[card].uiCard.gameObject.SetActive(true);
+        //     i++;
+        // }
     }
 
     // 关闭UI卡牌视图
     public virtual void CloseUICard()
     {
-        isEnable = false;
-        View.blocksRaycasts = false; // 禁用射线检测
-        View.alpha = 0;              // 完全隐藏
-        
-        // 同时隐藏卡牌滚动视图
-        cardScrollView.canvasGroup.blocksRaycasts = false;
-        cardScrollView.canvasGroup.alpha = 0;
-
-        // 隐藏所有卡牌UI
-        foreach (var card in cardList)
-        {
-            cardScrollView.cardDic[card].uiCard.gameObject.SetActive(false);
-        }
+        // isEnable = false;
+        // View.blocksRaycasts = false; // 禁用射线检测
+        // View.alpha = 0;              // 完全隐藏
+        //
+        // // 同时隐藏卡牌滚动视图
+        // cardScrollView.canvasGroup.blocksRaycasts = false;
+        // cardScrollView.canvasGroup.alpha = 0;
+        //
+        // // 隐藏所有卡牌UI
+        // foreach (var card in cardList)
+        // {
+        //     cardScrollView.cardDic[card].uiCard.gameObject.SetActive(false);
+        // }
     }
 
     // 添加卡牌到堆中
     public virtual async UniTask AddCard(Card card)
     {
-        // 如果卡牌不在滚动视图字典中，则创建UI实例
-        if (!cardScrollView.cardDic.ContainsKey(card.CardEvent))
-        {
-            var instance =
-                await CardFactory.Instance.CreateCardInstanceAsync(card.CardEvent, cardScrollView.content);
-
-            cardScrollView.cardDic.Add(card.CardEvent, (card, instance.GetComponent<UICard>()));
-        }
+        // // 如果卡牌不在滚动视图字典中，则创建UI实例
+        // if (!cardScrollView.cardDic.ContainsKey(card))
+        // {
+        //     var instance =
+        //         await CardFactory.Instance.CreateCardInstanceAsync(card.CardEvent, cardScrollView.content);
+        //
+        //     cardScrollView.cardDic.Add(card.CardEvent, (card, instance.GetComponent<UICard>()));
+        // }
 
         // 添加到卡牌列表
-        cardList.Add(card.CardEvent);
+        cardList.Add(card);
 
         // 更新计数显示
         countText.SetText(cardList.Count.ToString());
     }
 
     // 获取堆中所有卡牌并清空当前堆
-    public virtual List<CardEvent_Abs> GetCarAll()
+    public virtual List<Card> GetCarAll()
     {
-        var returnList = new List<CardEvent_Abs>(cardList);
+        var returnList = new List<Card>(cardList);
         cardList.Clear();
         countText.SetText(cardList.Count.ToString());
         return returnList;

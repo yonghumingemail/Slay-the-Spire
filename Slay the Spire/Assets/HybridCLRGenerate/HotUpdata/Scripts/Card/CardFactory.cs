@@ -10,21 +10,23 @@ using Object = UnityEngine.Object;
 
 public class CardFactory : SingletonBase<CardFactory>
 {
-    public async UniTask<Card> CreateCardInstanceAsync(CardEvent_Abs cardEventAbs, Transform parent, bool isActive = false)
+    public async UniTask<Card> CreateCardInstanceAsync(CardEvent_Abs cardEventAbs, Transform parent,
+        bool isActive = false)
     {
         // 1. 异步加载并实例化预制体
         var prefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/Card/Card.prefab");
         var cardInstance = Object.Instantiate(prefab, parent);
-       
+
         //注册卡牌信息，并更新卡牌UI
         var card = cardInstance.GetComponent<Card>();
-        card.Initialized(cardEventAbs);
+        await card.Initialized();
 
         cardInstance.SetActive(isActive);
         return card;
     }
 
-    public async UniTask<GameObject> CreateCardInstanceAsync(CardEvent_Abs cardEventAbs, RectTransform parent, bool isActive = false)
+    public async UniTask<GameObject> CreateCardInstanceAsync(CardEvent_Abs cardEventAbs, RectTransform parent,
+        bool isActive = false)
     {
         // 1. 异步加载并实例化预制体
         var prefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/Card/Card_UI.prefab");
@@ -52,11 +54,11 @@ public class CardFactory : SingletonBase<CardFactory>
 
     public async UniTask<bool> UpdateCardUI(UICard uiCard, CardEvent_Abs cardEventAbs)
     {
-        uiCard._infoComponent._background.sprite = cardEventAbs.SpriteData.background;
-        uiCard._infoComponent._frame.sprite = cardEventAbs.SpriteData.frame;
-        uiCard._infoComponent._banners.sprite = cardEventAbs.SpriteData.banner;
-        uiCard._infoComponent._orb.sprite = cardEventAbs.SpriteData.orb;
-        uiCard._infoComponent._image.sprite = cardEventAbs.SpriteData.image;
+        uiCard._infoComponent._background.sprite = cardEventAbs.SpriteInfo.background;
+        uiCard._infoComponent._frame.sprite = cardEventAbs.SpriteInfo.frame;
+        uiCard._infoComponent._banners.sprite = cardEventAbs.SpriteInfo.banner;
+        uiCard._infoComponent._orb.sprite = cardEventAbs.SpriteInfo.orb;
+        uiCard._infoComponent._image.sprite = cardEventAbs.SpriteInfo.image;
 
         uiCard._infoComponent._name.SetText(cardEventAbs.cardName);
         uiCard._infoComponent._typeName.SetText(Enum.GetName(cardEventAbs.cardType.GetType(), cardEventAbs.cardType));

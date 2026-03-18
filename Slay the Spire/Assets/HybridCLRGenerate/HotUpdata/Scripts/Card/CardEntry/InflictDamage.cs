@@ -6,7 +6,6 @@ using UnityEngine;
 public struct InflictDamage : ICardEntry
 {
     public int damage;
-
     public InflictDamage(int damage)
     {
         this.damage = damage;

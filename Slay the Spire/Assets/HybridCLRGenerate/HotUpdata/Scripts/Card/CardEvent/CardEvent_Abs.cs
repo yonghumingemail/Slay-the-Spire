@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Z_Tools;
 
 [Serializable]
@@ -19,8 +20,8 @@ public abstract class CardEvent_Abs
     protected Energy energy;
 
     public IEventCenter<string> _eventCenter;
-    [SerializeField] protected CardSpriteData spriteData;
-    public CardSpriteData SpriteData => spriteData;
+    [FormerlySerializedAs("spriteData")] [SerializeField] protected CardSpriteInfo spriteInfo;
+    public CardSpriteInfo SpriteInfo => spriteInfo;
     public List<ICardEntry> cardEntries { get; protected set; } = new List<ICardEntry>();
 
     protected CardEvent_Abs()
@@ -58,8 +59,8 @@ public abstract class CardEvent_Abs
 
     public virtual async UniTask<CardEvent_Abs> Initialize()
     {
-        var value = await AddressablesMgr.Instance.LoadAssetAsync<CardSpriteData>(defaultDataPtah);
-        spriteData = value.Copy();
+        var value = await AddressablesMgr.Instance.LoadAssetAsync<CardSpriteInfo>(defaultDataPtah);
+       // spriteData = value.Copy();
         return this;
     }
 }

@@ -1115,7 +1115,6 @@ GameObject:
   m_Component:
   - component: {fileID: 226703569809468817}
   - component: {fileID: -8632270315364346999}
-  - component: {fileID: 1920900573492121346}
   - component: {fileID: 4870365042342976565}
   - component: {fileID: 3370231055186512107}
   m_Layer: 0
@@ -1164,44 +1163,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1920900573492121346
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7722627056249905881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5b7375abba1b604bb362046f7d48c42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cardView:
-    _background: {fileID: 0}
-    _frame: {fileID: 0}
-    _banners: {fileID: 0}
-    _image: {fileID: 0}
-    _orb: {fileID: 0}
-    _name: {fileID: 0}
-    _typeName: {fileID: 0}
-    _orbValue: {fileID: 0}
-    _describe: {fileID: 0}
-    cardOutline: {fileID: 0}
-  cardAnimator:
-    _animator: {fileID: 0}
-    move_speed: 0
-  cardInteraction:
-    _position: {x: 0, y: 0, z: 0}
-    _rotation: {x: 0, y: 0, z: 0, w: 0}
-    _scale: {x: 0, y: 0, z: 0}
-    MouseOverPosition: {x: 0, y: 0, z: 0}
-    MouseOverScale: {x: 0, y: 0, z: 0}
-    isInteractable: 0
-    magnification: 0
-    rotation_speed: 0
-    move_speed: 0
-    magnification_speed: 0
-  handPile: {fileID: 0}
 --- !u!114 &4870365042342976565
 MonoBehaviour:
   m_ObjectHideFlags: 0

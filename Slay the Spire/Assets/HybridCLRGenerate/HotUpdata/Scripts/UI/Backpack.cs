@@ -21,53 +21,11 @@ public class Backpack : Pile
 
     private void Start()
     {
-        Test().Forget();
+     
     }
+    
 
-    private async UniTaskVoid Test()
-    {
-
-        List<UniTask<Card>> tasks = new List<UniTask<Card>>()
-        {
-            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Strike()).Initialize(),
-                _handPile.transform),
-            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Strike()).Initialize(),
-                _handPile.transform),
-            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Strike()).Initialize(),
-                _handPile.transform),
-            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Strike()).Initialize(),
-                _handPile.transform),
-            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Strike()).Initialize(),
-                _handPile.transform),
-            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Bash()).Initialize(),
-                _handPile.transform),
-            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Bash()).Initialize(),
-                _handPile.transform),
-            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Bash()).Initialize(),
-                _handPile.transform),
-            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Bash()).Initialize(),
-                _handPile.transform),
-            CardFactory.Instance.CreateCardInstanceAsync(await (new CardEvent_Ironclad_Bash()).Initialize(),
-                _handPile.transform),
-        };
-
-
-        var objinstace = await UniTask.WhenAll(tasks);
-        foreach (var VARIABLE in objinstace)
-        {
-            await AddCard(VARIABLE);
-        }
-        EventCenter_Singleton.Instance.GetEvent<Func<DrawPile>>("DrawPile", (action) =>
-        {
-          var drawPile = action.Invoke();
-          foreach (var VARIABLE in objinstace)
-          {
-              drawPile.AddCard(VARIABLE).Forget();
-          }
-        });
-    }
-
-    public void RemoveCard(CardEvent_Abs cardEvent)
+    public void RemoveCard(Card cardEvent)
     {
         cardList.Remove(cardEvent);
         cardScrollView.cardDic.Remove(cardEvent);

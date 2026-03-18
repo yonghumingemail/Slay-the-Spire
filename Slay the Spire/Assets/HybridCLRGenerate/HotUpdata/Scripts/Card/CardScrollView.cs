@@ -7,7 +7,7 @@ public class CardScrollView : MonoBehaviour
 {
     public RectTransform content;
     public CanvasGroup canvasGroup { get; private set; }
-    public Dictionary<CardEvent_Abs,(Card card, UICard uiCard)> cardDic=new Dictionary<CardEvent_Abs,(Card card, UICard uiCard)>();
+    public Dictionary<Card, UICard> cardDic = new Dictionary<Card, UICard>();
 
     private void Awake()
     {
@@ -15,7 +15,7 @@ public class CardScrollView : MonoBehaviour
         canvasGroup = GetComponent<CanvasGroup>();
         canvasGroup.alpha = 0;
         canvasGroup.blocksRaycasts = false;
-        
+
         EventCenter_Singleton.Instance.AddEvent<Func<CardScrollView>>("CardScrollView", () => this);
     }
 }

@@ -37,36 +37,38 @@ public class CardDragLine : MonoBehaviour
     }
 
 
-    public void Register(IEventCenter<string> eventCenter)
+    public void Register(MouseInteraction mouseInteraction)
     {
-        eventCenter.AddEvent<Action<PointerEventData>>("OnPointerDown", (instanceObj) =>
-        {
-            transform.position = instanceObj.position;
-            gameObject.SetActive(true);
-            foreach (var t in lines)
-            {
-                t.gameObject.SetActive(true);
-            }
-
-            Trigger(instanceObj).Forget();
-        });
-
-        eventCenter.AddEvent<Action<PointerEventData>>("OnPointerUp", (instanceObj) =>
-        {
-            _tokenSource?.Cancel();
-            _tokenSource?.Dispose();
-
-
-            gameObject.SetActive(false);
-            foreach (var t in sprites)
-            {
-                t.color = defaultColor;
-                t.transform.localPosition = Vector3.zero;
-            }
-        });
+        mouseInteraction.OnMouseDown += _OnMouseDown;
+        mouseInteraction.OnMouseUp += _OnMouseUp;
     }
 
     private CancellationTokenSource _tokenSource;
+
+    private void _OnMouseDown(PointerEventData _data)
+    {
+        transform.position = _data.position;
+        gameObject.SetActive(true);
+        foreach (var t in lines)
+        {
+            t.gameObject.SetActive(true);
+        }
+        Trigger(_data).Forget();
+    }
+
+    private void _OnMouseUp(PointerEventData _data)
+    {
+        _tokenSource?.Cancel();
+        _tokenSource?.Dispose();
+
+
+        gameObject.SetActive(false);
+        foreach (var t in sprites)
+        {
+            t.color = defaultColor;
+            t.transform.localPosition = Vector3.zero;
+        }
+    }
 
     private async UniTaskVoid Trigger(PointerEventData _data)
     {

@@ -1,6 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using TMPro;
+using UnityEditor.U2D;
 using UnityEngine;
 using Z_Tools;
 
@@ -30,7 +31,7 @@ public class CardView
     [SerializeField] private Outline cardOutline;
 
 
-    public CardView(IEventCenter<string> eventCenter,GameObject obj)
+    public CardView(IEventCenter<string> eventCenter, GameObject obj)
     {
         _background = obj.transform.Find("UI").GetComponent<SpriteRenderer>();
         _frame = obj.transform.Find("UI/Head/Frame").GetComponent<SpriteRenderer>();
@@ -63,26 +64,26 @@ public class CardView
         _background.gameObject.SetActive(enable);
     }
 
-    public void UpdateCardTextUI(CardEvent_Abs cardEventAbs)
+    public void UpdateCardTextUI(CardTextInfo cardText)
     {
-        _name.SetText(cardEventAbs.cardName);
-        _typeName.SetText(Enum.GetName(cardEventAbs.cardType.GetType(), cardEventAbs.cardType));
-        _orbValue.SetText(cardEventAbs.orbValue.ToString());
-        _describe.SetText(cardEventAbs.describe);
+        _name.SetText(cardText.cardName);
+        _typeName.SetText(Enum.GetName(cardText.cardType.GetType(), cardText.cardType));
+        _orbValue.SetText(cardText.orbValue.ToString());
+        _describe.SetText(cardText.describe);
     }
 
-    public void UpdateCardSpriteUI(CardEvent_Abs cardEventAbs)
+    public void UpdateCardSpriteUI(CardSpriteInfo SpriteInfo)
     {
-        _background.sprite = cardEventAbs.SpriteData.background;
-        _frame.sprite = cardEventAbs.SpriteData.frame;
-        _banners.sprite = cardEventAbs.SpriteData.banner;
-        _image.sprite = cardEventAbs.SpriteData.image;
-        _orb.sprite = cardEventAbs.SpriteData.orb;
+        _background.sprite = SpriteInfo.background;
+        _frame.sprite = SpriteInfo.frame;
+        _banners.sprite = SpriteInfo.banner;
+        _image.sprite = SpriteInfo.image;
+        _orb.sprite = SpriteInfo.orb;
     }
 
-    public void UpdateCardUI(CardEvent_Abs cardEventAbs)
+    public void UpdateCardUI(Card card)
     {
-        UpdateCardTextUI(cardEventAbs);
-        UpdateCardSpriteUI(cardEventAbs);
+        UpdateCardTextUI(card.CardTextInfo);
+        UpdateCardSpriteUI(card.SpriteInfo);
     }
 }

@@ -25,7 +25,7 @@ public class DrawPile : Pile
         List<Card> returnCards = new List<Card>(count);
         foreach (var card in cards)
         {
-            returnCards.Add(cardScrollView.cardDic[card].card);
+            returnCards.Add(card);
         }
 
         cardList.RemoveAll(card => cards.Contains(card));
