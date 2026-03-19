@@ -6,69 +6,75 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Z_Tools;
-[Serializable]
-public struct CardTextInfo
-{
-    public string cardName;
-    public CardType cardType;
-    public string defaultDataPtah;
-    public string describe;
-    public int orbValue;
-    public bool isStrengthen;
-    public List<ICardEntry> cardEntries;
 
-    public CardTextInfo(string cardName, CardType cardType, string defaultDataPtah, string describe, int orbValue, bool isStrengthen)
-    {
-        this.cardName = cardName;
-        this.cardType = cardType;
-        this.defaultDataPtah = defaultDataPtah;
-        this.describe = describe;
-        this.orbValue = orbValue;
-        this.isStrengthen = isStrengthen;
-        cardEntries = new List<ICardEntry>();
-    }
-}
 
 public abstract class Card : MonoBehaviour, IEventCenterObject<string>
 {
+    #region Property
+
     public CardView CardView => cardView;
     public CardAnimator CardAnimator => cardAnimator;
-    public CardInteraction CardInteraction => cardInteraction;
-    public CardTextInfo CardTextInfo => cardTextInfo;
+    public CardExteriorInfo ExteriorInfo => exteriorInfo;
+
+    #endregion
 
     [SerializeField] protected CardView cardView;
     [SerializeField] protected CardAnimator cardAnimator;
-    [SerializeField] protected CardInteraction cardInteraction;
-    [SerializeField] protected CardTextInfo cardTextInfo;
+    [SerializeField] protected CardExteriorInfo exteriorInfo;
     public IEventCenter<string> eventCenter { get; protected set; } = new EventCenter<string>();
     public HandPile handPile;
 
-    protected DiscardPile discardPile;
-    [SerializeField] protected CardSpriteInfo spriteInfo;
-    public CardSpriteInfo SpriteInfo => spriteInfo;
-
     public Camera _mainCamera { get; protected set; }
     public MouseInteraction _mouseInteraction { get; protected set; }
+
     protected Energy energy;
+    protected DiscardPile discardPile;
+
+
+    public string cardName;
+    public CardType cardType;
+    public int orbValue;
+    public List<ICardEntry> cardEntries { get; protected set; }
+    public string describe { get; protected set; }
+    public bool isStrengthen { get; protected set; }
+
+
+    [Header("位置信息")] [SerializeField] protected Vector3 position;
+    [SerializeField] protected Quaternion rotation;
+    [SerializeField] protected Vector3 scale;
+    [SerializeField] protected Vector3 mouseOverPosition;
+    [SerializeField] protected Vector3 mouseOverScale;
+
+
+    public bool _isDragging;
+    public bool isInteractable = true;
+    public float magnification = 1.1f;
 
     protected virtual void Awake()
     {
         _mouseInteraction = GetComponent<MouseInteraction>();
         handPile = GetComponentInParent<HandPile>();
 
-        _mouseInteraction.OnMouseDown += data =>
+        _mainCamera = Camera.main;
+        cardView = new CardView(this);
+        cardAnimator = new CardAnimator(this, _mainCamera);
+
+        scale = transform.localScale;
+        mouseOverScale = transform.localScale * magnification;
+        mouseOverPosition = new Vector3
         {
-            EventCenter_Singleton.Instance.GetEvent<Action<Card>>("OnSelectCard")?.Invoke(this);
-        };
-        _mouseInteraction.OnMouseUp += data =>
-        {
-            EventCenter_Singleton.Instance.GetEvent<Action<Card>>("OnUnSelectCard")?.Invoke(this);
+            z = -0.1f * handPile.maxHandSize - 0.1f,
+            y = _mainCamera.ViewportToWorldPoint(new Vector3(0.5f, 0)).y +
+                CardView.Background.bounds.size.y / 2
         };
 
-        _mainCamera = Camera.main;
-        cardView = new CardView(eventCenter, gameObject);
-        cardAnimator = new CardAnimator(eventCenter, gameObject, _mainCamera);
-        cardInteraction = new CardInteraction(eventCenter, this);
+        _mouseInteraction.OnMouseDownDelegate += OnPointerDown;
+        _mouseInteraction.OnMouseUpDelegate += OnPointerUp;
+        _mouseInteraction.OnMouseEnterDelegate += OnPointerEnter;
+        _mouseInteraction.OnMouseExitDelegate += OnPointerExit;
+
+        EventCenter_Singleton.Instance.AddEvent<Action>("OnCardArrangementComplete", OnCardArrangementComplete);
+        EventCenter_Singleton.Instance.AddEvent<Action>("OnStartCardArrangement", OnStartCardArrangement);
 
         EventCenter_Singleton.Instance.GetEvent<Func<Energy>>("Energy", (action) => { energy = action.Invoke(); });
 
@@ -76,39 +82,47 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
             action => { discardPile = action.Invoke(); });
     }
 
-    public void AddCardEntry<T>(T entry) where T : ICardEntry
+    #region abstract methods
+
+    public abstract UniTask<bool> Trigger(CancellationToken cancellationToken, bool conditionCheck = true);
+    public abstract void Strengthen();
+    public abstract UniTask Initialized();
+
+    #endregion
+
+
+    public virtual void AddCardEntry<T>(T entry) where T : ICardEntry
     {
-        cardTextInfo.cardEntries.Add(entry);
-        cardTextInfo.describe += entry.GetDescription();
+        cardEntries.Add(entry);
+        describe += entry.GetDescription();
         cardView.UpdateCardUI(this);
     }
 
-    public virtual CardTextInfo CopyCard()
+    public virtual void OnUnSelectedCard()
     {
-        var returnValue = new CardTextInfo();
-        returnValue.cardName = cardTextInfo.cardName;
-        returnValue.cardType = cardTextInfo.cardType;
-        returnValue.defaultDataPtah = cardTextInfo.defaultDataPtah;
-        returnValue.describe = cardTextInfo.describe;
-        returnValue.orbValue = cardTextInfo.orbValue;
-        returnValue.isStrengthen = cardTextInfo.isStrengthen;
-        returnValue.cardEntries = new List<ICardEntry>();
-        foreach (var VARIABLE in cardTextInfo.cardEntries)
-        {
-            returnValue.cardEntries.Add(VARIABLE);
-        }
-
-        return returnValue;
+        cardAnimator.TransformEffect(gameObject, position, rotation, scale);
     }
 
     public virtual bool CanBeTriggered()
     {
-        return energy._energy - cardTextInfo.orbValue >= 0;
+        return energy._energy - ExteriorInfo.orbValue >= 0;
     }
 
-    public abstract UniTask Trigger(CancellationToken cancellationToken, bool conditionCheck = true);
-    public abstract void Strengthen();
-    public abstract UniTask Initialized();
+    public virtual void Enable(bool enable)
+    {
+        if (enable)
+        {
+            gameObject.SetActive(true);
+            cardView.Enable(true);
+            isInteractable = true;
+        }
+        else
+        {
+            gameObject.SetActive(false);
+            cardView.Enable(false);
+            isInteractable = false;
+        }
+    }
 
     protected virtual UniTask CardTriggerAnimator()
     {
@@ -123,7 +137,7 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
                     _mainCamera.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
                 screenCenter.z = transform.position.z;
                 transform.position = screenCenter;
-                transform.localScale = cardInteraction.scale;
+                transform.localScale = scale;
 
                 discardPile.AddCard(this).Forget();
                 source.TrySetResult();
@@ -132,22 +146,70 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
         return source.Task;
     }
 
-    protected virtual async UniTask Initialized(string cardName, CardType cardType, int orbValue,
-        string defaultDataPtah)
-    {
-        cardTextInfo.cardName = cardName;
-        cardTextInfo.cardType = cardType;
-        cardTextInfo.orbValue = orbValue;
-        cardTextInfo.defaultDataPtah = defaultDataPtah;
-        cardTextInfo.isStrengthen = false;
-        cardTextInfo.cardEntries = new List<ICardEntry>();
 
-        spriteInfo = await AddressablesMgr.Instance.LoadAssetAsync<CardSpriteInfo>(defaultDataPtah);
+    protected virtual async UniTask Initialized(string defaultDataPtah)
+    {
+        exteriorInfo = await AddressablesMgr.Instance.LoadAssetAsync<CardExteriorInfo>(defaultDataPtah);
+
+        isStrengthen = false;
+        cardEntries = new List<ICardEntry>();
+        cardName = exteriorInfo.cardName;
+        cardType = exteriorInfo.cardType;
+        orbValue = exteriorInfo.orbValue;
+
         cardView.UpdateCardUI(this);
     }
 
+    protected virtual void OnCardArrangementComplete()
+    {
+        isInteractable = true;
+
+        position = transform.position;
+        rotation = transform.rotation;
+        mouseOverPosition.x = position.x;
+    }
+
+    protected virtual void OnStartCardArrangement()
+    {
+        isInteractable = false;
+    }
+
+    #region 交互事件
+
+    private void OnPointerEnter(PointerEventData eventData)
+    {
+        if (!isInteractable || _isDragging) return;
+
+        cardAnimator.TransformEffect(gameObject, mouseOverPosition, Quaternion.identity, mouseOverScale);
+    }
+
+    private void OnPointerExit(PointerEventData eventData)
+    {
+        if (!isInteractable || _isDragging) return;
+
+        cardAnimator.TransformEffect(gameObject, position, rotation, scale);
+    }
+
+    private void OnPointerDown(PointerEventData eventData)
+    {
+        if (!isInteractable) return;
+
+        EventCenter_Singleton.Instance.GetEvent<Action<Card>>("OnSelectCard")?.Invoke(this);
+        _isDragging = true;
+    }
+
+    private void OnPointerUp(PointerEventData eventData)
+    {
+        _isDragging = false;
+    }
+
+    #endregion
+
     protected virtual void OnDestroy()
     {
+        EventCenter_Singleton.Instance.RemoveEvent<Action>("OnCardArrangementComplete", OnCardArrangementComplete);
+        EventCenter_Singleton.Instance.RemoveEvent<Action>("OnStartCardArrangement", OnStartCardArrangement);
+
         eventCenter.GetEvent<Action>("OnDestroy")?.Invoke();
         eventCenter.Clear();
         transform.DOKill();

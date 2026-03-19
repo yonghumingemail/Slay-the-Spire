@@ -9,8 +9,12 @@ public enum CardType
 }
 
 [CreateAssetMenu(fileName = "NewCardParameter", menuName = "SO/Card Parameter")]
-public class CardSpriteInfo : ScriptableObject
-{
+public class CardExteriorInfo : ScriptableObject
+{  
+    public string cardName;
+    public CardType cardType;
+    public int orbValue;
+    
     public Sprite banner;
     public Sprite background;
     public Sprite orb;

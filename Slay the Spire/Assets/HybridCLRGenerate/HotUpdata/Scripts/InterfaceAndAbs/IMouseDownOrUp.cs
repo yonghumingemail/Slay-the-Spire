@@ -3,6 +3,6 @@ using UnityEngine.EventSystems;
 
 public interface IMouseDownOrUp
 {
-    Action<PointerEventData> OnMouseDown { get; set; }
-    Action<PointerEventData> OnMouseUp { get; set; }
+    Action<PointerEventData> OnMouseDownDelegate { get; set; }
+    Action<PointerEventData> OnMouseUpDelegate { get; set; }
 }

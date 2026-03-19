@@ -49,10 +49,6 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         {
             isSelectCard = true;
         });
-        EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnUnSelectCard", (card) =>
-        {
-            isSelectCard = false;
-        });
     }
 
     public int Choose(float[] list)
@@ -96,6 +92,7 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        isSelectCard = false;
         _alertBox.Close();
         enemySpawner.eventCenter.GetEvent<Action>("OnDeSelectEnemy")?.Invoke();
     }

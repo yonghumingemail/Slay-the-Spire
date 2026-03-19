@@ -36,11 +36,14 @@ public class CardDragLine : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-
+    public void Interrupt()
+    {
+        _tokenSource?.Cancel();
+    }
     public void Register(MouseInteraction mouseInteraction)
     {
-        mouseInteraction.OnMouseDown += _OnMouseDown;
-        mouseInteraction.OnMouseUp += _OnMouseUp;
+        mouseInteraction.OnMouseDownDelegate += _OnMouseDown;
+        mouseInteraction.OnMouseUpDelegate += _OnMouseUp;
     }
 
     private CancellationTokenSource _tokenSource;
@@ -59,15 +62,6 @@ public class CardDragLine : MonoBehaviour
     private void _OnMouseUp(PointerEventData _data)
     {
         _tokenSource?.Cancel();
-        _tokenSource?.Dispose();
-
-
-        gameObject.SetActive(false);
-        foreach (var t in sprites)
-        {
-            t.color = defaultColor;
-            t.transform.localPosition = Vector3.zero;
-        }
     }
 
     private async UniTaskVoid Trigger(PointerEventData _data)
@@ -81,9 +75,10 @@ public class CardDragLine : MonoBehaviour
         Vector3 pointPosition;
         Vector3 lastPoint;
         Vector3 direction;
-
+        
         _tokenSource = new CancellationTokenSource();
         CancellationToken _token = _tokenSource.Token;
+        
         while (!_token.IsCancellationRequested)
         {
             endPoint = mainCamera.ScreenToWorldPoint(Input.mousePosition);
@@ -106,7 +101,13 @@ public class CardDragLine : MonoBehaviour
             lines[^1].transform.position = lastPoint + Vector3.back;
             lines[^1].transform.eulerAngles = lines[^2].transform.eulerAngles;
             await UniTask.Yield(PlayerLoopTiming.PreLateUpdate);
-            ;
+        }
+        
+        gameObject.SetActive(false);
+        foreach (var t in sprites)
+        {
+            t.color = defaultColor;
+            t.transform.localPosition = Vector3.zero;
         }
     }
 
@@ -140,5 +141,11 @@ public class CardDragLine : MonoBehaviour
     {
         var u = 1 - t;
         return u * u * p0 + 2 * u * t * p1 + t * t * p2;
+    }
+
+    private void OnDestroy()
+    {
+        _tokenSource?.Cancel();
+        _tokenSource?.Dispose();
     }
 }

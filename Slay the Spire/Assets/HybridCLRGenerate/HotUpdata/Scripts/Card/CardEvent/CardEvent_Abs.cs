@@ -20,8 +20,8 @@ public abstract class CardEvent_Abs
     protected Energy energy;
 
     public IEventCenter<string> _eventCenter;
-    [FormerlySerializedAs("spriteData")] [SerializeField] protected CardSpriteInfo spriteInfo;
-    public CardSpriteInfo SpriteInfo => spriteInfo;
+    [FormerlySerializedAs("spriteData")] [SerializeField] protected CardExteriorInfo exteriorInfo;
+    public CardExteriorInfo ExteriorInfo => exteriorInfo;
     public List<ICardEntry> cardEntries { get; protected set; } = new List<ICardEntry>();
 
     protected CardEvent_Abs()
@@ -59,7 +59,7 @@ public abstract class CardEvent_Abs
 
     public virtual async UniTask<CardEvent_Abs> Initialize()
     {
-        var value = await AddressablesMgr.Instance.LoadAssetAsync<CardSpriteInfo>(defaultDataPtah);
+        var value = await AddressablesMgr.Instance.LoadAssetAsync<CardExteriorInfo>(defaultDataPtah);
        // spriteData = value.Copy();
         return this;
     }

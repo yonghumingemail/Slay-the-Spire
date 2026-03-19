@@ -9,52 +9,51 @@ public class Card_Ironclad_Strike : Card
     private InflictDamage _inflictDamage;
     private RaycastHit2D _target;
 
-    public override async UniTask Trigger(CancellationToken cancellationToken, bool conditionCheck = true)
+    public override async UniTask<bool> Trigger(CancellationToken cancellationToken, bool conditionCheck = true)
     {
-        print(_target.collider != null && (!conditionCheck || energy.SetEnergy(energy._energy - cardTextInfo.orbValue)));
-        
-        print(_target.collider != null);
-        print(energy.SetEnergy(energy._energy - cardTextInfo.orbValue));
-        if (_target.collider != null && (!conditionCheck || energy.SetEnergy(energy._energy - cardTextInfo.orbValue)))
+        if (_target.collider != null && (!conditionCheck || energy.SetEnergy(energy._energy - ExteriorInfo.orbValue)))
         {
-              Debug.Log("Trigger");
-            foreach (var VARIABLE in cardTextInfo.cardEntries)
+            isInteractable = false;
+            foreach (var VARIABLE in cardEntries)
             {
                 await VARIABLE.Trigger(gameObject, _target.collider.gameObject);
             }
 
             await CardTriggerAnimator();
             _target = default;
+            Enable(false);
+            return true;
         }
-        else
-        {
-            cardInteraction.TransformEffect(
-                gameObject,
-                cardInteraction.position,
-                cardInteraction.rotation,
-                cardInteraction.scale);
-             Debug.Log("UnTrigger");
-        }
+
+        CardAnimator.TransformEffect(
+            gameObject,
+            position,
+            rotation,
+            scale);
+        return false;
     }
 
+    public override void OnUnSelectedCard()
+    {
+        base.OnUnSelectedCard();
+        handPile.cardDragLine.Interrupt();
+    }
     public override void Strengthen()
     {
-        cardTextInfo.isStrengthen = true;
+        isStrengthen = true;
         _inflictDamage.damage += 2;
-        cardTextInfo.describe = _inflictDamage.GetDescription();
+        describe = _inflictDamage.GetDescription();
         cardView.UpdateCardUI(this);
     }
 
     public override async UniTask Initialized()
     {
-        IDrag drag = gameObject.GetComponent<IDrag>();
-        drag.SetDragEnabled(false);
         handPile.cardDragLine.Register(_mouseInteraction);
-        
-        await base.Initialized("打击", CardType.攻击, 1, "Assets/ScriptableObject/CardEvent/Ironclad_Strike.asset");
+
+        await base.Initialized("Assets/ScriptableObject/CardEvent/Ironclad_Strike.asset");
         _inflictDamage = new InflictDamage(6);
         AddCardEntry(_inflictDamage);
-        _mouseInteraction.OnMouseUp += _OnMouseUp;
+        _mouseInteraction.OnMouseUpDelegate += _OnMouseUp;
     }
 
     private void _OnMouseUp(PointerEventData _data)
@@ -63,7 +62,5 @@ public class Card_Ironclad_Strike : Card
             15,
             1 << LayerMask.NameToLayer("Enemy"));
         handPile.AddAsyncCardEvent(this);
-        //_target有数据但在其他地方报空
-        print(_target.collider != null);
     }
 }

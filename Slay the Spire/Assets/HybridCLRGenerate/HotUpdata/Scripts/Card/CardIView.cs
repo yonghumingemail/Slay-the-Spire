@@ -1,9 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using TMPro;
-using UnityEditor.U2D;
 using UnityEngine;
-using Z_Tools;
 
 [Serializable]
 public class CardView
@@ -31,19 +29,19 @@ public class CardView
     [SerializeField] private Outline cardOutline;
 
 
-    public CardView(IEventCenter<string> eventCenter, GameObject obj)
+    public CardView(Card card)
     {
-        _background = obj.transform.Find("UI").GetComponent<SpriteRenderer>();
-        _frame = obj.transform.Find("UI/Head/Frame").GetComponent<SpriteRenderer>();
-        _banners = obj.transform.Find("UI/Head/Frame/Banners").GetComponent<SpriteRenderer>();
-        _image = obj.transform.Find("UI/Head/Image").GetComponent<SpriteRenderer>();
-        _orb = obj.transform.Find("UI/Head/Orb").GetComponent<SpriteRenderer>();
+        _background = card.transform.Find("UI").GetComponent<SpriteRenderer>();
+        _frame = card.transform.Find("UI/Head/Frame").GetComponent<SpriteRenderer>();
+        _banners = card.transform.Find("UI/Head/Frame/Banners").GetComponent<SpriteRenderer>();
+        _image = card.transform.Find("UI/Head/Image").GetComponent<SpriteRenderer>();
+        _orb = card.transform.Find("UI/Head/Orb").GetComponent<SpriteRenderer>();
 
-        _name = obj.transform.Find("UI/Head/Frame/Banners/CardName").GetComponent<TextMeshPro>();
-        _typeName = obj.transform.Find("UI/Head/Frame/TypeName").GetComponent<TextMeshPro>();
-        _orbValue = obj.transform.Find("UI/Head/Orb/Point").GetComponent<TextMeshPro>();
-        _describe = obj.transform.Find("UI/Describe").GetComponent<TextMeshPro>();
-        cardOutline = obj.transform.Find("Outline").GetComponent<Outline>();
+        _name = card.transform.Find("UI/Head/Frame/Banners/CardName").GetComponent<TextMeshPro>();
+        _typeName = card.transform.Find("UI/Head/Frame/TypeName").GetComponent<TextMeshPro>();
+        _orbValue = card.transform.Find("UI/Head/Orb/Point").GetComponent<TextMeshPro>();
+        _describe = card.transform.Find("UI/Describe").GetComponent<TextMeshPro>();
+        cardOutline = card.transform.Find("Outline").GetComponent<Outline>();
     }
 
 
@@ -64,26 +62,26 @@ public class CardView
         _background.gameObject.SetActive(enable);
     }
 
-    public void UpdateCardTextUI(CardTextInfo cardText)
+    public void UpdateCardTextUI(Card card)
     {
-        _name.SetText(cardText.cardName);
-        _typeName.SetText(Enum.GetName(cardText.cardType.GetType(), cardText.cardType));
-        _orbValue.SetText(cardText.orbValue.ToString());
-        _describe.SetText(cardText.describe);
+        _name.SetText(card.cardName);
+        _typeName.SetText(Enum.GetName(card.cardType.GetType(), card.cardType));
+        _orbValue.SetText(card.orbValue.ToString());
+        _describe.SetText(card.describe);
     }
 
-    public void UpdateCardSpriteUI(CardSpriteInfo SpriteInfo)
+    public void UpdateCardSpriteUI(CardExteriorInfo exteriorInfo)
     {
-        _background.sprite = SpriteInfo.background;
-        _frame.sprite = SpriteInfo.frame;
-        _banners.sprite = SpriteInfo.banner;
-        _image.sprite = SpriteInfo.image;
-        _orb.sprite = SpriteInfo.orb;
+        _background.sprite = exteriorInfo.background;
+        _frame.sprite = exteriorInfo.frame;
+        _banners.sprite = exteriorInfo.banner;
+        _image.sprite = exteriorInfo.image;
+        _orb.sprite = exteriorInfo.orb;
     }
 
     public void UpdateCardUI(Card card)
     {
-        UpdateCardTextUI(card.CardTextInfo);
-        UpdateCardSpriteUI(card.SpriteInfo);
+        UpdateCardTextUI(card);
+        UpdateCardSpriteUI(card.ExteriorInfo);
     }
 }

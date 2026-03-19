@@ -99,7 +99,7 @@ public class Pile : MonoBehaviour
     }
 
     // 添加卡牌到堆中
-    public virtual async UniTask AddCard(Card card)
+    public virtual UniTask AddCard(Card card)
     {
         // // 如果卡牌不在滚动视图字典中，则创建UI实例
         // if (!cardScrollView.cardDic.ContainsKey(card))
@@ -115,6 +115,7 @@ public class Pile : MonoBehaviour
 
         // 更新计数显示
         countText.SetText(cardList.Count.ToString());
+        return UniTask.CompletedTask;
     }
 
     // 获取堆中所有卡牌并清空当前堆

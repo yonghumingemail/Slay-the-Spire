@@ -9,36 +9,36 @@ public class MouseInteraction : MonoBehaviour,
     IPointerUpHandler,
     IMouseDownOrUp, IMouseEnterORExit
 {
-    public Action<PointerEventData> OnMouseDown { get; set; }
-    public Action<PointerEventData> OnMouseUp { get; set; }
-    public Action<PointerEventData> OnMouseEnter { get; set; }
-    public Action<PointerEventData> OnMouseExit { get; set; }
+    public Action<PointerEventData> OnMouseDownDelegate { get; set; }
+    public Action<PointerEventData> OnMouseUpDelegate { get; set; }
+    public Action<PointerEventData> OnMouseEnterDelegate { get; set; }
+    public Action<PointerEventData> OnMouseExitDelegate { get; set; }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        OnMouseEnter?.Invoke(eventData);
+        OnMouseEnterDelegate?.Invoke(eventData);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        OnMouseExit?.Invoke(eventData);
+        OnMouseExitDelegate?.Invoke(eventData);
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        OnMouseDown?.Invoke(eventData);
+        OnMouseDownDelegate?.Invoke(eventData);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        OnMouseUp?.Invoke(eventData);
+        OnMouseUpDelegate?.Invoke(eventData);
     }
 
     private void OnDestroy()
     {
-        OnMouseEnter = null;
-        OnMouseExit = null;
-        OnMouseEnter = null;
-        OnMouseExit = null;
+        OnMouseEnterDelegate = null;
+        OnMouseExitDelegate = null;
+        OnMouseEnterDelegate = null;
+        OnMouseExitDelegate = null;
     }
 }

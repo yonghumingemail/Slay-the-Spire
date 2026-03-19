@@ -54,11 +54,11 @@ public class CardFactory : SingletonBase<CardFactory>
 
     public async UniTask<bool> UpdateCardUI(UICard uiCard, CardEvent_Abs cardEventAbs)
     {
-        uiCard._infoComponent._background.sprite = cardEventAbs.SpriteInfo.background;
-        uiCard._infoComponent._frame.sprite = cardEventAbs.SpriteInfo.frame;
-        uiCard._infoComponent._banners.sprite = cardEventAbs.SpriteInfo.banner;
-        uiCard._infoComponent._orb.sprite = cardEventAbs.SpriteInfo.orb;
-        uiCard._infoComponent._image.sprite = cardEventAbs.SpriteInfo.image;
+        uiCard._infoComponent._background.sprite = cardEventAbs.ExteriorInfo.background;
+        uiCard._infoComponent._frame.sprite = cardEventAbs.ExteriorInfo.frame;
+        uiCard._infoComponent._banners.sprite = cardEventAbs.ExteriorInfo.banner;
+        uiCard._infoComponent._orb.sprite = cardEventAbs.ExteriorInfo.orb;
+        uiCard._infoComponent._image.sprite = cardEventAbs.ExteriorInfo.image;
 
         uiCard._infoComponent._name.SetText(cardEventAbs.cardName);
         uiCard._infoComponent._typeName.SetText(Enum.GetName(cardEventAbs.cardType.GetType(), cardEventAbs.cardType));

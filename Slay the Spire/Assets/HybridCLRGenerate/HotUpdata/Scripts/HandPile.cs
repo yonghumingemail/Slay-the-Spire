@@ -80,8 +80,7 @@ public class HandPile : MonoBehaviour
             cardArrangement.speed = speed;
             foreach (var card in cards)
             {
-                card.CardInteraction.isInteractable = false;
-                card.gameObject.SetActive(true);
+                card.Enable(true);
                 cardInstances.Add(card);
                 UpdateCardPositions();
                 await Task.Delay((int)(1000 * speed2));
@@ -89,12 +88,12 @@ public class HandPile : MonoBehaviour
         }
     }
 
-    private Queue<Card> triggerQueue = new Queue<Card>();
+    private Queue<Card> executeQueue = new Queue<Card>();
     public bool isExecute;
 
     public void AddAsyncCardEvent(Card action)
     {
-        triggerQueue.Enqueue(action);
+        executeQueue.Enqueue(action);
         if (!isExecute)
         {
             ExecuteQueue().Forget();
@@ -104,15 +103,18 @@ public class HandPile : MonoBehaviour
     private async UniTask ExecuteQueue()
     {
         isExecute = true;
-
-        while (triggerQueue.Count != 0)
+        bool isTrigger = false;
+        while (executeQueue.Count != 0)
         {
-            var current = triggerQueue.Dequeue();
-            EventCenter_Singleton.Instance.GetEvent<Action<Card>>("OnTriggerCardEvent")?.Invoke(current);
-            await current.Trigger(CancellationToken.None);
+            var current = executeQueue.Dequeue();
+            isTrigger = await current.Trigger(CancellationToken.None) || isTrigger;
         }
 
-        UpdateCardPositions();
+        if (isTrigger)
+        {
+            UpdateCardPositions();
+        }
+
         isExecute = false;
     }
 

@@ -6,20 +6,19 @@ using Z_Tools;
 [Serializable]
 public class CardAnimator
 {
-    private Camera _mainCamera;
     [SerializeField] private Animator _animator;
     public Animator Animator => _animator;
 
     [Header("DOTween动画播放速度")] [SerializeField]
-    private float move_speed = 0.2f;
+    private float rotation_speed= 0.15f ;
 
-    private IEventCenter<string> _eventCenter;
-
-    public CardAnimator(IEventCenter<string> eventCenter,GameObject obj,Camera  mainCamera)
+    [SerializeField] private float move_speed=0.2f ;
+    [SerializeField] private float Scale_speed= 0.15f;
+    private Camera _mainCamera;
+    public CardAnimator(Card card,Camera mainCamera) 
     {
-        _eventCenter = eventCenter;
+        _animator =card.GetComponent<Animator>();
         _mainCamera = mainCamera;
-        _animator =obj.GetComponent<Animator>();
     }
 
 
@@ -60,6 +59,18 @@ public class CardAnimator
             move_speed).onComplete += () => { callback?.Invoke(); };
     }
 
+    public void TransformEffect(GameObject obj,Vector3 targetPosition, Quaternion targetRotation, Vector3 targetScale)
+    {
+        DOTween.To(() => obj.transform.position, value => { obj.transform.position = value; },
+            targetPosition, move_speed);
+
+        DOTween.To(() => obj.transform.rotation, value => { obj.transform.rotation = value; },
+            targetRotation.eulerAngles,
+            rotation_speed);
+
+        DOTween.To(() => obj.transform.localScale, value => { obj.transform.localScale = value; }, targetScale,
+            Scale_speed);
+    }
     #endregion
 
     public void OnDestroy()
