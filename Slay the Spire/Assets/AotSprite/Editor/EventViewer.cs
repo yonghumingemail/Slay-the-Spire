@@ -103,6 +103,56 @@ public class EventUsageInfo
 
 #endregion
 
+
+
+
+#region 新增的搜索相关枚举和类
+
+/// <summary>
+/// 搜索模式
+/// </summary>
+public enum SearchMode
+{
+    EventName,  // 搜索事件名称
+    ScriptName, // 搜索脚本名称
+    All         // 搜索全部
+}
+
+/// <summary>
+/// 匹配类型
+/// </summary>
+public enum SearchMatchType
+{
+    EventName,  // 事件名称匹配
+    ScriptName  // 脚本名称匹配
+}
+
+/// <summary>
+/// 搜索匹配项
+/// </summary>
+[System.Serializable]
+public class SearchMatch
+{
+    public SearchMatchType MatchType;
+    public string EventName;
+    public string ScriptName;
+    public int Line;
+    public MatchType? UsageType;
+}
+
+/// <summary>
+/// 搜索结果
+/// </summary>
+[System.Serializable]
+public class EventSearchResult
+{
+    public string EventName;
+    public EventGroupInfo EventGroup;
+    public List<SearchMatch> Matches = new List<SearchMatch>();
+}
+
+#endregion
+
 public class EventViewer : EditorWindow
 {
     [MenuItem("Tools Window/Event Center/事件查看器")]
@@ -110,22 +160,41 @@ public class EventViewer : EditorWindow
 
     private static string m_NotesText = "本窗口只能捕获静态字符串，动态字符串无法捕获其准确内容\n事件查看器会忽略被注释的代码与Editor文件夹内的代码。";
 
+    
+    // 新增：搜索相关字段
+    [SerializeField] private string m_SearchText = "";
+    [SerializeField] private SearchMode m_SearchMode = SearchMode.EventName;
+    [SerializeField] private bool m_SearchCaseSensitive = false;
+#pragma warning disable CS0414 // 字段已被赋值，但它的值从未被使用
+    [SerializeField] private bool m_SearchInProgress = false;
+#pragma warning restore CS0414 // 字段已被赋值，但它的值从未被使用
+    [SerializeField] private int m_SearchResultCount = 0;
+    [SerializeField] private List<EventSearchResult> m_SearchResults = new List<EventSearchResult>();
+    
+    // 新增：过滤相关字段
+    [SerializeField] private bool m_ShowAddEvents = true;
+    [SerializeField] private bool m_ShowRemoveEvents = true;
+    [SerializeField] private bool m_ShowGetEvents = true;
+    [SerializeField] private bool m_ShowErrorEventsOnly = false;
+    [SerializeField] private bool m_ShowSearchFilters = false;
+    
     #region 正则表达式
 
-    // 预编译的正则表达式
+// 预编译的正则表达式
     private static readonly Regex m_AddRegex = new Regex(
         @"(?<!public\s|private\s|protected\s|internal\s)(?<!\bvoid\s)[\w.]*?AddEvent\s*(?:<.*?>)?\s*\(\s*([^,]+?)\s*(?:,|\))",
         RegexOptions.Compiled | RegexOptions.Singleline);
 
+// 修复：使泛型参数可选
     private static readonly Regex m_GetRegex = new Regex(
-        @"(?<!public\s|private\s|protected\s|internal\s)(?<!\bvoid\s)[\w.]*?GetEvent\s*<.*?>\s*\(\s*([^,]+?)\s*(?:,|\))",
+        @"(?<!public\s|private\s|protected\s|internal\s)(?<!\bvoid\s)[\w.]*?GetEvent\s*(?:<.*?>)?\s*\(\s*([^,]+?)\s*(?:,|\))",
         RegexOptions.Compiled | RegexOptions.Singleline);
 
     private static readonly Regex m_RemoveRegex = new Regex(
         @"(?<![""'`])\.RemoveEvent\s*\(\s*([^)]+?)\s*\)",
         RegexOptions.Compiled | RegexOptions.Singleline);
 
-    // 接口检测正则表达式也预编译
+// 接口检测正则表达式也预编译
     private static readonly Regex m_InterfaceRegex1 = new Regex(
         @"class\s+\w+\s*:\s*[^{]*IEventCenter\s*<\s*[^>]+\s*>",
         RegexOptions.Compiled | RegexOptions.Singleline);
@@ -140,6 +209,10 @@ public class EventViewer : EditorWindow
 
     #endregion
 
+    
+    
+    
+    
     private Vector2 m_ScrollPosition;
     
     // 新增：扫描路径相关字段
@@ -163,6 +236,8 @@ public class EventViewer : EditorWindow
     private void OnEnable()
     {
         LoadSettings();
+        // 加载搜索相关设置
+        LoadSearchSettings();
     }
 
     private void OnGUI()
@@ -179,18 +254,511 @@ public class EventViewer : EditorWindow
         DrawSeparatorWithShadow();
         EditorGUILayout.Space(5);
         
+        // 新增：搜索功能区
+        DrawSearchControls();
+        
+        EditorGUILayout.Space(5);
+        DrawSeparatorWithShadow();
+        EditorGUILayout.Space(5);
+        
+        // 修改：添加折叠/展开按钮
+        DrawEventListControls();
+        
+        EditorGUILayout.HelpBox(m_NotesText, MessageType.Warning, true);
+        
+        // 修改：根据搜索结果显示不同内容
+        if (!string.IsNullOrEmpty(m_SearchText) && m_SearchResults.Count > 0)
+        {
+            RenderSearchResults();
+        }
+        else if (!string.IsNullOrEmpty(m_SearchText))
+        {
+            RenderNoSearchResults();
+        }
+        else
+        {
+            RenderEventGroups();
+        }
+        
         if (GUILayout.Button("打开或关闭 所有列表", GUILayout.Height(24)))
         {
             ToggleAllFoldouts();
         }
-
-        EditorGUILayout.HelpBox(m_NotesText, MessageType.Warning, true);
-
-        m_ScrollPosition = GUILayout.BeginScrollView(m_ScrollPosition);
-        RenderEventGroups();
-        GUILayout.EndScrollView();
-
+        
         GUILayout.FlexibleSpace();
+    }
+    
+    
+    /// <summary>
+    /// 加载搜索设置
+    /// </summary>
+    private void LoadSearchSettings()
+    {
+        m_SearchCaseSensitive = EditorPrefs.GetBool("EventViewer_SearchCaseSensitive", false);
+        m_ShowAddEvents = EditorPrefs.GetBool("EventViewer_ShowAddEvents", true);
+        m_ShowRemoveEvents = EditorPrefs.GetBool("EventViewer_ShowRemoveEvents", true);
+        m_ShowGetEvents = EditorPrefs.GetBool("EventViewer_ShowGetEvents", true);
+        m_ShowErrorEventsOnly = EditorPrefs.GetBool("EventViewer_ShowErrorEventsOnly", false);
+    }
+    
+    /// <summary>
+    /// 保存搜索设置
+    /// </summary>
+    private void SaveSearchSettings()
+    {
+        EditorPrefs.SetBool("EventViewer_SearchCaseSensitive", m_SearchCaseSensitive);
+        EditorPrefs.SetBool("EventViewer_ShowAddEvents", m_ShowAddEvents);
+        EditorPrefs.SetBool("EventViewer_ShowRemoveEvents", m_ShowRemoveEvents);
+        EditorPrefs.SetBool("EventViewer_ShowGetEvents", m_ShowGetEvents);
+        EditorPrefs.SetBool("EventViewer_ShowErrorEventsOnly", m_ShowErrorEventsOnly);
+    }
+    
+     /// <summary>
+    /// 绘制高级过滤选项
+    /// </summary>
+    private void DrawAdvancedFilters()
+    {
+        EditorGUI.indentLevel++;
+        
+        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+        
+        EditorGUILayout.LabelField("显示事件类型:", EditorStyles.miniBoldLabel);
+        
+        EditorGUILayout.BeginHorizontal();
+        m_ShowAddEvents = EditorGUILayout.ToggleLeft("添加监听", m_ShowAddEvents, GUILayout.Width(80));
+        m_ShowRemoveEvents = EditorGUILayout.ToggleLeft("移除监听", m_ShowRemoveEvents, GUILayout.Width(80));
+        m_ShowGetEvents = EditorGUILayout.ToggleLeft("获取事件", m_ShowGetEvents, GUILayout.Width(80));
+        EditorGUILayout.EndHorizontal();
+        
+        EditorGUILayout.Space(5);
+        
+        m_ShowErrorEventsOnly = EditorGUILayout.ToggleLeft("只显示有错误的事件", m_ShowErrorEventsOnly);
+        
+        EditorGUILayout.Space(5);
+        
+        EditorGUILayout.EndVertical();
+        
+        EditorGUI.indentLevel--;
+    }
+    
+    /// <summary>
+    /// 绘制事件列表控制按钮
+    /// </summary>
+    private void DrawEventListControls()
+    {
+        EditorGUILayout.BeginHorizontal();
+        
+        if (GUILayout.Button("展开所有", GUILayout.Height(24)))
+        {
+            ExpandAllFoldouts(true);
+        }
+        
+        if (GUILayout.Button("折叠所有", GUILayout.Height(24)))
+        {
+            ExpandAllFoldouts(false);
+        }
+        
+        GUILayout.FlexibleSpace();
+        
+        if (GUILayout.Button("导出结果", GUILayout.Height(24)))
+        {
+            ExportSearchResults();
+        }
+        
+        EditorGUILayout.EndHorizontal();
+    }
+    
+    /// <summary>
+    /// 执行搜索
+    /// </summary>
+    private void PerformSearch()
+    {
+        if (string.IsNullOrEmpty(m_SearchText))
+        {
+            ClearSearchResults();
+            return;
+        }
+        
+        m_SearchResults.Clear();
+        m_SearchInProgress = true;
+        
+        try
+        {
+            EditorUtility.DisplayProgressBar("搜索事件", "正在搜索匹配的事件...", 0.5f);
+            
+            // 准备搜索选项
+            StringComparison comparison = m_SearchCaseSensitive ? 
+                StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+            
+            // 遍历所有事件
+            foreach (var kvp in m_Events)
+            {
+                string eventName = kvp.Key;
+                EventGroupInfo group = kvp.Value;
+                
+                // 检查是否只显示错误事件
+                if (m_ShowErrorEventsOnly && !group.HasError)
+                {
+                    continue;
+                }
+                
+                // 根据搜索模式进行匹配
+                bool matchFound = false;
+                List<SearchMatch> matches = new List<SearchMatch>();
+                
+                // 搜索事件名称
+                if (m_SearchMode == SearchMode.EventName || m_SearchMode == SearchMode.All)
+                {
+                    if (eventName.IndexOf(m_SearchText, comparison) >= 0)
+                    {
+                        matchFound = true;
+                        matches.Add(new SearchMatch { MatchType = SearchMatchType.EventName, EventName = eventName });
+                    }
+                }
+                
+                // 搜索脚本名称
+                if (m_SearchMode == SearchMode.ScriptName || m_SearchMode == SearchMode.All)
+                {
+                    // 检查添加监听
+                    if (m_ShowAddEvents)
+                    {
+                        foreach (var add in group.Adds)
+                        {
+                            if (add.scriptName.IndexOf(m_SearchText, comparison) >= 0)
+                            {
+                                matchFound = true;
+                                matches.Add(new SearchMatch 
+                                { 
+                                    MatchType = SearchMatchType.ScriptName, 
+                                    EventName = eventName,
+                                    ScriptName = add.scriptName,
+                                    Line = add.Line,
+                                    UsageType = MatchType.Add
+                                });
+                            }
+                        }
+                    }
+                    
+                    // 检查移除监听
+                    if (m_ShowRemoveEvents)
+                    {
+                        foreach (var remove in group.Removes)
+                        {
+                            if (remove.scriptName.IndexOf(m_SearchText, comparison) >= 0)
+                            {
+                                matchFound = true;
+                                matches.Add(new SearchMatch 
+                                { 
+                                    MatchType = SearchMatchType.ScriptName, 
+                                    EventName = eventName,
+                                    ScriptName = remove.scriptName,
+                                    Line = remove.Line,
+                                    UsageType = MatchType.Remove
+                                });
+                            }
+                        }
+                    }
+                    
+                    // 检查获取事件
+                    if (m_ShowGetEvents)
+                    {
+                        foreach (var get in group.Gets)
+                        {
+                            if (get.scriptName.IndexOf(m_SearchText, comparison) >= 0)
+                            {
+                                matchFound = true;
+                                matches.Add(new SearchMatch 
+                                { 
+                                    MatchType = SearchMatchType.ScriptName, 
+                                    EventName = eventName,
+                                    ScriptName = get.scriptName,
+                                    Line = get.Line,
+                                    UsageType = MatchType.Get
+                                });
+                            }
+                        }
+                    }
+                }
+                
+                // 如果找到匹配，添加到结果列表
+                if (matchFound)
+                {
+                    m_SearchResults.Add(new EventSearchResult
+                    {
+                        EventName = eventName,
+                        EventGroup = group,
+                        Matches = matches
+                    });
+                }
+            }
+            
+            m_SearchResultCount = m_SearchResults.Count;
+            
+            EditorUtility.ClearProgressBar();
+            
+            // 自动展开所有匹配的事件
+            foreach (var result in m_SearchResults)
+            {
+                result.EventGroup.isFoldout = true;
+            }
+        }
+        catch (System.Exception e)
+        {
+            EditorUtility.ClearProgressBar();
+            Debug.LogError($"搜索事件时出错: {e}");
+        }
+        finally
+        {
+            m_SearchInProgress = false;
+            Repaint();
+        }
+    }
+    
+    /// <summary>
+    /// 清除搜索结果
+    /// </summary>
+    private void ClearSearchResults()
+    {
+        m_SearchText = "";
+        m_SearchResults.Clear();
+        m_SearchResultCount = 0;
+        Repaint();
+    }
+    
+    /// <summary>
+    /// 展开或折叠所有事件
+    /// </summary>
+    private void ExpandAllFoldouts(bool expand)
+    {
+        if (m_Events.Count == 0) return;
+        
+        foreach (var group in m_Events.Values)
+        {
+            group.isFoldout = expand;
+        }
+        
+        Repaint();
+    }
+    
+    /// <summary>
+    /// 导出搜索结果
+    /// </summary>
+    private void ExportSearchResults()
+    {
+        string exportPath = EditorUtility.SaveFilePanel("导出搜索结果", "", "EventSearchResults.txt", "txt");
+        if (!string.IsNullOrEmpty(exportPath))
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(exportPath))
+                {
+                    writer.WriteLine($"事件搜索结果 - {DateTime.Now}");
+                    writer.WriteLine($"搜索条件: {m_SearchText}");
+                    writer.WriteLine($"搜索模式: {m_SearchMode}");
+                    writer.WriteLine($"区分大小写: {m_SearchCaseSensitive}");
+                    writer.WriteLine($"匹配数量: {m_SearchResults.Count}");
+                    writer.WriteLine("=".PadRight(80, '='));
+                    writer.WriteLine();
+                    
+                    foreach (var result in m_SearchResults)
+                    {
+                        writer.WriteLine($"事件: {result.EventName}");
+                        writer.WriteLine($"错误状态: {(result.EventGroup.HasError ? "有错误(未注册)" : "正常")}");
+                        writer.WriteLine($"匹配项: {result.Matches.Count} 个");
+                        
+                        foreach (var match in result.Matches)
+                        {
+                            string matchType = match.MatchType.ToString();
+                            string usageType = match.UsageType.HasValue ? match.UsageType.ToString() : "N/A";
+                            
+                            writer.WriteLine($"  - 匹配类型: {matchType}");
+                            if (matchType == SearchMatchType.ScriptName.ToString())
+                            {
+                                writer.WriteLine($"    脚本: {match.ScriptName} (第{match.Line}行)");
+                                writer.WriteLine($"    使用类型: {usageType}");
+                            }
+                            writer.WriteLine();
+                        }
+                        
+                        writer.WriteLine("---");
+                    }
+                    
+                    writer.WriteLine("=".PadRight(80, '='));
+                    writer.WriteLine($"导出完成于: {DateTime.Now}");
+                }
+                
+                EditorUtility.DisplayDialog("导出成功", $"搜索结果已导出到:\n{exportPath}", "确定");
+            }
+            catch (System.Exception e)
+            {
+                EditorUtility.DisplayDialog("导出失败", $"导出过程中发生错误:\n{e.Message}", "确定");
+            }
+        }
+    }
+    
+    /// <summary>
+    /// 渲染搜索结果
+    /// </summary>
+    private void RenderSearchResults()
+    {
+        EditorGUILayout.LabelField($"搜索结果 ({m_SearchResults.Count} 个匹配)", EditorStyles.boldLabel);
+        EditorGUILayout.Space(5);
+        
+        m_ScrollPosition = GUILayout.BeginScrollView(m_ScrollPosition);
+        
+        foreach (var result in m_SearchResults)
+        {
+            DrawEventGroup(result.EventName, result.EventGroup);
+            DrawSeparatorWithShadow();
+        }
+        
+        GUILayout.EndScrollView();
+    }
+    
+    /// <summary>
+    /// 渲染无搜索结果提示
+    /// </summary>
+    private void RenderNoSearchResults()
+    {
+        GUILayout.FlexibleSpace();
+        
+        EditorGUILayout.BeginVertical();
+        GUILayout.FlexibleSpace();
+        
+        EditorGUILayout.HelpBox($"未找到包含 '{m_SearchText}' 的事件", MessageType.Info);
+        
+        GUILayout.FlexibleSpace();
+        EditorGUILayout.EndVertical();
+    }
+    
+    /// <summary>
+    /// 渲染事件组
+    /// </summary>
+    private void RenderEventGroups()
+    {
+        if (m_Events.Count == 0)
+        {
+            EditorGUILayout.HelpBox("未找到任何事件，请点击扫描按钮", MessageType.Info);
+            return;
+        }
+
+        DrawSeparatorWithShadow();
+        
+        // 统计信息
+        GUILayout.BeginHorizontal();
+        GUILayout.Label($"总计: {m_Events.Count} 个事件", EditorStyles.boldLabel);
+        GUILayout.FlexibleSpace();
+        int errorCount = m_Events.Count(g => g.Value.HasError);
+        if (errorCount > 0)
+        {
+            GUILayout.Label($"错误: {errorCount} 个", GUIStyles.ErrorLabelStyle);
+        }
+        GUILayout.EndHorizontal();
+        
+        EditorGUILayout.Space(5);
+        
+        m_ScrollPosition = GUILayout.BeginScrollView(m_ScrollPosition);
+        
+        foreach (var (eventName, eventGroup) in m_Events)
+        {
+            // 应用高级过滤
+            if (m_ShowErrorEventsOnly && !eventGroup.HasError)
+            {
+                continue;
+            }
+            
+            DrawEventGroup(eventName, eventGroup);
+            DrawSeparatorWithShadow();
+        }
+        
+        GUILayout.EndScrollView();
+    }
+    
+     /// <summary>
+    /// 绘制搜索控制界面
+    /// </summary>
+    private void DrawSearchControls()
+    {
+        EditorGUILayout.LabelField("事件搜索", EditorStyles.boldLabel);
+        
+        // 搜索框
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("🔍", GUILayout.Width(20));
+        
+        // 监听回车键搜索
+        if (Event.current.isKey && Event.current.keyCode == KeyCode.Return && 
+            Event.current.type == EventType.KeyDown && GUI.GetNameOfFocusedControl() == "SearchField")
+        {
+            PerformSearch();
+            Event.current.Use();
+        }
+        
+        GUI.SetNextControlName("SearchField");
+        string newSearchText = EditorGUILayout.TextField(m_SearchText, GUI.skin.textField);
+        
+        // 如果搜索文本发生变化，立即搜索
+        if (newSearchText != m_SearchText)
+        {
+            m_SearchText = newSearchText;
+            PerformSearch();
+        }
+        
+        // 清除按钮
+        if (!string.IsNullOrEmpty(m_SearchText))
+        {
+            if (GUILayout.Button("×", GUILayout.Width(30)))
+            {
+                m_SearchText = "";
+                GUI.FocusControl(null);
+                ClearSearchResults();
+            }
+        }
+        
+        EditorGUILayout.EndHorizontal();
+        
+        // 搜索选项
+        EditorGUILayout.BeginHorizontal();
+        m_SearchMode = (SearchMode)EditorGUILayout.EnumPopup(m_SearchMode, GUILayout.Width(120));
+        m_SearchCaseSensitive = EditorGUILayout.ToggleLeft("区分大小写", m_SearchCaseSensitive, GUILayout.Width(100));
+        
+        GUILayout.FlexibleSpace();
+        
+        if (GUILayout.Button("高级过滤", GUILayout.Width(80)))
+        {
+            m_ShowSearchFilters = !m_ShowSearchFilters;
+        }
+        
+        EditorGUILayout.EndHorizontal();
+        
+        // 高级过滤选项
+        if (m_ShowSearchFilters)
+        {
+            DrawAdvancedFilters();
+        }
+        
+        // 搜索结果统计
+        if (!string.IsNullOrEmpty(m_SearchText) && m_SearchResults.Count > 0)
+        {
+            EditorGUILayout.Space(5);
+            EditorGUILayout.BeginHorizontal();
+            
+            string resultText = $"找到 {m_SearchResults.Count} 个匹配项";
+            if (m_Events.Count > 0)
+            {
+                resultText += $" (共 {m_Events.Count} 个事件)";
+            }
+            
+            EditorGUILayout.HelpBox(resultText, MessageType.Info);
+            
+            GUILayout.FlexibleSpace();
+            
+            if (GUILayout.Button("清除结果", GUILayout.Width(80)))
+            {
+                ClearSearchResults();
+            }
+            
+            EditorGUILayout.EndHorizontal();
+        }
     }
     
     /// <summary>
@@ -590,34 +1158,7 @@ public class EventViewer : EditorWindow
             EditorUtility.DisplayDialog("导出失败", $"导出过程中发生错误:\n{e.Message}", "确定");
         }
     }
-
-    private void RenderEventGroups()
-    {
-        if (m_Events.Count == 0)
-        {
-            EditorGUILayout.HelpBox("未找到任何事件，请点击扫描按钮", MessageType.Info);
-            return;
-        }
-
-        DrawSeparatorWithShadow();
-        
-        // 统计信息
-        GUILayout.BeginHorizontal();
-        GUILayout.Label($"总计: {m_Events.Count} 个事件", EditorStyles.boldLabel);
-        GUILayout.FlexibleSpace();
-        int errorCount = m_Events.Count(g => g.Value.HasError);
-        if (errorCount > 0)
-        {
-            GUILayout.Label($"错误: {errorCount} 个", GUIStyles.ErrorLabelStyle);
-        }
-        GUILayout.EndHorizontal();
-        
-        foreach (var (eventName, eventGroup) in m_Events)
-        {
-            DrawEventGroup(eventName, eventGroup);
-            DrawSeparatorWithShadow();
-        }
-    }
+    
 
     private void DrawEventGroup(string scriptName, EventGroupInfo eventGroup)
     {

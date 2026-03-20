@@ -1,6 +1,5 @@
 using System;
 using System.Threading;
-using CardEvent_Ironclad;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -8,25 +7,29 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    public float time;
-    private async void Start()
+    private void Start()
     {
-        await Test22(this.GetCancellationTokenOnDestroy()).SuppressCancellationThrow();
-        
+        Test11(this.GetCancellationTokenOnDestroy()).Forget();
     }
 
     private void Update()
     {
     }
 
-    public async UniTask Test22( CancellationToken token)
+    public async UniTask Test11(CancellationToken token)
     {
+        await Test22(token);
+        print("完毕");
+    }
 
-        while (time<10f)
+    public async UniTask Test22(CancellationToken token)
+    {
+        while (!token.IsCancellationRequested)
         {
-            time+=Time.deltaTime;
+            print("执行");
             await UniTask.Yield(token);
         }
-        print("执行完毕");
+
+        print("循环终止");
     }
 }

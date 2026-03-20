@@ -1115,7 +1115,6 @@ GameObject:
   m_Component:
   - component: {fileID: 226703569809468817}
   - component: {fileID: -8632270315364346999}
-  - component: {fileID: 4870365042342976565}
   - component: {fileID: 3370231055186512107}
   m_Layer: 0
   m_Name: Card
@@ -1134,7 +1133,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6264155486511405605}
@@ -1163,23 +1162,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4870365042342976565
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7722627056249905881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7020549f767938408b8963d95293780, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dragEnabled: 1
-  constraint: 0
-  smoothTime: 0.1
-  bringToFront: 1
-  leftClickOnly: 1
 --- !u!114 &3370231055186512107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1220,7 +1202,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2034686785267874913}

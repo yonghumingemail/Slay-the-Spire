@@ -3,14 +3,17 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Z_Tools;
 
-public class Card_Ironclad_Strike : Card
+public class Card_Ironclad_Bash : Card
 {
     private InflictDamage _inflictDamage;
+    private VulnerableState _vulnerableState;
     private RaycastHit2D _target;
 
     public override async UniTask<bool> Trigger(CancellationToken cancellationToken, bool conditionCheck = true)
     {
+       
         if (_target.collider != null && (!conditionCheck || energy.SetEnergy(energy._energy - ExteriorInfo.orbValue)))
         {
             isInteractable = false;
@@ -18,10 +21,10 @@ public class Card_Ironclad_Strike : Card
             {
                 await VARIABLE.Trigger(gameObject, _target.collider.gameObject);
             }
-
             await CardTriggerAnimator();
             _target = default;
             Enable(false);
+            handPile.SortCards();
             return true;
         }
 
@@ -38,10 +41,12 @@ public class Card_Ironclad_Strike : Card
         base.OnUnSelectedCard();
         handPile.cardDragLine.Interrupt();
     }
+
     public override void Strengthen()
     {
         isStrengthen = true;
         _inflictDamage.damage += 2;
+        _vulnerableState.stack += 1;
         describe = _inflictDamage.GetDescription();
         cardView.UpdateCardUI(this);
     }
@@ -50,9 +55,12 @@ public class Card_Ironclad_Strike : Card
     {
         handPile.cardDragLine.Register(_mouseInteraction);
 
-        await base.Initialized("Assets/ScriptableObject/CardEvent/Ironclad_Strike.asset");
+        await base.Initialized( "Assets/ScriptableObject/CardEvent/Ironclad_Bash.asset");
+
         _inflictDamage = new InflictDamage(6);
+        _vulnerableState = new VulnerableState(2);
         AddCardEntry(_inflictDamage);
+        AddCardEntry(_vulnerableState);
         _mouseInteraction.OnMouseUpDelegate += _OnMouseUp;
     }
 
@@ -61,6 +69,6 @@ public class Card_Ironclad_Strike : Card
         _target = Physics2D.Raycast(_data.pressEventCamera.ScreenToWorldPoint(_data.position), Vector3.forward,
             15,
             1 << LayerMask.NameToLayer("Enemy"));
-        handPile.AddAsyncCardEvent(this);
+     combatManage.AddCardToExecuteQueue(this);
     }
 }

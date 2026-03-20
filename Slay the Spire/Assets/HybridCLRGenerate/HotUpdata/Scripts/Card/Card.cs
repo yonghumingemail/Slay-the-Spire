@@ -27,6 +27,7 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
     public Camera _mainCamera { get; protected set; }
     public MouseInteraction _mouseInteraction { get; protected set; }
 
+    protected CombatManage combatManage;
     protected Energy energy;
     protected DiscardPile discardPile;
 
@@ -34,7 +35,7 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
     public string cardName;
     public CardType cardType;
     public int orbValue;
-    public List<ICardEntry> cardEntries { get; protected set; }
+    public List<IEntry> cardEntries { get; protected set; }
     public string describe { get; protected set; }
     public bool isStrengthen { get; protected set; }
 
@@ -75,12 +76,8 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
 
         EventCenter_Singleton.Instance.AddEvent<Action>("OnCardArrangementComplete", OnCardArrangementComplete);
         EventCenter_Singleton.Instance.AddEvent<Action>("OnStartCardArrangement", OnStartCardArrangement);
-
-        EventCenter_Singleton.Instance.GetEvent<Func<Energy>>("Energy", (action) => { energy = action.Invoke(); });
-
-        EventCenter_Singleton.Instance.GetEvent<Func<DiscardPile>>("DiscardPile",
-            action => { discardPile = action.Invoke(); });
     }
+
 
     #region abstract methods
 
@@ -91,7 +88,7 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
     #endregion
 
 
-    public virtual void AddCardEntry<T>(T entry) where T : ICardEntry
+    public virtual void AddCardEntry<T>(T entry) where T : IEntry
     {
         cardEntries.Add(entry);
         describe += entry.GetDescription();
@@ -151,8 +148,12 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
     {
         exteriorInfo = await AddressablesMgr.Instance.LoadAssetAsync<CardExteriorInfo>(defaultDataPtah);
 
+        combatManage = EventCenter_Singleton.Instance.GetEvent<Func<CombatManage>>("CombatManage").Invoke();
+        energy = EventCenter_Singleton.Instance.GetEvent<Func<Energy>>("Energy").Invoke();
+        discardPile = EventCenter_Singleton.Instance.GetEvent<Func<DiscardPile>>("DiscardPile").Invoke();
+
         isStrengthen = false;
-        cardEntries = new List<ICardEntry>();
+        cardEntries = new List<IEntry>();
         cardName = exteriorInfo.cardName;
         cardType = exteriorInfo.cardType;
         orbValue = exteriorInfo.orbValue;
@@ -200,6 +201,8 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
 
     private void OnPointerUp(PointerEventData eventData)
     {
+        EventCenter_Singleton.Instance.GetEvent<Action<Card>>("OnUnSelectCard")?.Invoke(this);
+
         _isDragging = false;
     }
 

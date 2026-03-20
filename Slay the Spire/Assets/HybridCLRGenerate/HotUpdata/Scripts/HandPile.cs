@@ -34,10 +34,18 @@ public class HandPile : MonoBehaviour
         EventCenter_Singleton.Instance.GetEvent<Func<DrawPile>>("DrawPile",
             (action) => { drawPile = action.Invoke(); });
         EventCenter_Singleton.Instance.AddEvent<Func<HandPile>>("HandPile", () => this);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action<int>>("PlayerTurnStart",OnPlayerTurnStart,0);
+    }
 
+    private void Start()
+    {
         Test11().Forget();
     }
 
+    private void OnPlayerTurnStart(int roundCont)
+    {
+        Test().Forget();
+    }
     public async UniTaskVoid Test11()
     {
         GameObject prefab =
@@ -68,58 +76,30 @@ public class HandPile : MonoBehaviour
 
     private void Update()
     {
-        Test().Forget();
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            
+        }
     }
 
 
     public async UniTaskVoid Test()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        var cards = drawPile.GetRandomSampleCards(drawCardsCount + drawCardsOffer);
+        cardArrangement.speed = speed;
+        foreach (var card in cards)
         {
-            var cards = drawPile.GetRandomSampleCards(drawCardsCount + drawCardsOffer);
-            cardArrangement.speed = speed;
-            foreach (var card in cards)
-            {
-                card.Enable(true);
-                cardInstances.Add(card);
-                UpdateCardPositions();
-                await Task.Delay((int)(1000 * speed2));
-            }
+            card.Enable(true);
+            cardInstances.Add(card);
+            SortCards();
+            await Task.Delay((int)(1000 * speed2));
         }
     }
 
-    private Queue<Card> executeQueue = new Queue<Card>();
-    public bool isExecute;
+   
 
-    public void AddAsyncCardEvent(Card action)
+    public void SortCards(Action callback = null)
     {
-        executeQueue.Enqueue(action);
-        if (!isExecute)
-        {
-            ExecuteQueue().Forget();
-        }
-    }
-
-    private async UniTask ExecuteQueue()
-    {
-        isExecute = true;
-        bool isTrigger = false;
-        while (executeQueue.Count != 0)
-        {
-            var current = executeQueue.Dequeue();
-            isTrigger = await current.Trigger(CancellationToken.None) || isTrigger;
-        }
-
-        if (isTrigger)
-        {
-            UpdateCardPositions();
-        }
-
-        isExecute = false;
-    }
-
-    public void UpdateCardPositions()
-    {
-        cardArrangement.UpdateCardPositions(spline, cardInstances, null);
+        cardArrangement.UpdateCardPositions(spline, cardInstances, callback);
     }
 }

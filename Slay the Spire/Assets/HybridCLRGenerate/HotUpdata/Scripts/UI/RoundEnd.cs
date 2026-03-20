@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using Z_Tools;
@@ -15,10 +16,15 @@ public class RoundEnd : MonoBehaviour
 
     private void OnClick()
     {
+        OnRoundEnd().Forget();
+    }
+
+    private async UniTaskVoid OnRoundEnd()
+    {
         var eventList = EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("OnRoundEnd");
         foreach (var VARIABLE in eventList)
         {
-            (VARIABLE._delegate as Action)?.Invoke();
+            await (VARIABLE._delegate as Func<UniTask>).Invoke();
         }
     }
 

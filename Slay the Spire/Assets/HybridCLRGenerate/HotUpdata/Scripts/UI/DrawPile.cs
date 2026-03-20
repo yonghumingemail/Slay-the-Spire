@@ -15,7 +15,7 @@ public class DrawPile : Pile
 
     public virtual List<Card> GetRandomSampleCards(int count)
     {
-        if (cardList.Count == 0)
+        if (cardList.Count == 0 || cardList.Count < count)
         {
             cardList = _discardPile.GetCarAll();
             countText.SetText(cardList.Count.ToString());

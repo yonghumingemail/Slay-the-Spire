@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Z_Tools;
@@ -23,7 +26,11 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
     private IShieldV shield_V;
 
     private AlertBox _alertBox;
-    private bool isSelectCard;
+    [SerializeField]private bool isSelectCard;
+
+    public GameObject receive;
+    private List<IEntry> entrys = new List<IEntry>();
+
     private void Awake()
     {
         _alertBox = transform.Find("AlertBox").GetComponent<AlertBox>();
@@ -45,13 +52,21 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         eventCenter.AddEvent<Func<IBuffList>>("IBuffList", () => _buffList);
 
         eventCenter.AddEvent<Func<PriorityQueueEventCenter>>("PriorityQueueEventCenter", () => _priorityEventCenter);
-        EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnSelectCard", (card) =>
-        {
-            isSelectCard = true;
-        });
+        EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnSelectCard", (card) => { isSelectCard = true; });
+        EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnUnSelectCard", (card) => { isSelectCard = false; });
     }
 
-    public int Choose(float[] list)
+    public virtual async UniTask ExecuteEntry()
+    {
+        CancellationToken token = this.GetCancellationTokenOnDestroy();
+        foreach (var entry in entrys)
+        {
+            await entry.Trigger(gameObject, receive);
+            await UniTask.Yield(token);
+        }
+    }
+
+    public virtual int Choose(float[] list)
     {
         if (list == null || list.Length == 0) return -1;
         // 1. 计算总权重
@@ -84,7 +99,7 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         
         if (isSelectCard)
         {
-            _alertBox.Show(transform,spriteRenderer.sprite);
+            _alertBox.Show(transform, spriteRenderer.sprite);
             enemySpawner.eventCenter.GetEvent<Action<Transform, Sprite>>("OnSelectEnemy")
                 ?.Invoke(transform, spriteRenderer.sprite);
         }
@@ -92,7 +107,7 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        isSelectCard = false;
+        
         _alertBox.Close();
         enemySpawner.eventCenter.GetEvent<Action>("OnDeSelectEnemy")?.Invoke();
     }

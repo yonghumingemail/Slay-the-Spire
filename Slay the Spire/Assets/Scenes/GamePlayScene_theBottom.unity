@@ -238,6 +238,7 @@ Transform:
   m_Children:
   - {fileID: 1062049142}
   - {fileID: 541457383}
+  - {fileID: 1698219142}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &78333066
@@ -255,10 +256,9 @@ MonoBehaviour:
   cardInstances: []
   drawCardsCount: 5
   drawCardsOffer: 0
-  speed: 0.35
+  speed: 0.3
   isDragging: 0
-  speed2: 0.175
-  isExecute: 0
+  speed2: 0.15
 --- !u!1 &105061497
 GameObject:
   m_ObjectHideFlags: 0
@@ -2127,6 +2127,50 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 3.52, y: 2.45}
   m_EdgeRadius: 0
+--- !u!1 &379516889
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 379516891}
+  - component: {fileID: 379516890}
+  m_Layer: 0
+  m_Name: Test
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &379516890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 379516889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bdfe8722e29c974fb0bfe59b216f467, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &379516891
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 379516889}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &389949669
 GameObject:
   m_ObjectHideFlags: 0
@@ -8118,12 +8162,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1698219139}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: -4.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 78333065}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!1 &1704393551
 GameObject:
@@ -8483,6 +8527,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1733269247}
   m_CullTransparentMesh: 1
+--- !u!1 &1734707290
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1734707292}
+  - component: {fileID: 1734707291}
+  m_Layer: 0
+  m_Name: CombatManage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1734707291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1734707290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3da3476b38aef2545931f6d58628c428, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roundCount: 0
+  isExecute: 0
+  isPlayerTurn: 0
+--- !u!4 &1734707292
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1734707290}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1736462433
 GameObject:
   m_ObjectHideFlags: 0
@@ -8957,6 +9048,8 @@ MonoBehaviour:
     _buffListObj: []
   _shield:
     shieldVale: 0
+  isSelectCard: 0
+  receive: {fileID: 0}
 --- !u!95 &1810546603
 Animator:
   serializedVersion: 7
@@ -10736,4 +10829,5 @@ SceneRoots:
   - {fileID: 78333065}
   - {fileID: 371315477}
   - {fileID: 1337518862}
-  - {fileID: 1698219142}
+  - {fileID: 1734707292}
+  - {fileID: 379516891}
