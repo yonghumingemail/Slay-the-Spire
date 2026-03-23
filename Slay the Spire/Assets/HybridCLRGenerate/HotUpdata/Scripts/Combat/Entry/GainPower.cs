@@ -7,12 +7,9 @@ using UnityEngine;
 public struct GainPower : IEntry
 {
     public int stack;
-    private StringBuilder description;
     public GainPower(int stack)
     {
         this.stack = stack;
-        description=new StringBuilder();
-        
     }
 
     public UniTask Trigger(GameObject sender, [NotNull] GameObject receiver)
@@ -42,7 +39,7 @@ public struct GainPower : IEntry
             return UniTask.CompletedTask;
         }
 
-        var buff = new Power_BuffObj(stack, maxStack, receiver);
+        var buff = new Power_BuffObj(stack, maxStack,new [] { BuffTag_E.buff} ,receiver);
         buffListObj.AddBuff(buff);
         buff.OnAddBuff(priorityEventCenter);
         return UniTask.CompletedTask;

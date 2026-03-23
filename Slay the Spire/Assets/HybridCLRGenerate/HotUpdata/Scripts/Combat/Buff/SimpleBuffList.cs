@@ -30,10 +30,11 @@ public class SimpleBuffList : IBuffList
     {
         // 将Buff对象添加到内部列表
         _buffListObj.Add(buffObj);
-        // 触发Buff对象的添加事件，传入事件中心
-        buffObj.OnAddBuff(_priorityEventCenter);
         // 通知视图更新，显示新添加的Buff
         _buffListV.AddBuff(buffObj);
+        // 触发Buff对象的添加事件，传入事件中心
+        buffObj.OnAddBuff(_priorityEventCenter);
+        
     }
 
     // 移除Buff对象
@@ -41,10 +42,11 @@ public class SimpleBuffList : IBuffList
     {
         // 从内部列表中移除指定的Buff对象
         _buffListObj.Remove(buffObj);
-        // 触发Buff对象的移除事件，传入事件中心
-        buffObj.OnRemoveBuff(_priorityEventCenter);
         // 通知视图更新，移除对应Buff的显示
         _buffListV.RemoveBuff(buffObj);
+        // 触发Buff对象的移除事件，传入事件中心
+        buffObj.OnRemoveBuff(_priorityEventCenter);
+      
     }
 
     // 更新指定Buff对象的视图显示

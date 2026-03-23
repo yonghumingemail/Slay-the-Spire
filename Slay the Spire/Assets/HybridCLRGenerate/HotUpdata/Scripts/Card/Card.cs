@@ -51,6 +51,7 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
     public bool isInteractable = true;
     public float magnification = 1.1f;
 
+
     protected virtual void Awake()
     {
         _mouseInteraction = GetComponent<MouseInteraction>();
@@ -73,6 +74,7 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
         _mouseInteraction.OnMouseUpDelegate += OnPointerUp;
         _mouseInteraction.OnMouseEnterDelegate += OnPointerEnter;
         _mouseInteraction.OnMouseExitDelegate += OnPointerExit;
+
 
         EventCenter_Singleton.Instance.AddEvent<Action>("OnCardArrangementComplete", OnCardArrangementComplete);
         EventCenter_Singleton.Instance.AddEvent<Action>("OnStartCardArrangement", OnStartCardArrangement);
@@ -119,6 +121,27 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
             cardView.Enable(false);
             isInteractable = false;
         }
+    }
+
+    public UniTask Recycle_DiscardPile()
+    {
+        handPile.cardInstances.Remove(this);
+        var source = new UniTaskCompletionSource();
+
+        cardAnimator.Recycle_DiscardPile(gameObject, () =>
+        {
+            gameObject.SetActive(false);
+            Vector3 screenCenter =
+                _mainCamera.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
+            screenCenter.z = transform.position.z;
+            transform.position = screenCenter;
+            transform.localScale = scale;
+
+            discardPile.AddCard(this).Forget();
+            source.TrySetResult();
+        });
+        
+        return source.Task;
     }
 
     protected virtual UniTask CardTriggerAnimator()

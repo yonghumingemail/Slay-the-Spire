@@ -11,18 +11,21 @@ public class BuffObj
     public int maxStack; //最大层数
     public string name;
     protected BuffName_E _name;
-    protected BuffObj( int stack, int maxStack, GameObject carrier)
+    public GameObject view;
+    protected BuffObj(int stack, int maxStack, BuffTag_E[] tagE, GameObject carrier)
     {
         this.stack = stack;
         this.maxStack = maxStack;
+        tags = tagE;
         this._carrier = carrier;
     }
-    
-    
-    public virtual void OnAddBuff(PriorityQueueEventCenter eventCent){}
-    public virtual void OnRemoveBuff(PriorityQueueEventCenter eventCent){}
-   
+
+
+    public virtual void OnAddBuff(PriorityQueueEventCenter eventCent)
+    {
+    }
+
+    public virtual void OnRemoveBuff(PriorityQueueEventCenter eventCent)
+    {
+    }
 }
-
-
-

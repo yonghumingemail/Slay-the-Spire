@@ -3,16 +3,19 @@ using UnityEngine;
 
 public class VulnerableState_BuffObj : BuffObj
 {
-    public VulnerableState_BuffObj(int stack, int maxStack, GameObject carrier) : base(
-        stack, maxStack, carrier)
+    public float power;
+
+    public VulnerableState_BuffObj(int stack, int maxStack, BuffTag_E[] buffTagEs, GameObject carrier) : base(
+        stack, maxStack, buffTagEs, carrier)
     {
-        _name =BuffName_E.vulnerable;
+        power = 1.5f;
+        _name = BuffName_E.vulnerable;
         name = Enum.GetName(typeof(BuffName_E), _name);
     }
 
     private void Effect(ChangeValueInfo info)
     {
-        info.value += info.value / 2;
+        info.value *= power;
     }
 
     public override void OnAddBuff(PriorityQueueEventCenter eventCent)

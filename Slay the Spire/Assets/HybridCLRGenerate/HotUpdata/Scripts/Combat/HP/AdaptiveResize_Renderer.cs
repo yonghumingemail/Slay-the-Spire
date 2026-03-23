@@ -11,7 +11,7 @@ public class AdaptiveResize_Renderer : MonoBehaviour
                            Right.bounds.size.x +
                            Body.bounds.size.x;
 
-    public void SpriteResize(Sprite targetSprite)
+    public void SpriteResize(Renderer _renderer, float scale_X = 1f)
     {
         Left = transform.Find("Left").GetComponent<Renderer>();
         Right = transform.Find("Right").GetComponent<Renderer>();
@@ -21,7 +21,7 @@ public class AdaptiveResize_Renderer : MonoBehaviour
             Debug.Log("缺少必要子对象，检查子对象名字是否正确");
         }
 
-        float rate = targetSprite.rect.size.x / targetSprite.pixelsPerUnit / Body.bounds.size.x;
+        float rate = _renderer.bounds.size.x / Body.bounds.size.x * scale_X;
 
         Body.transform.localPosition = Vector3.zero;
         Vector3 scale = Body.transform.localScale;

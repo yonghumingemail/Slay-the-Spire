@@ -7,7 +7,8 @@ using Z_Tools;
 
 public class CombatManage : MonoBehaviour
 {
-    public int roundCount;
+    public int RoundCount => roundCount;
+    [SerializeField] private int roundCount;
 
     public Queue<Card> executeQueue = new Queue<Card>();
     public bool isExecute;
@@ -15,16 +16,25 @@ public class CombatManage : MonoBehaviour
 
     private void Awake()
     {
-        EventCenter_Singleton.Instance.AddEvent<Func<CombatManage>>("CombatManage",Get);
+        EventCenter_Singleton.Instance.AddEvent<Func<CombatManage>>("CombatManage", Get);
 
         EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action>("PlayerRoundEnded", PlayerRoundEnded,
             -1);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            PlayerTurnStart();
+        }
     }
 
     private CombatManage Get()
     {
         return this;
     }
+
     public void AddCardToExecuteQueue(Card action)
     {
         executeQueue.Enqueue(action);
@@ -52,14 +62,14 @@ public class CombatManage : MonoBehaviour
         isPlayerTurn = false;
     }
 
-    public void PlayerTurnStart()
+    public async void PlayerTurnStart()
     {
         roundCount++;
         isPlayerTurn = true;
         var actions = EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("PlayerTurnStart");
         foreach (var VARIABLE in actions)
         {
-            (VARIABLE._delegate as Action<int>)?.Invoke(roundCount);
+           await (VARIABLE._delegate as Func<int,UniTask>).Invoke(roundCount);
         }
     }
 }

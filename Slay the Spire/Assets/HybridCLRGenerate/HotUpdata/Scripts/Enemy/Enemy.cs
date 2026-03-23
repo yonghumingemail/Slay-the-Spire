@@ -14,24 +14,23 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
     public PriorityQueueEventCenter _priorityEventCenter { get; private set; } =
         new PriorityQueueEventCenter(); //用于记录buff事件
 
-    public EnemySpawner enemySpawner;
-    public SpriteRenderer spriteRenderer;
-
     [SerializeField] private SimpleHealth _health;
     private IHealth_V health_V;
     [SerializeField] private SimpleBuffList _buffList;
     private IBuffList_V buffList_V;
-
     [SerializeField] private SimpleShield _shield;
     private IShieldV shield_V;
 
+    public EnemySpawner enemySpawner;
+    public SpriteRenderer spriteRenderer;
+
     private AlertBox _alertBox;
-    [SerializeField]private bool isSelectCard;
+    [SerializeField] private bool isSelectCard;
 
     public GameObject receive;
-    private List<IEntry> entrys = new List<IEntry>();
+    private List<IEntry> entryList = new List<IEntry>();
 
-    private void Awake()
+    private async void Awake()
     {
         _alertBox = transform.Find("AlertBox").GetComponent<AlertBox>();
         enemySpawner = transform.parent.GetComponent<EnemySpawner>();
@@ -49,17 +48,20 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
 
         buffList_V = transform.Find("BuffList").GetComponent<IBuffList_V>();
         _buffList = new SimpleBuffList(buffList_V, _priorityEventCenter);
+        await buffList_V.Initialized();
         eventCenter.AddEvent<Func<IBuffList>>("IBuffList", () => _buffList);
 
         eventCenter.AddEvent<Func<PriorityQueueEventCenter>>("PriorityQueueEventCenter", () => _priorityEventCenter);
         EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnSelectCard", (card) => { isSelectCard = true; });
         EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnUnSelectCard", (card) => { isSelectCard = false; });
+
+        _buffList.AddBuff(new Anger_BuffObj(2, 999, new[] { BuffTag_E.buff }, gameObject));
     }
 
     public virtual async UniTask ExecuteEntry()
     {
         CancellationToken token = this.GetCancellationTokenOnDestroy();
-        foreach (var entry in entrys)
+        foreach (var entry in entryList)
         {
             await entry.Trigger(gameObject, receive);
             await UniTask.Yield(token);
@@ -96,7 +98,6 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        
         if (isSelectCard)
         {
             _alertBox.Show(transform, spriteRenderer.sprite);
@@ -107,7 +108,6 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        
         _alertBox.Close();
         enemySpawner.eventCenter.GetEvent<Action>("OnDeSelectEnemy")?.Invoke();
     }

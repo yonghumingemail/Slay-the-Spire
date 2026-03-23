@@ -24,21 +24,14 @@ public class BuffList_V : MonoBehaviour, IBuffList_V
     /// <summary>布局组件（用于自动排列Buff UI）</summary>
     private Layout2D layout2D;
 
-    /// <summary>
-    /// Unity生命周期方法：对象创建时调用
-    /// 初始化资源加载
-    /// </summary>
-    private void Awake()
-    {
-        Initialized().Forget();
-    }
+
 
     /// <summary>
     /// 异步初始化方法
     /// 加载Buff UI所需的图集和预设体资源
     /// </summary>
     /// <returns>异步任务</returns>
-    private async UniTaskVoid Initialized()
+    public async UniTask Initialized()
     {
         // 并行加载多个资源，提高加载效率
         var taskList = new[]
@@ -75,7 +68,7 @@ public class BuffList_V : MonoBehaviour, IBuffList_V
             tempObj.SetActive(false);  // 初始设置为不活跃
             buffPool.Push(tempObj.GetComponent<Buff_V>());  // 加入对象池
         }
-
+        
         // 从对象池中获取可用的Buff UI
         var tempBuff_V = buffPool.Pop();
         
@@ -88,6 +81,7 @@ public class BuffList_V : MonoBehaviour, IBuffList_V
         
         // 添加到字典中建立映射关系
         buffGameDic.Add(buffObj, tempBuff_V);
+        tempBuff_V.TriggerAnimator();
     }
 
     /// <summary>
@@ -132,6 +126,7 @@ public class BuffList_V : MonoBehaviour, IBuffList_V
         {
             // 调用UI更新方法
             tempBuff_V.UpdateBuffUI(buffObj);
+            tempBuff_V.TriggerAnimator();
         }
     }
 

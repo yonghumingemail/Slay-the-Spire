@@ -10,6 +10,10 @@ using UnityEngine;
 /// </summary>
 public class Hp_Sprite2D_V : MonoBehaviour,IHealth_V
 {
+    /// <summary>
+    /// 血条x轴的缩放
+    /// </summary>
+    public float scale_X = 1;
     /// <summary>血条动画变化速度（秒）</summary>
     public float animatorSpeed = 0.15f;
     
@@ -55,8 +59,7 @@ public class Hp_Sprite2D_V : MonoBehaviour,IHealth_V
         _hp = transform.Find("Blood").GetComponent<AdaptiveResize_Renderer>();
         
         // 获取目标对象的精灵信息用于尺寸适配
-        SpriteRenderer targetSpriteRenderer = obj.GetComponentInChildren<SpriteRenderer>();
-        Sprite targetSprite = targetSpriteRenderer.sprite;
+        Renderer _renderer = obj.GetComponentInChildren<Renderer>();
 
         // 调整血条子组件的尺寸以匹配目标对象精灵
         AdaptiveResize_Renderer[] spriteRendererChild = transform.GetComponentsInChildren<AdaptiveResize_Renderer>();
@@ -65,7 +68,7 @@ public class Hp_Sprite2D_V : MonoBehaviour,IHealth_V
         // 遍历所有血条精灵组件并重新调整尺寸
         foreach (var t in spriteRendererChild)
         {
-            t.SpriteResize(targetSprite);
+            t.SpriteResize(_renderer,scale_X);
             if (t.Body.bounds.size.y>maxSpriteSize)
             {
                 maxSpriteSize = t.Body.bounds.size.y;
@@ -73,10 +76,10 @@ public class Hp_Sprite2D_V : MonoBehaviour,IHealth_V
         }
         
         // 计算血条在目标对象下方的位置
-        float posY = (-targetSprite.rect.size.y / targetSprite.pixelsPerUnit / 2) - maxSpriteSize / 2;
+        float posY = (-_renderer.bounds.size.y / 2) - maxSpriteSize / 2;
         
         // 设置血条位置（目标对象底部 + 自定义偏移）
-        var localPosition = new Vector3(0, posY, targetSpriteRenderer.transform.position.z);
+        var localPosition = new Vector3(0, posY, _renderer.transform.position.z);
         localPosition += positionOffset;
         transform.localPosition = localPosition;
 

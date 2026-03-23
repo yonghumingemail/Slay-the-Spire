@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -52,7 +53,7 @@ public class Layout2D : MonoBehaviour
     private Vector2 totalSize;
 
     // ========== 生命周期方法 ==========
-
+    
     /// <summary>
     /// 游戏运行时初始化布局
     /// </summary>
@@ -124,7 +125,7 @@ public class Layout2D : MonoBehaviour
     public void AddChild(GameObject child, bool refreshLayout = true)
     {
         if (child == null) return;
-        
+
         SetValue(child);
         // 设置父对象并刷新子对象列表
         child.transform.SetParent(transform);
@@ -175,9 +176,12 @@ public class Layout2D : MonoBehaviour
     private void SetValue(GameObject obj)
     {
         //print("auto update");
-        var _renderer = obj.GetComponent<Renderer>();
-        horizontalOffset = _renderer.bounds.size.x + HorizontalOffset;
-        verticalOffset = _renderer.bounds.size.y + VerticalOffset;
+        var _renderer = obj.GetComponentInChildren<SpriteRenderer>(true);
+        horizontalOffset = _renderer.sprite.rect.size.x / _renderer.sprite.pixelsPerUnit + HorizontalOffset;
+        verticalOffset = _renderer.sprite.rect.size.y / _renderer.sprite.pixelsPerUnit + VerticalOffset;
+        // var _renderer = obj.GetComponentInChildren<Renderer>(true);
+        // horizontalOffset = _renderer.bounds.size.x + HorizontalOffset;
+        // verticalOffset = _renderer.bounds.size.y+ VerticalOffset;
     }
 
     /// <summary>

@@ -21,6 +21,10 @@ public class RoundEnd : MonoBehaviour
 
     private async UniTaskVoid OnRoundEnd()
     {
+        if (EventCenter_Singleton.Instance.GetEvent<Func<CombatManage>>("CombatManage").Invoke().isExecute)
+        {
+            return;
+        }
         var eventList = EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("OnRoundEnd");
         foreach (var VARIABLE in eventList)
         {
@@ -28,12 +32,4 @@ public class RoundEnd : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-    }
-
-
-    void Update()
-    {
-    }
 }

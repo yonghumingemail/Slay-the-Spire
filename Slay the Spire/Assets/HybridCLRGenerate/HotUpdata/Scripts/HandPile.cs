@@ -34,7 +34,8 @@ public class HandPile : MonoBehaviour
         EventCenter_Singleton.Instance.GetEvent<Func<DrawPile>>("DrawPile",
             (action) => { drawPile = action.Invoke(); });
         EventCenter_Singleton.Instance.AddEvent<Func<HandPile>>("HandPile", () => this);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action<int>>("PlayerTurnStart",OnPlayerTurnStart,0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int, UniTask>>("PlayerTurnStart", OnPlayerTurnStart, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<UniTask>>("OnRoundEnd", OnRoundEnd, 0);
     }
 
     private void Start()
@@ -42,10 +43,6 @@ public class HandPile : MonoBehaviour
         Test11().Forget();
     }
 
-    private void OnPlayerTurnStart(int roundCont)
-    {
-        Test().Forget();
-    }
     public async UniTaskVoid Test11()
     {
         GameObject prefab =
@@ -71,19 +68,18 @@ public class HandPile : MonoBehaviour
         }
     }
 
-    public float speed2;
-
-
-    private void Update()
+    private UniTask OnRoundEnd()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        foreach (var VARIABLE in cardInstances)
         {
-            
+            VARIABLE.isInteractable = false;
+            VARIABLE.Recycle_DiscardPile();
         }
+        return UniTask.CompletedTask;
     }
-
-
-    public async UniTaskVoid Test()
+    
+    public float speed2;
+    public async UniTask OnPlayerTurnStart(int roundCount)
     {
         var cards = drawPile.GetRandomSampleCards(drawCardsCount + drawCardsOffer);
         cardArrangement.speed = speed;
@@ -96,7 +92,6 @@ public class HandPile : MonoBehaviour
         }
     }
 
-   
 
     public void SortCards(Action callback = null)
     {

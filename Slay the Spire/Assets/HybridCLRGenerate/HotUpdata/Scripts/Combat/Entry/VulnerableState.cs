@@ -39,7 +39,7 @@ public struct VulnerableState : IEntry
             return UniTask.CompletedTask;
         }
 
-        var buff = new VulnerableState_BuffObj(stack, maxStack, receiver);
+        var buff = new VulnerableState_BuffObj(stack, maxStack,new [] { BuffTag_E.debuff }, receiver);
         buffListObj.AddBuff(buff);
         return UniTask.CompletedTask;
     }

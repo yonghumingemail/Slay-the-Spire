@@ -2,15 +2,12 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Test2 : MonoBehaviour
+public class Test2 :ScriptableObject
 {
     private void Awake()
     {
-        print("Awake");
+       MonoBehaviour.print("Awake");
     }
 
-    private void Start()
-    {
-        print("Start");
-    }
+  
 }
