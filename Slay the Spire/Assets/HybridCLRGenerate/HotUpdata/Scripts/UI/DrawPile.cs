@@ -17,7 +17,7 @@ public class DrawPile : Pile
     {
         if (cardList.Count == 0 || cardList.Count < count)
         {
-            cardList = _discardPile.GetCarAll();
+            cardList.AddRange(_discardPile.GetCarAll());
             countText.SetText(cardList.Count.ToString());
         }
 

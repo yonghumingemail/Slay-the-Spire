@@ -41,7 +41,6 @@ public struct GainPower : IEntry
 
         var buff = new Power_BuffObj(stack, maxStack,new [] { BuffTag_E.buff} ,receiver);
         buffListObj.AddBuff(buff);
-        buff.OnAddBuff(priorityEventCenter);
         return UniTask.CompletedTask;
     }
 

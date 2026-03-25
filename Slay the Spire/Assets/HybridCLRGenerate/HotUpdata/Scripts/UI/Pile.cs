@@ -11,16 +11,16 @@ using Random = System.Random;
 public class Pile : MonoBehaviour
 {
     // 当前堆中的卡牌事件列表
-    public List<Card> cardList { get; protected set; } = new List<Card>();
+    [SerializeField] protected List<Card> cardList = new List<Card>();
 
     // UI引用
-    protected Button returnUI;          // 返回按钮
-    protected Button UI;                // 打开堆的按钮
-    protected CanvasGroup View;         // 堆的视图画布组（用于显示/隐藏）
+    protected Button returnUI; // 返回按钮
+    protected Button UI; // 打开堆的按钮
+    protected CanvasGroup View; // 堆的视图画布组（用于显示/隐藏）
     protected CardScrollView cardScrollView; // 卡牌滚动视图组件
 
     protected TextMeshProUGUI countText; // 显示卡牌数量的文本
-    protected bool isEnable;             // 当前是否处于显示状态
+    protected bool isEnable; // 当前是否处于显示状态
     protected Random random = new Random(); // 随机数生成器
 
     // 初始化方法
@@ -39,7 +39,7 @@ public class Pile : MonoBehaviour
         // 绑定按钮点击事件
         UI.onClick.AddListener(OnClick);
         returnUI.onClick.AddListener(OnClick);
-        
+
         // 初始化视图状态
         View.blocksRaycasts = isEnable;
         View.alpha = 0;
@@ -51,11 +51,11 @@ public class Pile : MonoBehaviour
     {
         if (isEnable)
         {
-            CloseUICard();  // 如果已显示，则关闭
+            CloseUICard(); // 如果已显示，则关闭
         }
         else
         {
-            ShowUICard();   // 如果未显示，则打开
+            ShowUICard(); // 如果未显示，则打开
         }
     }
 
@@ -119,14 +119,14 @@ public class Pile : MonoBehaviour
     }
 
     // 获取堆中所有卡牌并清空当前堆
-    public virtual List<Card> GetCarAll()
+    public virtual Card[] GetCarAll()
     {
-        var returnList = new List<Card>(cardList);
+        var returnList =cardList.ToArray();
         cardList.Clear();
         countText.SetText(cardList.Count.ToString());
         return returnList;
     }
-    
+
     /// <summary>
     /// 从列表中随机取样指定数量的元素（不重复）
     /// 采用Knuth洗牌算法，原地操作，高效随机
@@ -142,7 +142,7 @@ public class Pile : MonoBehaviour
 
         int n = list.Count;
         count = count < list.Count ? count : list.Count; // 确保取样数量不超过列表大小
-        
+
         // 部分洗牌算法：只洗前count个元素
         for (int i = 0; i < count; i++)
         {
@@ -152,7 +152,7 @@ public class Pile : MonoBehaviour
 
         // 获取前count个元素作为结果
         var result = list.GetRange(0, count);
-        
+
         // 从原列表中移除已被取样的元素
         list.RemoveRange(0, count);
         return result;

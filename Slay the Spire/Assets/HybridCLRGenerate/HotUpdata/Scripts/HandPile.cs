@@ -34,13 +34,44 @@ public class HandPile : MonoBehaviour
         EventCenter_Singleton.Instance.GetEvent<Func<DrawPile>>("DrawPile",
             (action) => { drawPile = action.Invoke(); });
         EventCenter_Singleton.Instance.AddEvent<Func<HandPile>>("HandPile", () => this);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int, UniTask>>("PlayerTurnStart", OnPlayerTurnStart, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int, UniTask>>("PlayerTurnStart",
+            OnPlayerTurnStart, 0);
         EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<UniTask>>("OnRoundEnd", OnRoundEnd, 0);
+
+        EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnSelectCard", OnSelectCard);
+        EventCenter_Singleton.Instance.AddEvent<Action<Card>>("UnOnSelectCard", UnOnSelectCard);
     }
 
     private void Start()
     {
         Test11().Forget();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            DrawCard(3).Forget();
+        }
+    }
+
+    private void OnSelectCard(Card card)
+    {
+        foreach (var VARIABLE in cardInstances)
+        {
+            if (card != VARIABLE)
+            {
+                VARIABLE.isInteractable = false;
+            }
+        }
+    }
+
+    private void UnOnSelectCard(Card card)
+    {
+        foreach (var VARIABLE in cardInstances)
+        {
+            VARIABLE.isInteractable = true;
+        }
     }
 
     public async UniTaskVoid Test11()
@@ -63,25 +94,38 @@ public class HandPile : MonoBehaviour
 
             card.gameObject.SetActive(false);
             card.Initialized().Forget();
-            cardInstances.Add(card);
             drawPile.AddCard(card).Forget();
+            
         }
     }
 
-    private UniTask OnRoundEnd()
+    private async UniTask OnRoundEnd()
     {
-        foreach (var VARIABLE in cardInstances)
+        // 创建副本，避免循环中列表变化的影响
+        var cardsToProcess = cardInstances.ToArray();
+        UniTask[] tasks = new UniTask[cardsToProcess.Length];
+print(tasks.Length);
+        for (int i = 0; i < cardsToProcess.Length; i++)
         {
-            VARIABLE.isInteractable = false;
-            VARIABLE.Recycle_DiscardPile();
+            cardsToProcess[i].isInteractable = false;
+            tasks[i] = cardsToProcess[i].Recycle_DiscardPile();
         }
-        return UniTask.CompletedTask;
+
+        await UniTask.WhenAll(tasks);
+        print("完成");
     }
-    
+
     public float speed2;
+
     public async UniTask OnPlayerTurnStart(int roundCount)
     {
-        var cards = drawPile.GetRandomSampleCards(drawCardsCount + drawCardsOffer);
+        await DrawCard(drawCardsCount + drawCardsOffer);
+    }
+
+    private async UniTask DrawCard(int count)
+    {
+        var cards = drawPile.GetRandomSampleCards(count);
+        print(cards.Count);
         cardArrangement.speed = speed;
         foreach (var card in cards)
         {
@@ -91,7 +135,6 @@ public class HandPile : MonoBehaviour
             await Task.Delay((int)(1000 * speed2));
         }
     }
-
 
     public void SortCards(Action callback = null)
     {

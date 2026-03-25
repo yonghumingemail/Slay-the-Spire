@@ -11,7 +11,7 @@ public class CombatManage : MonoBehaviour
     [SerializeField] private int roundCount;
 
     public Queue<Card> executeQueue = new Queue<Card>();
-    public bool isExecute;
+    public bool isExecute=false;
     public bool isPlayerTurn;
 
     private void Awake()
@@ -26,7 +26,7 @@ public class CombatManage : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            PlayerTurnStart();
+            PlayerTurnStart().Forget();
         }
     }
 
@@ -62,7 +62,7 @@ public class CombatManage : MonoBehaviour
         isPlayerTurn = false;
     }
 
-    public async void PlayerTurnStart()
+    public async UniTaskVoid PlayerTurnStart()
     {
         roundCount++;
         isPlayerTurn = true;

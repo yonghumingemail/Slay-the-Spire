@@ -30,7 +30,7 @@ public class Card_Ironclad_Strike : Card
         CardAnimator.TransformEffect(
             gameObject,
             position,
-            rotation,
+            rotation.eulerAngles,
             scale);
         return false;
     }

@@ -7,7 +7,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Z_Tools;
 
-
 public abstract class Card : MonoBehaviour, IEventCenterObject<string>
 {
     #region Property
@@ -74,8 +73,7 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
         _mouseInteraction.OnMouseUpDelegate += OnPointerUp;
         _mouseInteraction.OnMouseEnterDelegate += OnPointerEnter;
         _mouseInteraction.OnMouseExitDelegate += OnPointerExit;
-
-
+        
         EventCenter_Singleton.Instance.AddEvent<Action>("OnCardArrangementComplete", OnCardArrangementComplete);
         EventCenter_Singleton.Instance.AddEvent<Action>("OnStartCardArrangement", OnStartCardArrangement);
     }
@@ -99,7 +97,7 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
 
     public virtual void OnUnSelectedCard()
     {
-        cardAnimator.TransformEffect(gameObject, position, rotation, scale);
+        cardAnimator.TransformEffect(gameObject, position, rotation.eulerAngles, scale);
     }
 
     public virtual bool CanBeTriggered()
@@ -123,10 +121,10 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
         }
     }
 
-    public UniTask Recycle_DiscardPile()
+    public UniTask Recycle_DiscardPile(UniTaskCompletionSource source=null)
     {
         handPile.cardInstances.Remove(this);
-        var source = new UniTaskCompletionSource();
+        source??= new UniTaskCompletionSource();
 
         cardAnimator.Recycle_DiscardPile(gameObject, () =>
         {
@@ -136,6 +134,7 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
             screenCenter.z = transform.position.z;
             transform.position = screenCenter;
             transform.localScale = scale;
+            transform.rotation = Quaternion.identity;
 
             discardPile.AddCard(this).Forget();
             source.TrySetResult();
@@ -150,18 +149,7 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
         var source = new UniTaskCompletionSource();
         cardAnimator.MoveToScreenCenter(gameObject, () =>
         {
-            cardAnimator.Recycle_DiscardPile(gameObject, () =>
-            {
-                gameObject.SetActive(false);
-                Vector3 screenCenter =
-                    _mainCamera.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
-                screenCenter.z = transform.position.z;
-                transform.position = screenCenter;
-                transform.localScale = scale;
-
-                discardPile.AddCard(this).Forget();
-                source.TrySetResult();
-            });
+            Recycle_DiscardPile(source);
         });
         return source.Task;
     }
@@ -204,14 +192,14 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
     {
         if (!isInteractable || _isDragging) return;
 
-        cardAnimator.TransformEffect(gameObject, mouseOverPosition, Quaternion.identity, mouseOverScale);
+        cardAnimator.TransformEffectToRotation(gameObject, mouseOverPosition, Quaternion.identity, mouseOverScale);
     }
 
     private void OnPointerExit(PointerEventData eventData)
     {
         if (!isInteractable || _isDragging) return;
 
-        cardAnimator.TransformEffect(gameObject, position, rotation, scale);
+        cardAnimator.TransformEffectToRotation(gameObject, position, rotation, scale);
     }
 
     private void OnPointerDown(PointerEventData eventData)

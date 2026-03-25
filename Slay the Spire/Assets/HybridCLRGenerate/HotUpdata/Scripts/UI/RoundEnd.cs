@@ -7,11 +7,17 @@ using Z_Tools;
 public class RoundEnd : MonoBehaviour
 {
     private Button _button;
+    private CombatManage _combatManage;
 
     private void Awake()
     {
         _button = transform.GetComponent<Button>();
         _button.onClick.AddListener(OnClick);
+    }
+
+    private void Start()
+    {
+        _combatManage = EventCenter_Singleton.Instance.GetEvent<Func<CombatManage>>("CombatManage").Invoke();
     }
 
     private void OnClick()
@@ -21,15 +27,23 @@ public class RoundEnd : MonoBehaviour
 
     private async UniTaskVoid OnRoundEnd()
     {
-        if (EventCenter_Singleton.Instance.GetEvent<Func<CombatManage>>("CombatManage").Invoke().isExecute)
+        if (_combatManage.isExecute)
         {
             return;
         }
         var eventList = EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("OnRoundEnd");
         foreach (var VARIABLE in eventList)
         {
-            await (VARIABLE._delegate as Func<UniTask>).Invoke();
+            if (VARIABLE._delegate is Func<UniTask> func)
+            {
+                await func.Invoke();
+            }
+            else
+            {
+                // 处理类型不匹配的情况
+                Debug.LogWarning($"委托类型不匹配: {VARIABLE._delegate?.GetType()}");
+            }
         }
+        _combatManage.PlayerTurnStart().Forget();
     }
-
 }

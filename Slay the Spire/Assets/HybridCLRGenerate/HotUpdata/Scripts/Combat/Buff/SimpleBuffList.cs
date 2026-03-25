@@ -7,7 +7,7 @@ using UnityEngine;
 public class SimpleBuffList : IBuffList
 {
     // 优先级事件中心，用于处理Buff相关事件（如添加、移除）并按优先级排序
-    private PriorityQueueEventCenter _priorityEventCenter;
+    public PriorityQueueEventCenter _priorityEventCenter { get;private set; }
     
     // Buff列表的视图接口，用于更新Buff的显示
     private IBuffList_V _buffListV;

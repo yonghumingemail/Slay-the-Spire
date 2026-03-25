@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public struct PriorityEvent
@@ -10,7 +11,7 @@ public struct PriorityEvent
 
 public class PriorityQueueEventCenter
 {
-    private Dictionary<string, List<PriorityEvent>> Event_Dic = new ();
+    private Dictionary<string, List<PriorityEvent>> Event_Dic = new();
 
     public void AddEvent<D>(string eventName, D _delegate, int priority) where D : Delegate
     {
@@ -22,11 +23,12 @@ public class PriorityQueueEventCenter
         {
             if (Event_Dic[eventName][0]._delegate is not D)
             {
-                Debug.Log($"事件类型不统一,原事件类型为{Event_Dic[eventName][0]._delegate.GetType()}|,传递的参数类型为{_delegate.GetType()}");
+                Debug.Log(
+                    $"事件类型不统一,原事件类型为{Event_Dic[eventName][0]._delegate.GetType()}|,传递的参数类型为{_delegate.GetType()}");
                 return;
             }
         }
-        
+
         var temp = new PriorityEvent
         {
             priority = priority,
@@ -37,9 +39,9 @@ public class PriorityQueueEventCenter
         Event_Dic[eventName].Sort((a, b) => b.priority.CompareTo(a.priority));
     }
 
-    public List<PriorityEvent> GetEvent(string name)
+    public IEnumerable<PriorityEvent> GetEvent(string name)
     {
-        return Event_Dic.GetValueOrDefault(name);
+        return Event_Dic.GetValueOrDefault(name) ?? Enumerable.Empty<PriorityEvent>();
     }
 
     public bool RemoveEvent(string eventName)

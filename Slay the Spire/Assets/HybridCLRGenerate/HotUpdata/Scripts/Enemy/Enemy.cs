@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
     public IEventCenter<string> eventCenter { get; } = new EventCenter<string>(); //用于提供接口对象
 
     public PriorityQueueEventCenter _priorityEventCenter { get; private set; } =
-        new PriorityQueueEventCenter(); //用于记录buff事件
+        new PriorityQueueEventCenter(); //用于记录和触发buff事件
 
     [SerializeField] private SimpleHealth _health;
     private IHealth_V health_V;
@@ -56,13 +57,30 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnUnSelectCard", (card) => { isSelectCard = false; });
 
         _buffList.AddBuff(new Anger_BuffObj(2, 999, new[] { BuffTag_E.buff }, gameObject));
+        entryList.Add(new InflictDamage(5));
     }
 
-    public virtual async UniTask ExecuteEntry()
+    public virtual async UniTask ExecuteEntry(int roundCount)
     {
+        //通知buff，回合开始
+        var actions = _priorityEventCenter.GetEvent("OnRoundStart");
+        foreach (var action in actions)
+        {
+            if (action._delegate is Func<int, UniTask> func)
+            {
+                await func(roundCount);
+            }
+            else
+            {
+                // 处理类型不匹配的情况
+                Debug.LogWarning($"委托类型不匹配: {action._delegate?.GetType()}");
+            }
+        }
+
         CancellationToken token = this.GetCancellationTokenOnDestroy();
         foreach (var entry in entryList)
         {
+            print("执行");
             await entry.Trigger(gameObject, receive);
             await UniTask.Yield(token);
         }

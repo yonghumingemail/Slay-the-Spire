@@ -13,7 +13,7 @@ public class Power_BuffObj : BuffObj
 
     private void Effect(ChangeValueInfo info)
     {
-        info.value +=stack;
+        info.value -=stack;
     }
 
     public override void OnAddBuff(PriorityQueueEventCenter eventCent)
