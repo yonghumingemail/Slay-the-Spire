@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 
 [Serializable]
-public class CardView
+public class CardView:MonoBehaviour
 {
     public SpriteRenderer Background => _background;
     public SpriteRenderer Frame => _frame;
@@ -28,23 +28,21 @@ public class CardView
     [SerializeField] private TextMeshPro _describe;
     [SerializeField] private Outline cardOutline;
 
-
-    public CardView(Card card)
+    private void Awake()
     {
-        _background = card.transform.Find("UI").GetComponent<SpriteRenderer>();
-        _frame = card.transform.Find("UI/Head/Frame").GetComponent<SpriteRenderer>();
-        _banners = card.transform.Find("UI/Head/Frame/Banners").GetComponent<SpriteRenderer>();
-        _image = card.transform.Find("UI/Head/Image").GetComponent<SpriteRenderer>();
-        _orb = card.transform.Find("UI/Head/Orb").GetComponent<SpriteRenderer>();
+        _background = transform.Find("UI").GetComponent<SpriteRenderer>();
+        _frame = transform.Find("UI/Head/Frame").GetComponent<SpriteRenderer>();
+        _banners = transform.Find("UI/Head/Frame/Banners").GetComponent<SpriteRenderer>();
+        _image = transform.Find("UI/Head/Image").GetComponent<SpriteRenderer>();
+        _orb = transform.Find("UI/Head/Orb").GetComponent<SpriteRenderer>();
 
-        _name = card.transform.Find("UI/Head/Frame/Banners/CardName").GetComponent<TextMeshPro>();
-        _typeName = card.transform.Find("UI/Head/Frame/TypeName").GetComponent<TextMeshPro>();
-        _orbValue = card.transform.Find("UI/Head/Orb/Point").GetComponent<TextMeshPro>();
-        _describe = card.transform.Find("UI/Describe").GetComponent<TextMeshPro>();
-        cardOutline = card.transform.Find("Outline").GetComponent<Outline>();
+        _name = transform.Find("UI/Head/Frame/Banners/CardName").GetComponent<TextMeshPro>();
+        _typeName = transform.Find("UI/Head/Frame/TypeName").GetComponent<TextMeshPro>();
+        _orbValue = transform.Find("UI/Head/Orb/Point").GetComponent<TextMeshPro>();
+        _describe = transform.Find("UI/Describe").GetComponent<TextMeshPro>();
+        cardOutline = transform.Find("Outline").GetComponent<Outline>();
     }
-
-
+    
     public void ShowOutline(bool enable)
     {
         if (enable)

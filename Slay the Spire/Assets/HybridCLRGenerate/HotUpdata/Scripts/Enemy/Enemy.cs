@@ -22,6 +22,8 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
     [SerializeField] private SimpleShield _shield;
     private IShieldV shield_V;
 
+    private Intent _intent;
+    
     public EnemySpawner enemySpawner;
     public SpriteRenderer spriteRenderer;
 
@@ -34,8 +36,10 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
     private async void Awake()
     {
         _alertBox = transform.Find("AlertBox").GetComponent<AlertBox>();
+        _intent = transform.Find("Intent").GetComponent<Intent>();
         enemySpawner = transform.parent.GetComponent<EnemySpawner>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        
 
         health_V = transform.Find("HP").GetComponent<IHealth_V>();
         _health = new SimpleHealth(50, 100, health_V, _priorityEventCenter);

@@ -29,7 +29,6 @@ public class Card_Ironclad_Bash : Card
         }
 
         CardAnimator.TransformEffect(
-            gameObject,
             position,
             rotation.eulerAngles,
             scale);

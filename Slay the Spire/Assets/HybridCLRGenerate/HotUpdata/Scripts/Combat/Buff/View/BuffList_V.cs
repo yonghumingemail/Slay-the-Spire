@@ -11,19 +11,18 @@ public class BuffList_V : MonoBehaviour, IBuffList_V
 {
     /// <summary>Buff数据到UI对象的映射字典</summary>
     private Dictionary<BuffObj, Buff_V> buffGameDic = new();
-    
+
     /// <summary>Buff UI对象池（用于复用减少实例化开销）</summary>
     private Stack<Buff_V> buffPool = new();
 
     /// <summary>Buff图标图集（包含所有Buff的图标）</summary>
     private SpriteAtlas spriteAtlas;
-    
+
     /// <summary>Buff UI预设体（用于实例化新的Buff UI）</summary>
     private GameObject buffVPrefab;
 
     /// <summary>布局组件（用于自动排列Buff UI）</summary>
     private Layout2D layout2D;
-
 
 
     /// <summary>
@@ -38,18 +37,18 @@ public class BuffList_V : MonoBehaviour, IBuffList_V
         {
             // 加载Buff图标图集
             AddressablesMgr.Instance.LoadAssetAsync<object>("Assets/Art/Image/SpriteAtlas/Powers.spriteatlasv2"),
-            
+
             // 加载Buff UI预设体
             AddressablesMgr.Instance.LoadAssetAsync<object>("Assets/Art/Prefab/UI/Buff.prefab"),
         };
-        
+
         // 等待所有资源加载完成
         var results = await UniTask.WhenAll(taskList);
-        
+
         // 类型转换并赋值
-        spriteAtlas = results[0] as SpriteAtlas;      // 第一个结果是图集
-        buffVPrefab = results[1] as GameObject;       // 第二个结果是预设体
-        
+        spriteAtlas = results[0] as SpriteAtlas; // 第一个结果是图集
+        buffVPrefab = results[1] as GameObject; // 第二个结果是预设体
+
         // 获取布局组件引用
         layout2D = GetComponent<Layout2D>();
     }
@@ -65,20 +64,20 @@ public class BuffList_V : MonoBehaviour, IBuffList_V
         {
             // 实例化新的Buff UI对象
             var tempObj = Instantiate(buffVPrefab, transform);
-            tempObj.SetActive(false);  // 初始设置为不活跃
-            buffPool.Push(tempObj.GetComponent<Buff_V>());  // 加入对象池
+            tempObj.SetActive(false); // 初始设置为不活跃
+            buffPool.Push(tempObj.GetComponent<Buff_V>()); // 加入对象池
         }
-        
+
         // 从对象池中获取可用的Buff UI
         var tempBuff_V = buffPool.Pop();
-        
+
         // 初始化Buff UI（设置图标、数据等）
         tempBuff_V.Initialized(buffObj, spriteAtlas);
-        tempBuff_V.gameObject.SetActive(true);  // 激活显示
+        tempBuff_V.gameObject.SetActive(true); // 激活显示
 
         // 添加到布局组件中自动排列
         layout2D.AddChild(tempBuff_V.gameObject);
-        
+
         // 添加到字典中建立映射关系
         buffGameDic.Add(buffObj, tempBuff_V);
         tempBuff_V.TriggerAnimator();
@@ -96,20 +95,20 @@ public class BuffList_V : MonoBehaviour, IBuffList_V
             Debug.Log("要移除的对象不存在");
             return;
         }
-        
+
         // 获取UI对象
         GameObject tempObj = tempBuff_V.gameObject;
-        
-        // 重置位置（可选，确保下次复用时位置正确）
+
+        // 重置位置
         tempObj.transform.localPosition = new Vector3(0, 0, tempObj.transform.localPosition.z);
-        tempObj.SetActive(false);  // 隐藏对象
+        tempObj.SetActive(false); // 隐藏对象
 
         // 从布局中移除
         layout2D.RemoveChild(tempObj.gameObject);
-        
+
         // 从字典中移除映射关系
         buffGameDic.Remove(buffObj);
-        
+
         // 回收对象到对象池
         buffPool.Push(tempObj.GetComponent<Buff_V>());
     }
@@ -138,15 +137,5 @@ public class BuffList_V : MonoBehaviour, IBuffList_V
     {
         AddressablesMgr.Instance.Release("Assets/Art/Image/SpriteAtlas/Powers.spriteatlasv2");
         AddressablesMgr.Instance.Release("Assets/Art/Prefab/UI/Buff.prefab");
-    }
-    
-    /// <summary>
-    /// 检查是否存在特定Buff
-    /// </summary>
-    /// <param name="buffObj">要检查的Buff数据对象</param>
-    /// <returns>是否存在</returns>
-    public bool ContainsBuff(BuffObj buffObj)
-    {
-        return buffGameDic.ContainsKey(buffObj);
     }
 }

@@ -1,26 +1,30 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using DG.Tweening;
 using UnityEngine;
 
+[Serializable]
+public abstract class Test23
+{
+    public int counter;
+    public string name;
+    public abstract void Test();
+}
 
 public class Test : MonoBehaviour
 {
-    public List<Test> tests = new List<Test>();
+   public List<Test23> tests = new List<Test23>();
     public Vector3 position;
+
     private void Start()
     {
-        tests.Add(this);
     }
 
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-          
         }
     }
 
