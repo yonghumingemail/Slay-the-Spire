@@ -1,7 +1,7 @@
 using UnityEngine;
 
-public interface IShieldV 
+public interface IShieldV
 {
-    void UpdateView( IShield shield);
+    void UpdateView(IShield shield);
     void InitializeView(GameObject obj);
 }

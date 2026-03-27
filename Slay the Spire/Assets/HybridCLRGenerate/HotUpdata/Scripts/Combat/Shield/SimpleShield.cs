@@ -20,6 +20,7 @@ public class SimpleShield : IShield
         _shield_V = shieldSprite2DObj;
         _priorityEventCenter = priorityEventCenter;
         _priorityEventCenter.AddEvent<Action<ChangeValueInfo>>("OnHealthChange", ShieldTrigger, -1);
+        _shield_V.UpdateView(this);
     }
 
     public void SetShieldValue(float value)

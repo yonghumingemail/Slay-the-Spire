@@ -28,7 +28,7 @@ public class SimpleHealth : IHealth
         MaxHealth = maxHealth;
         _priorityEventCenter = priorityEventCenter;
         _healthV = healthV;
-        
+        _healthV.UpdateView(this);
     }
 
     public void SetHealth(ChangeValueInfo info)

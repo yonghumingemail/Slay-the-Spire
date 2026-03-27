@@ -12,12 +12,12 @@ public class Card_Ironclad_Strike : Card
 
     public override async UniTask<bool> Trigger(CancellationToken cancellationToken, bool conditionCheck = true)
     {
-        if (_target.collider != null && (!conditionCheck || energy.SetEnergy(energy._energy - ExteriorInfo.orbValue)))
+        if (_target.collider != null && (!conditionCheck || _energy.SetEnergy(_energy._energy - exteriorInfo.orbValue)))
         {
             isInteractable = false;
             foreach (var VARIABLE in cardEntries)
             {
-                await VARIABLE.Trigger(gameObject, _target.collider.gameObject);
+                await VARIABLE.Trigger(_player.gameObject, _target.collider.gameObject);
             }
 
             await CardTriggerAnimator();
@@ -27,7 +27,7 @@ public class Card_Ironclad_Strike : Card
             return true;
         }
 
-        CardAnimator.TransformEffect(
+        cardAnimator.TransformEffect(
             position,
             rotation.eulerAngles,
             scale);
@@ -63,6 +63,6 @@ public class Card_Ironclad_Strike : Card
         _target = Physics2D.Raycast(_data.pressEventCamera.ScreenToWorldPoint(_data.position), Vector3.forward,
             15,
             1 << LayerMask.NameToLayer("Enemy"));
-        combatManage.AddCardToExecuteQueue(this);
+        _combatManage.AddCardToExecuteQueue(this);
     }
 }

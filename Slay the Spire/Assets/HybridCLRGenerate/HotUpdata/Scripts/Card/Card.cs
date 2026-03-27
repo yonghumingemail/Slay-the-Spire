@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Z_Tools;
 
-public abstract class Card : MonoBehaviour, IEventCenterObject<string>
+public abstract class Card : MonoBehaviour
 {
     #region Property
 
@@ -20,15 +20,15 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
     [SerializeField] protected CardView cardView;
     [SerializeField] protected CardAnimator cardAnimator;
     [SerializeField] protected CardExteriorInfo exteriorInfo;
-    public IEventCenter<string> eventCenter { get; protected set; } = new EventCenter<string>();
     public HandPile handPile;
 
     public Camera _mainCamera { get; protected set; }
     public MouseInteraction _mouseInteraction { get; protected set; }
 
-    protected CombatManage combatManage;
-    protected Energy energy;
-    protected DiscardPile discardPile;
+    protected Player _player;
+    protected CombatManage _combatManage;
+    protected Energy _energy;
+    protected DiscardPile _discardPile;
 
 
     public string cardName;
@@ -66,7 +66,7 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
         {
             z = -0.1f * handPile.maxHandSize - 0.1f,
             y = _mainCamera.ViewportToWorldPoint(new Vector3(0.5f, 0)).y +
-                CardView.Background.bounds.size.y / 2
+                cardView.Background.bounds.size.y / 2
         };
 
         _mouseInteraction.OnMouseDownDelegate += OnPointerDown;
@@ -77,7 +77,6 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
         EventCenter_Singleton.Instance.AddEvent<Action>("OnCardArrangementComplete", OnCardArrangementComplete);
         EventCenter_Singleton.Instance.AddEvent<Action>("OnStartCardArrangement", OnStartCardArrangement);
     }
-
 
     #region abstract methods
 
@@ -102,7 +101,7 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
 
     public virtual bool CanBeTriggered()
     {
-        return energy._energy - ExteriorInfo.orbValue >= 0;
+        return _energy._energy - exteriorInfo.orbValue >= 0;
     }
 
     public virtual void Enable(bool enable)
@@ -136,7 +135,7 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
             transform.localScale = scale;
             transform.rotation = Quaternion.identity;
 
-            discardPile.AddCard(this).Forget();
+            _discardPile.AddCard(this).Forget();
             source.TrySetResult();
         });
 
@@ -156,9 +155,10 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
     {
         exteriorInfo = await AddressablesMgr.Instance.LoadAssetAsync<CardExteriorInfo>(defaultDataPtah);
 
-        combatManage = EventCenter_Singleton.Instance.GetEvent<Func<CombatManage>>("CombatManage").Invoke();
-        energy = EventCenter_Singleton.Instance.GetEvent<Func<Energy>>("Energy").Invoke();
-        discardPile = EventCenter_Singleton.Instance.GetEvent<Func<DiscardPile>>("DiscardPile").Invoke();
+        _player = EventCenter_Singleton.Instance.GetEvent<Func<Player>>("Player").Invoke();
+        _combatManage = EventCenter_Singleton.Instance.GetEvent<Func<CombatManage>>("CombatManage").Invoke();
+        _energy = EventCenter_Singleton.Instance.GetEvent<Func<Energy>>("Energy").Invoke();
+        _discardPile = EventCenter_Singleton.Instance.GetEvent<Func<DiscardPile>>("DiscardPile").Invoke();
 
         isStrengthen = false;
         cardEntries = new List<IEntry>();
@@ -220,9 +220,7 @@ public abstract class Card : MonoBehaviour, IEventCenterObject<string>
     {
         EventCenter_Singleton.Instance.RemoveEvent<Action>("OnCardArrangementComplete", OnCardArrangementComplete);
         EventCenter_Singleton.Instance.RemoveEvent<Action>("OnStartCardArrangement", OnStartCardArrangement);
-
-        eventCenter.GetEvent<Action>("OnDestroy")?.Invoke();
-        eventCenter.Clear();
+        
         transform.DOKill();
     }
 }

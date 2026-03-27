@@ -8,13 +8,10 @@ using UnityEngine.EventSystems;
 using Z_Tools;
 
 [Serializable]
-public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IEventCenterObject<string>
+public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IHealth, IBuffList, IShield
 {
     public IEventCenter<string> eventCenter { get; } = new EventCenter<string>(); //用于提供接口对象
-
-    public PriorityQueueEventCenter _priorityEventCenter { get; private set; } =
-        new PriorityQueueEventCenter(); //用于记录和触发buff事件
-
+    
     [SerializeField] private SimpleHealth _health;
     private IHealth_V health_V;
     [SerializeField] private SimpleBuffList _buffList;
@@ -22,8 +19,8 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
     [SerializeField] private SimpleShield _shield;
     private IShieldV shield_V;
 
-    private Intent _intent;
-    
+    private Intent_V _intentV;
+
     public EnemySpawner enemySpawner;
     public SpriteRenderer spriteRenderer;
 
@@ -31,37 +28,38 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
     [SerializeField] private bool isSelectCard;
 
     public GameObject receive;
-    private List<IEntry> entryList = new List<IEntry>();
+    private List<Intent> entryList = new List<Intent>();
 
     private async void Awake()
     {
         _alertBox = transform.Find("AlertBox").GetComponent<AlertBox>();
-        _intent = transform.Find("Intent").GetComponent<Intent>();
+        _intentV = transform.Find("Intent").GetComponent<Intent_V>();
         enemySpawner = transform.parent.GetComponent<EnemySpawner>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        
+
 
         health_V = transform.Find("HP").GetComponent<IHealth_V>();
-        _health = new SimpleHealth(50, 100, health_V, _priorityEventCenter);
-        eventCenter.AddEvent<Func<IHealth>>("IHealth", () => _health);
         health_V.InitializeView(gameObject);
+        _health = new SimpleHealth(50, 100, health_V, _priorityEventCenter);
+       
 
         shield_V = transform.Find("HP/Shield").GetComponent<IShieldV>();
-        _shield = new SimpleShield(shield_V, _priorityEventCenter);
-        eventCenter.AddEvent<Func<IShield>>("IShield", () => _shield);
         shield_V.InitializeView(gameObject);
+        _shield = new SimpleShield(shield_V, _priorityEventCenter);
+        
 
         buffList_V = transform.Find("BuffList").GetComponent<IBuffList_V>();
-        _buffList = new SimpleBuffList(buffList_V, _priorityEventCenter);
         await buffList_V.Initialized();
-        eventCenter.AddEvent<Func<IBuffList>>("IBuffList", () => _buffList);
+        _buffList = new SimpleBuffList(buffList_V, _priorityEventCenter);
+       
 
-        eventCenter.AddEvent<Func<PriorityQueueEventCenter>>("PriorityQueueEventCenter", () => _priorityEventCenter);
         EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnSelectCard", (card) => { isSelectCard = true; });
         EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnUnSelectCard", (card) => { isSelectCard = false; });
 
         _buffList.AddBuff(new Anger_BuffObj(2, 999, new[] { BuffTag_E.buff }, gameObject));
-        entryList.Add(new InflictDamage(5));
+      Intent temp=  new AttackIntent(40, 3, _intentV, _priorityEventCenter);
+        entryList.Add(temp);
+        temp.Show();
     }
 
     public virtual async UniTask ExecuteEntry(int roundCount)
@@ -85,7 +83,7 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         foreach (var entry in entryList)
         {
             print("执行");
-            await entry.Trigger(gameObject, receive);
+            await entry.Execute(gameObject, receive);
             await UniTask.Yield(token);
         }
     }
@@ -132,5 +130,47 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
     {
         _alertBox.Close();
         enemySpawner.eventCenter.GetEvent<Action>("OnDeSelectEnemy")?.Invoke();
+    }
+
+    public float HealthValue => _health.HealthValue;
+    public float MaxHealth => _health.MaxHealth;
+
+    public void SetHealth(ChangeValueInfo changeValueInfo)
+    {
+        _health.SetHealth(changeValueInfo);
+    }
+
+    public float ShieldValue => _shield.ShieldValue;
+
+    public void SetShieldValue(float value)
+    {
+        _shield.SetShieldValue(value);
+    }
+
+    public void ShieldTrigger(ChangeValueInfo info)
+    {
+       _shield.ShieldTrigger(info);
+    }
+    
+    public PriorityQueueEventCenter _priorityEventCenter { get; private set; } =
+        new PriorityQueueEventCenter(); //用于记录和触发buff事件
+    public void AddBuff(BuffObj buffObj)
+    {
+        _buffList.AddBuff(buffObj);
+    }
+
+    public void RemoveBuff(BuffObj buffObj)
+    {
+        _buffList.RemoveBuff(buffObj);
+    }
+
+    public void UpdateView(BuffObj buffObj)
+    {
+      _buffList.UpdateView(buffObj);
+    }
+
+    public IEnumerable<BuffObj> GetBuffList()
+    {
+        return _buffList.GetBuffList();
     }
 }

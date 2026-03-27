@@ -15,21 +15,18 @@ public struct InflictDamage : IEntry
 
     public UniTask Trigger(GameObject sender, [NotNull] GameObject receiver)
     {
-        IEventCenterObject<string> receiverEventCenter = receiver.GetComponent<IEventCenterObject<string>>();
-        IEventCenterObject<string> senderEventCenter = sender.GetComponent<IEventCenterObject<string>>();
-
-        IBuffList buffList = senderEventCenter?.eventCenter.GetEvent<Func<IBuffList>>("IBuffList")?.Invoke();
-        IHealth health = receiverEventCenter?.eventCenter.GetEvent<Func<IHealth>>("IHealth")?.Invoke();
+        IBuffList buffList_Sender =sender.GetComponent<IBuffList>();
+        IHealth health = receiver.GetComponent<IHealth>();
 
         ChangeValueInfo info = new ChangeValueInfo(sender, receiver, -damage);
 
-        if (buffList == null)
+        if (buffList_Sender == null)
         {
-             UnityEngine.Debug.LogWarning($" 目标对象 {receiver.name} 缺少 IBuffList 组件");
+             Debug.LogWarning($" 目标对象 {receiver.name} 缺少 IBuffList 组件");
         }
         else
         {
-            var buffEvents = buffList._priorityEventCenter?.GetEvent("OnAttack");
+            var buffEvents = buffList_Sender._priorityEventCenter?.GetEvent("OnAttack");
             foreach (var priorityEvent in buffEvents ?? Enumerable.Empty<PriorityEvent>())
             {
                 (priorityEvent._delegate as Action<ChangeValueInfo>)?.Invoke(info);
@@ -38,10 +35,9 @@ public struct InflictDamage : IEntry
 
         if (health == null)
         {
-            UnityEngine.Debug.LogWarning($" 目标对象 {receiver.name} 缺少 IHealth 组件");
+            Debug.LogWarning($" 目标对象 {receiver.name} 缺少 IHealth 组件");
             return UniTask.CompletedTask;
         }
-        Debug.Log(info.value);
         health.SetHealth(info);
         return UniTask.CompletedTask;
     }

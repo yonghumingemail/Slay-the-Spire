@@ -82,23 +82,5 @@ public class Hp_Sprite2D_V : MonoBehaviour,IHealth_V
         var localPosition = new Vector3(0, posY, _renderer.transform.position.z);
         localPosition += positionOffset;
         transform.localPosition = localPosition;
-
-        // 检查目标对象是否实现了必要的事件接口
-        IEventCenterObject<string> eventCenterObject = obj.GetComponent<IEventCenterObject<string>>();
-        if (eventCenterObject == null)
-        {
-            Debug.Log(obj.name + "对象缺少必备组件");
-            gameObject.SetActive(false);
-            return;
-        }
-        
-        IHealth health = eventCenterObject.eventCenter.GetEvent<Func<IHealth>>("IHealth")?.Invoke();
-        if (health == null)
-        {
-            Debug.Log("对象未实现生命接口");
-            gameObject.SetActive(false);
-            return;
-        }
-        UpdateView(health);
     }
 }

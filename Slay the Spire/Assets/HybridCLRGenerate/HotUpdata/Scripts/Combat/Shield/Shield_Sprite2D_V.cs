@@ -12,7 +12,7 @@ public class Shield_Sprite2D_V : MonoBehaviour,IShieldV
         gameObject.SetActive(shieldInfo.ShieldValue > 0);
     }
     
-    public void InitializeView(GameObject obj)
+    public void InitializeView(GameObject obj )
     {
         gameObject.SetActive(false);
         
@@ -29,23 +29,5 @@ public class Shield_Sprite2D_V : MonoBehaviour,IShieldV
         blockPos.z = block.transform.localPosition.z;
 
         block.transform.localPosition = blockPos;
-        
-        // 检查目标对象是否实现了必要的事件接口
-        IEventCenterObject<string> eventCenterObject = obj.GetComponent<IEventCenterObject<string>>();
-        if (eventCenterObject == null)
-        {
-            Debug.Log(obj.name + "对象缺少必备组件");
-            gameObject.SetActive(false);
-            return;
-        }
-        
-        IShield health = eventCenterObject.eventCenter.GetEvent<Func<IShield>>("IShield")?.Invoke();
-        if (health == null)
-        {
-            Debug.Log("对象未实现护盾接口");
-            gameObject.SetActive(false);
-            return;
-        }
-        UpdateView(health);
     }
 }

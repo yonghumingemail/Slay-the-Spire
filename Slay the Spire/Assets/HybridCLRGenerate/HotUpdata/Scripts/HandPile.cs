@@ -104,7 +104,7 @@ public class HandPile : MonoBehaviour
         // 创建副本，避免循环中列表变化的影响
         var cardsToProcess = cardInstances.ToArray();
         UniTask[] tasks = new UniTask[cardsToProcess.Length];
-print(tasks.Length);
+        
         for (int i = 0; i < cardsToProcess.Length; i++)
         {
             cardsToProcess[i].isInteractable = false;
@@ -125,7 +125,7 @@ print(tasks.Length);
     private async UniTask DrawCard(int count)
     {
         var cards = drawPile.GetRandomSampleCards(count);
-        print(cards.Count);
+
         cardArrangement.speed = speed;
         foreach (var card in cards)
         {

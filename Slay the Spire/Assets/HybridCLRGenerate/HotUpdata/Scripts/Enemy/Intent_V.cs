@@ -3,10 +3,10 @@ using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
-public class Intent : MonoBehaviour
+public class Intent_V : MonoBehaviour
 {
-    private SpriteRenderer _spriteRenderer;
-    private TextMeshPro _textMeshPro;
+    public SpriteRenderer _spriteRenderer { get; private set; }
+    public TextMeshPro _textMeshPro{get; private set;}
     public float speed = 1;
     public Vector3 animatorMovePointA;
     public Vector3 animatorMovePointB;
@@ -20,7 +20,7 @@ public class Intent : MonoBehaviour
         AnimatorEffect().Forget();
     }
 
-    public void UpdateBuffUI(BuffObj BuffObj)
+    public void UpdateBuffUI(Intent intent)
     {
         
     }
@@ -35,7 +35,7 @@ public class Intent : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    private void OnDestroy()
     {
         animatorEffect = false;
     }

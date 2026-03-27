@@ -96,7 +96,6 @@ public class AddressablesMgr : SingletonBase<AddressablesMgr>
         // 检查资源是否已缓存
         if (resDic.TryGetValue(keyName, out AddressablesInfo cachedInfo))
         {
-            Debug.Log(cachedInfo.handle.Result is T); //结果为true
             // 获取已缓存的操作句柄并转换类型
             if (cachedInfo.handle.Result is T result)
             {

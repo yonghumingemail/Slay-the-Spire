@@ -14,19 +14,11 @@ public struct VulnerableState : IEntry
 
     public UniTask Trigger(GameObject sender, [NotNull] GameObject receiver)
     {
-        IEventCenterObject<string> eventCenter = receiver.GetComponent<IEventCenterObject<string>>();
-        IBuffList buffListObj = eventCenter?.eventCenter.GetEvent<Func<IBuffList>>("IBuffList")?.Invoke();
+
+        IBuffList buffListObj =receiver.GetComponent<IBuffList>();
         if (buffListObj == null)
         {
             UnityEngine.Debug.LogWarning($"{nameof(Trigger)}: 目标对象 {receiver.name} 缺少 IBuffList 组件");
-            return UniTask.CompletedTask;
-        }
-
-        PriorityQueueEventCenter priorityEventCenter = eventCenter?.eventCenter
-            .GetEvent<Func<PriorityQueueEventCenter>>("PriorityQueueEventCenter")?.Invoke();
-        if (priorityEventCenter == null)
-        {
-            Debug.LogWarning($"目标对象 {receiver.name} 缺少有效的优先级事件中心");
             return UniTask.CompletedTask;
         }
 

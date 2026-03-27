@@ -4,22 +4,10 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-[Serializable]
-public abstract class Test23
-{
-    public int counter;
-    public string name;
-    public abstract void Test();
-}
 
 public class Test : MonoBehaviour
 {
-   public List<Test23> tests = new List<Test23>();
-    public Vector3 position;
-
-    private void Start()
-    {
-    }
+    
 
     private void Update()
     {
@@ -44,4 +32,5 @@ public class Test : MonoBehaviour
 
         print("循环终止");
     }
+
 }
