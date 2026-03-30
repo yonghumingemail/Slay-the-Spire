@@ -23,6 +23,9 @@ public class Hp_Sprite2D_V : MonoBehaviour,IHealth_V
     private TextMeshPro _textMeshPro;      // 生命值文本显示组件
     private AdaptiveResize_Renderer _hp;           // 血条前景渲染器（随生命值变化）
     
+    
+    
+    public GameObject GetViewObject() => gameObject;
     /// <summary>
     /// 更新血条显示
     /// 根据当前生命值比例调整血条长度和文本显示[1,

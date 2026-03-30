@@ -29,7 +29,8 @@ public abstract class Card : MonoBehaviour
     protected CombatManage _combatManage;
     protected Energy _energy;
     protected DiscardPile _discardPile;
-
+    
+    protected UniTaskCompletionSource _source;
 
     public string cardName;
     public CardType cardType;
@@ -76,6 +77,11 @@ public abstract class Card : MonoBehaviour
 
         EventCenter_Singleton.Instance.AddEvent<Action>("OnCardArrangementComplete", OnCardArrangementComplete);
         EventCenter_Singleton.Instance.AddEvent<Action>("OnStartCardArrangement", OnStartCardArrangement);
+    }
+
+    private void Start()
+    {
+        _player= EventCenter_Singleton.Instance.GetEvent<Func<Player>>("Player").Invoke();
     }
 
     #region abstract methods
@@ -145,9 +151,9 @@ public abstract class Card : MonoBehaviour
     protected virtual UniTask CardTriggerAnimator()
     {
         handPile.cardInstances.Remove(this);
-        var source = new UniTaskCompletionSource();
-        cardAnimator.MoveToScreenCenter(() => { Recycle_DiscardPile(source); });
-        return source.Task;
+         _source = new UniTaskCompletionSource();
+        cardAnimator.MoveToScreenCenter(() => { Recycle_DiscardPile(_source); });
+        return _source.Task;
     }
 
 

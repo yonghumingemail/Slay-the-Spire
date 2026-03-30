@@ -15,8 +15,11 @@ public struct InflictDamage : IEntry
 
     public UniTask Trigger(GameObject sender, [NotNull] GameObject receiver)
     {
-        IBuffList buffList_Sender =sender.GetComponent<IBuffList>();
-        IHealth health = receiver.GetComponent<IHealth>();
+        IEventCenterObject<string> eventCenter_Sender = sender.GetComponent<IEventCenterObject<string>>();
+        IEventCenterObject<string> eventCenter_Receiver = receiver.GetComponent<IEventCenterObject<string>>();
+        
+        IBuffList buffList_Sender = eventCenter_Sender.eventCenter.GetEvent<Func<IBuffList>>("IBuffList")?.Invoke();
+        IHealth health =  eventCenter_Receiver.eventCenter.GetEvent<Func<IHealth>>("IHealth")?.Invoke();
 
         ChangeValueInfo info = new ChangeValueInfo(sender, receiver, -damage);
 

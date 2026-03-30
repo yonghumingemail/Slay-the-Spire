@@ -8,58 +8,82 @@ using UnityEngine.EventSystems;
 using Z_Tools;
 
 [Serializable]
-public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IHealth, IBuffList, IShield
+public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IEventCenterObject<string>
 {
     public IEventCenter<string> eventCenter { get; } = new EventCenter<string>(); //用于提供接口对象
-    
+
+    public PriorityQueueEventCenter _priorityEventCenter { get; private set; } =
+        new PriorityQueueEventCenter(); //用于记录和触发buff事件
+
     [SerializeField] private SimpleHealth _health;
     private IHealth_V health_V;
+
+    [SerializeField] private SimpleShield _shield;
+    private IShield_V shield_V;
+
     [SerializeField] private SimpleBuffList _buffList;
     private IBuffList_V buffList_V;
-    [SerializeField] private SimpleShield _shield;
-    private IShieldV shield_V;
 
     private Intent_V _intentV;
 
     public EnemySpawner enemySpawner;
     public SpriteRenderer spriteRenderer;
 
+    
+    private Animator _animator;
+    private GameObject _ui;
+    private Intent_C intentC;
     private AlertBox _alertBox;
     [SerializeField] private bool isSelectCard;
 
     public GameObject receive;
-    private List<Intent> entryList = new List<Intent>();
 
-    private async void Awake()
+
+    private void Awake()
     {
-        _alertBox = transform.Find("AlertBox").GetComponent<AlertBox>();
-        _intentV = transform.Find("Intent").GetComponent<Intent_V>();
+        Initialize().Forget();
+    }
+
+    private async UniTaskVoid Initialize()
+    {
+        _ui = transform.Find("UI").gameObject;
+        _alertBox = GetComponentInChildren<AlertBox>();
+        _intentV = GetComponentInChildren<Intent_V>();
         enemySpawner = transform.parent.GetComponent<EnemySpawner>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-
-
-        health_V = transform.Find("HP").GetComponent<IHealth_V>();
-        health_V.InitializeView(gameObject);
-        _health = new SimpleHealth(50, 100, health_V, _priorityEventCenter);
-       
-
-        shield_V = transform.Find("HP/Shield").GetComponent<IShieldV>();
-        shield_V.InitializeView(gameObject);
-        _shield = new SimpleShield(shield_V, _priorityEventCenter);
+        intentC = GetComponent<Intent_C>();
+        _animator = GetComponent<Animator>();
         
 
-        buffList_V = transform.Find("BuffList").GetComponent<IBuffList_V>();
+        health_V = GetComponentInChildren<IHealth_V>();
+        health_V.InitializeView(_ui);
+        _health = new SimpleHealth(50, 100, health_V, _priorityEventCenter);
+        eventCenter.AddEvent<Func<IHealth>>("IHealth", () => _health);
+
+
+        shield_V = GetComponentInChildren<IShield_V>();
+        shield_V.InitializeView(_ui, health_V);
+        _shield = new SimpleShield(shield_V, _priorityEventCenter);
+        eventCenter.AddEvent<Func<IShield>>("IShield", () => _shield);
+
+
+        buffList_V = GetComponentInChildren<IBuffList_V>();
         await buffList_V.Initialized();
         _buffList = new SimpleBuffList(buffList_V, _priorityEventCenter);
-       
+        eventCenter.AddEvent<Func<IBuffList>>("IBuffList", () => _buffList);
+
 
         EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnSelectCard", (card) => { isSelectCard = true; });
         EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnUnSelectCard", (card) => { isSelectCard = false; });
 
         _buffList.AddBuff(new Anger_BuffObj(2, 999, new[] { BuffTag_E.buff }, gameObject));
-      Intent temp=  new AttackIntent(40, 3, _intentV, _priorityEventCenter);
-        entryList.Add(temp);
-        temp.Show();
+    }
+
+    private void Start()
+    {
+        IIntent temp = new AttackIntent(20, 3, _animator, _priorityEventCenter);
+        intentC.AddIntent(temp);
+        intentC.ShowIntent(temp);
     }
 
     public virtual async UniTask ExecuteEntry(int roundCount)
@@ -80,9 +104,9 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         }
 
         CancellationToken token = this.GetCancellationTokenOnDestroy();
-        foreach (var entry in entryList)
+
+        foreach (var entry in intentC.entryList)
         {
-            print("执行");
             await entry.Execute(gameObject, receive);
             await UniTask.Yield(token);
         }
@@ -132,45 +156,5 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         enemySpawner.eventCenter.GetEvent<Action>("OnDeSelectEnemy")?.Invoke();
     }
 
-    public float HealthValue => _health.HealthValue;
-    public float MaxHealth => _health.MaxHealth;
-
-    public void SetHealth(ChangeValueInfo changeValueInfo)
-    {
-        _health.SetHealth(changeValueInfo);
-    }
-
-    public float ShieldValue => _shield.ShieldValue;
-
-    public void SetShieldValue(float value)
-    {
-        _shield.SetShieldValue(value);
-    }
-
-    public void ShieldTrigger(ChangeValueInfo info)
-    {
-       _shield.ShieldTrigger(info);
-    }
-    
-    public PriorityQueueEventCenter _priorityEventCenter { get; private set; } =
-        new PriorityQueueEventCenter(); //用于记录和触发buff事件
-    public void AddBuff(BuffObj buffObj)
-    {
-        _buffList.AddBuff(buffObj);
-    }
-
-    public void RemoveBuff(BuffObj buffObj)
-    {
-        _buffList.RemoveBuff(buffObj);
-    }
-
-    public void UpdateView(BuffObj buffObj)
-    {
-      _buffList.UpdateView(buffObj);
-    }
-
-    public IEnumerable<BuffObj> GetBuffList()
-    {
-        return _buffList.GetBuffList();
-    }
+   
 }

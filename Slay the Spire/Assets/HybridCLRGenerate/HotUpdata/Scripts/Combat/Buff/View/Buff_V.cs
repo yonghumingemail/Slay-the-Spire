@@ -19,6 +19,7 @@ public class Buff_V : MonoBehaviour,IBuff_V
         _buffAnimatorSprite = transform.Find("UI/AnimatorEffect").GetComponent<SpriteRenderer>();
     }
 
+    public GameObject GetViewObject() => gameObject;
     public void Initialized(BuffObj BuffObj,SpriteAtlas spriteAtlas)
     {
         if(BuffObj==null) return;

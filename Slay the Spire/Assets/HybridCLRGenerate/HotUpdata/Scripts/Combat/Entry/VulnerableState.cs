@@ -14,8 +14,9 @@ public struct VulnerableState : IEntry
 
     public UniTask Trigger(GameObject sender, [NotNull] GameObject receiver)
     {
+        IEventCenterObject<string> eventCenter = receiver.GetComponent<IEventCenterObject<string>>();
+        IBuffList buffListObj = eventCenter.eventCenter.GetEvent<Func<IBuffList>>("IBuffList")?.Invoke();
 
-        IBuffList buffListObj =receiver.GetComponent<IBuffList>();
         if (buffListObj == null)
         {
             UnityEngine.Debug.LogWarning($"{nameof(Trigger)}: 目标对象 {receiver.name} 缺少 IBuffList 组件");

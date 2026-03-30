@@ -5,7 +5,7 @@ using UnityEngine;
 public class SimpleShield : IShield
 {
    private PriorityQueueEventCenter _priorityEventCenter;
-    private IShieldV _shield_V;
+    private IShield_V _shield_V;
 
     public float ShieldValue
     {
@@ -15,7 +15,7 @@ public class SimpleShield : IShield
 
     public float shieldVale;
 
-    public SimpleShield(IShieldV shieldSprite2DObj , PriorityQueueEventCenter priorityEventCenter)
+    public SimpleShield(IShield_V shieldSprite2DObj , PriorityQueueEventCenter priorityEventCenter)
     {
         _shield_V = shieldSprite2DObj;
         _priorityEventCenter = priorityEventCenter;

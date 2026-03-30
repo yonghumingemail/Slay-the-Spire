@@ -16,7 +16,8 @@ public struct GainPower : IEntry
 
     public UniTask Trigger(GameObject sender, [NotNull] GameObject receiver)
     {
-        IBuffList buffListObj = receiver.GetComponent<IBuffList>();
+        IEventCenterObject<string> eventCenter = receiver.GetComponent<IEventCenterObject<string>>();
+        IBuffList buffListObj = eventCenter.eventCenter.GetEvent<Func<IBuffList>>("IBuffList")?.Invoke();
         if (buffListObj == null)
         {
             Debug.LogWarning($" 目标对象 {receiver.name} 缺少 IBuffList 组件");

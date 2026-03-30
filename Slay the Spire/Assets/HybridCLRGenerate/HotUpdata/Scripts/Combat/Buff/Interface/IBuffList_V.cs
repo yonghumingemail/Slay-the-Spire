@@ -7,4 +7,5 @@ public interface IBuffList_V
     void RemoveBuff(BuffObj buffObj);
     void UpdateBuffView(BuffObj buffObj);
     UniTask Initialized();
+    GameObject GetViewObject();
 }

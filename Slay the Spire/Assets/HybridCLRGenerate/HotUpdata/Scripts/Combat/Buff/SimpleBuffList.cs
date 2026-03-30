@@ -7,14 +7,14 @@ using UnityEngine;
 public class SimpleBuffList : IBuffList
 {
     // 优先级事件中心，用于处理Buff相关事件（如添加、移除）并按优先级排序
-    public PriorityQueueEventCenter _priorityEventCenter { get;private set; }
-    
+    public PriorityQueueEventCenter _priorityEventCenter { get; private set; }
+
     // Buff列表的视图接口，用于更新Buff的显示
     private IBuffList_V _buffListV;
-    
+
     // 存储所有BuffObj对象的列表
-   [SerializeField] private List<BuffObj> _buffListObj;
-    
+    [SerializeField] private List<BuffObj> _buffListObj;
+
     public SimpleBuffList(IBuffList_V buffListV, PriorityQueueEventCenter priorityEventCenter)
     {
         // 设置事件中心
@@ -23,7 +23,10 @@ public class SimpleBuffList : IBuffList
         _buffListV = buffListV;
         // 初始化Buff对象列表
         _buffListObj = new List<BuffObj>();
+
     }
+
+
 
     // 添加Buff对象
     public void AddBuff(BuffObj buffObj)
@@ -34,7 +37,6 @@ public class SimpleBuffList : IBuffList
         _buffListV.AddBuff(buffObj);
         // 触发Buff对象的添加事件，传入事件中心
         buffObj.OnAddBuff(_priorityEventCenter);
-        
     }
 
     // 移除Buff对象
@@ -46,7 +48,6 @@ public class SimpleBuffList : IBuffList
         _buffListV.RemoveBuff(buffObj);
         // 触发Buff对象的移除事件，传入事件中心
         buffObj.OnRemoveBuff(_priorityEventCenter);
-      
     }
 
     // 更新指定Buff对象的视图显示

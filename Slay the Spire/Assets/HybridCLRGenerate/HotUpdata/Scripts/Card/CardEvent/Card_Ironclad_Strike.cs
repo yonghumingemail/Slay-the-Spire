@@ -27,9 +27,9 @@ public class Card_Ironclad_Strike : Card
             return true;
         }
 
-        cardAnimator.TransformEffect(
+        cardAnimator.TransformEffectToRotation(
             position,
-            rotation.eulerAngles,
+            rotation,
             scale);
         return false;
     }

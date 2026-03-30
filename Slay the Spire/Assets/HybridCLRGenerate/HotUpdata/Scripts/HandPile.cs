@@ -39,7 +39,7 @@ public class HandPile : MonoBehaviour
         EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<UniTask>>("OnRoundEnd", OnRoundEnd, 0);
 
         EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnSelectCard", OnSelectCard);
-        EventCenter_Singleton.Instance.AddEvent<Action<Card>>("UnOnSelectCard", UnOnSelectCard);
+        EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnUnSelectCard", UnOnSelectCard);
     }
 
     private void Start()
@@ -112,7 +112,6 @@ public class HandPile : MonoBehaviour
         }
 
         await UniTask.WhenAll(tasks);
-        print("完成");
     }
 
     public float speed2;

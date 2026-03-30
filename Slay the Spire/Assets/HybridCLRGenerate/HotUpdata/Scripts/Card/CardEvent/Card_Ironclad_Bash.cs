@@ -28,9 +28,9 @@ public class Card_Ironclad_Bash : Card
             return true;
         }
 
-        cardAnimator.TransformEffect(
+        cardAnimator.TransformEffectToRotation(
             position,
-            rotation.eulerAngles,
+            rotation,
             scale);
         return false;
     }

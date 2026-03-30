@@ -15,14 +15,20 @@ public class Intent_V : MonoBehaviour
 
     private void Awake()
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         _textMeshPro = GetComponentInChildren<TextMeshPro>();
         AnimatorEffect().Forget();
     }
 
-    public void UpdateBuffUI(Intent intent)
+    public void UpdateUI(IIntent intent)
     {
-        
+        _spriteRenderer.sprite =intent._sprite;
+        _textMeshPro.SetText(intent._text);
+    }
+
+    public void Enable(bool enable)
+    {
+        gameObject.SetActive(enable);
     }
     
     private async UniTaskVoid AnimatorEffect()
