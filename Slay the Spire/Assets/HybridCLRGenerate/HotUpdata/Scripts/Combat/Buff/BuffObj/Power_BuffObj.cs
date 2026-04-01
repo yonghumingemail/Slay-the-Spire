@@ -16,6 +16,10 @@ public class Power_BuffObj : BuffObj
         info.value -=stack;
     }
 
+    public int DamageCalculation_Sender(int value)
+    {
+        return value -stack;
+    }
     public override void OnAddBuff(PriorityQueueEventCenter eventCent)
     {
         eventCent.AddEvent<Action<ChangeValueInfo>>("OnAttack", Effect, priority);

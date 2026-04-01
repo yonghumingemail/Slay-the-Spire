@@ -32,6 +32,7 @@ public class Intent_C : MonoBehaviour
     {
         entryList.Add(intent);
         intent.OnUpdate += OnIntentUpdate;
+        intent.OnAnimatorPlay += AnimatorComplete;
     }
 
     public void ShowIntent(IIntent intent)
@@ -44,19 +45,14 @@ public class Intent_C : MonoBehaviour
     {
         action.Invoke(_animator);
         var task = new UniTaskCompletionSource();
-        
-        _animatorComplete.onComplete = null;
-        _animatorComplete.onStart = null;
-        
-        _animatorComplete.onStart += (clipName) =>
-        {
-            print(clipName+"开始播放");
-            task.TrySetResult();
-        };
+
+        _animatorComplete.onComplete?.Invoke($"Error:{_animatorComplete._clipName}动画片段中断,onComplete事件提前执行");
+
         _animatorComplete.onComplete += (clipName) =>
         {
-            print(clipName+"播放结束");
+           // print(clipName+"播放结束："+Time.time);
             task.TrySetResult();
+            _animatorComplete.onComplete = null;
         };
         return task.Task;
     }

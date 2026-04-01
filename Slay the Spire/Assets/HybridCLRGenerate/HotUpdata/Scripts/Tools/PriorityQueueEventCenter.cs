@@ -51,7 +51,20 @@ public class PriorityQueueEventCenter
         Event_Dic[eventName] = null;
         return Event_Dic.Remove(eventName);
     }
+    
+    public bool RemoveEvent(string eventName,Delegate _delegate)
+    {
+        if (!Event_Dic.TryGetValue(eventName, out var delegates)) return false;
 
+        for (int i = 0; i < delegates.Count; i++)
+        {
+            if (delegates[i]._delegate != _delegate) continue;
+            delegates.RemoveAt(i);
+            return true;
+        }
+        
+        return false;
+    }
     public void Clear()
     {
         Event_Dic.Clear();

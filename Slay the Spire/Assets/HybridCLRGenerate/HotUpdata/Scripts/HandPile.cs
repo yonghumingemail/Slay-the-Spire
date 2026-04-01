@@ -118,6 +118,7 @@ public class HandPile : MonoBehaviour
 
     public async UniTask OnPlayerTurnStart(int roundCount)
     {
+       // print("抽牌："+Time.time);
         await DrawCard(drawCardsCount + drawCardsOffer);
     }
 

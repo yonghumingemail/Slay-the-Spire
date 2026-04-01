@@ -4,9 +4,8 @@ using UnityEngine;
 public class AnimatorComplete : MonoBehaviour
 {
     
-    public Action<string> onStart;
     public Action<string> onComplete;
-    
+    public string _clipName;
     private Animator _animator;
     private AnimatorOverrideController _animatorOverrideController;
 
@@ -23,25 +22,15 @@ public class AnimatorComplete : MonoBehaviour
                 stringParameter = animationClip.name,
                 functionName = "OnComplete"
             };
-            AnimationEvent startEvent = new AnimationEvent
-            {
-                time = 0,
-                stringParameter = animationClip.name,
-                functionName = "OnStart"
-            };
-            animationClip.AddEvent(startEvent);
             animationClip.AddEvent(completeEvent);
         }
         
         _animator.runtimeAnimatorController = _animatorOverrideController;
     }
-
-    public void OnStart(string clipName)
-    {
-        onStart?.Invoke(clipName);
-    }
+    
     public void OnComplete(string clipName)
     {
+        _clipName = clipName;
         onComplete?.Invoke(clipName);
     }
 }

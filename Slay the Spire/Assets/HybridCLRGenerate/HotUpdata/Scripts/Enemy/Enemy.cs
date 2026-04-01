@@ -23,9 +23,7 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
 
     [SerializeField] private SimpleBuffList _buffList;
     private IBuffList_V buffList_V;
-
-    private Intent_V _intentV;
-
+    
     public EnemySpawner enemySpawner;
     public SpriteRenderer spriteRenderer;
 
@@ -41,20 +39,20 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
 
     private void Awake()
     {
-        Initialize().Forget();
+       
     }
 
-    private async UniTaskVoid Initialize()
+    private async UniTask Initialize()
     {
         _ui = transform.Find("UI").gameObject;
         _alertBox = GetComponentInChildren<AlertBox>();
-        _intentV = GetComponentInChildren<Intent_V>();
         enemySpawner = transform.parent.GetComponent<EnemySpawner>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer =_ui.GetComponent<SpriteRenderer>();
         intentC = GetComponent<Intent_C>();
         _animator = GetComponent<Animator>();
-        
 
+        eventCenter.AddEvent<Func<PriorityQueueEventCenter>>("PriorityQueueEventCenter", () => _priorityEventCenter);
+        
         health_V = GetComponentInChildren<IHealth_V>();
         health_V.InitializeView(_ui);
         _health = new SimpleHealth(50, 100, health_V, _priorityEventCenter);
@@ -72,19 +70,19 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         _buffList = new SimpleBuffList(buffList_V, _priorityEventCenter);
         eventCenter.AddEvent<Func<IBuffList>>("IBuffList", () => _buffList);
 
-
+        _buffList.AddBuff(new Anger_BuffObj(2, 999, new[] { BuffTag_E.buff }, gameObject));
+        IIntent temp = new AttackIntent(6, 2, _priorityEventCenter);
+        IIntent temp2 = new AttackIntent(4, 1, _priorityEventCenter);
+        intentC.AddIntent(temp);
+        intentC.ShowIntent(temp2);
+        
         EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnSelectCard", (card) => { isSelectCard = true; });
         EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnUnSelectCard", (card) => { isSelectCard = false; });
 
-        _buffList.AddBuff(new Anger_BuffObj(2, 999, new[] { BuffTag_E.buff }, gameObject));
+       
     }
 
-    private void Start()
-    {
-        IIntent temp = new AttackIntent(20, 3, _animator, _priorityEventCenter);
-        intentC.AddIntent(temp);
-        intentC.ShowIntent(temp);
-    }
+
 
     public virtual async UniTask ExecuteEntry(int roundCount)
     {
@@ -108,6 +106,7 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         foreach (var entry in intentC.entryList)
         {
             await entry.Execute(gameObject, receive);
+         //   print("意图执行完毕："+Time.time);
             await UniTask.Yield(token);
         }
     }

@@ -31,7 +31,7 @@ public class SimpleHealth : IHealth
         _healthV.UpdateView(this);
     }
 
-    public void SetHealth(ChangeValueInfo info)
+    public void AddHealth(ChangeValueInfo info)
     {
         var eventList = _priorityEventCenter.GetEvent("OnHealthChange");
         if (eventList != null)

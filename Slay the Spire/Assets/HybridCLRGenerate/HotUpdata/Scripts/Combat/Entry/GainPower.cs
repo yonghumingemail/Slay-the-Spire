@@ -25,28 +25,31 @@ public struct GainPower : IEntry
         }
 
         int maxStack = 999;
-        Power_BuffObj powerBuffObj = null;
+        Power_BuffObj buff = null;
         foreach (var buffObj in buffListObj.GetBuffList())
         {
             if (buffObj.GetType() != typeof(Power_BuffObj)) continue;
-            powerBuffObj = buffObj as Power_BuffObj;
+            buff = buffObj as Power_BuffObj;
         }
 
-        if (powerBuffObj != null)
+        if (buff != null)
         {
-            powerBuffObj.stack = Math.Min(powerBuffObj.stack + stack, maxStack);
-            buffListObj.UpdateView(powerBuffObj);
+            buff.stack = Math.Min(buff.stack + stack, maxStack);
+            buffListObj.UpdateView(buff);
         }
         else
         {
-            powerBuffObj = new Power_BuffObj(stack, maxStack, new[] { BuffTag_E.buff }, receiver);
-            buffListObj.AddBuff(powerBuffObj);
+            buff = new Power_BuffObj(stack, maxStack, new[] { BuffTag_E.buff }, receiver);
+            buffListObj.AddBuff(buff);
         }
+        
+        //通知接受者更新伤害信息Get Action
 
+        
         var actions = buffListObj._priorityEventCenter.GetEvent("GainBuff");
         foreach (var action in actions ?? Enumerable.Empty<PriorityEvent>())
         {
-            (action._delegate as Action<BuffObj, int>)?.Invoke(powerBuffObj, stack);
+            (action._delegate as Action<BuffObj, int>)?.Invoke(buff, stack);
         }
 
         return UniTask.CompletedTask;

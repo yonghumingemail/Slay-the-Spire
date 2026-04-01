@@ -5,5 +5,5 @@ public interface IHealth
 {
     float HealthValue { get; }
     float MaxHealth { get; }
-    void SetHealth(ChangeValueInfo  changeValueInfo);
+    void AddHealth(ChangeValueInfo  changeValueInfo);
 }

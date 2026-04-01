@@ -6,6 +6,7 @@ public class SimpleShield : IShield
 {
    private PriorityQueueEventCenter _priorityEventCenter;
     private IShield_V _shield_V;
+    private int maxValue;
 
     public float ShieldValue
     {
@@ -17,15 +18,17 @@ public class SimpleShield : IShield
 
     public SimpleShield(IShield_V shieldSprite2DObj , PriorityQueueEventCenter priorityEventCenter)
     {
+        maxValue = 999;
         _shield_V = shieldSprite2DObj;
         _priorityEventCenter = priorityEventCenter;
         _priorityEventCenter.AddEvent<Action<ChangeValueInfo>>("OnHealthChange", ShieldTrigger, -1);
         _shield_V.UpdateView(this);
+        
     }
 
-    public void SetShieldValue(float value)
+    public void AddShieldValue(float value)
     {
-        ShieldValue = Mathf.Max(0, value);
+        shieldVale = Mathf.Clamp(shieldVale + value, 0, maxValue);
         _shield_V.UpdateView(this);
     }
 
@@ -46,6 +49,6 @@ public class SimpleShield : IShield
         info.value += damageAbsorbed;
 
         // 更新护盾视觉表现
-        SetShieldValue(ShieldValue);
+        AddShieldValue(ShieldValue);
     }
 }

@@ -9,7 +9,7 @@ public class Card_Ironclad_Strike : Card
 {
     private InflictDamage _inflictDamage;
     private RaycastHit2D _target;
-
+//从优先级事件中获取DamageCalculation_Sender事件，将InflictDamage的数值传入
     public override async UniTask<bool> Trigger(CancellationToken cancellationToken, bool conditionCheck = true)
     {
         if (_target.collider != null && (!conditionCheck || _energy.SetEnergy(_energy._energy - exteriorInfo.orbValue)))

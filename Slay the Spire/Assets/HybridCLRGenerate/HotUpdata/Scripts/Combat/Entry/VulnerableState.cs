@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -24,16 +25,30 @@ public struct VulnerableState : IEntry
         }
 
         int maxStack = 999;
+        VulnerableState_BuffObj buff = null;
         foreach (var buffObj in buffListObj.GetBuffList())
         {
             if (buffObj.GetType() != typeof(VulnerableState_BuffObj)) continue;
-            buffObj.stack = Math.Min(buffObj.stack + stack, maxStack);
-            buffListObj.UpdateView(buffObj);
-            return UniTask.CompletedTask;
+            buff = buffObj as VulnerableState_BuffObj;
         }
 
-        var buff = new VulnerableState_BuffObj(stack, maxStack,new [] { BuffTag_E.debuff }, receiver);
-        buffListObj.AddBuff(buff);
+        if (buff!=null)
+        {
+            buff.stack = Math.Min(buff.stack + stack, maxStack);
+            buffListObj.UpdateView(buff);
+        }
+        else
+        {
+            buff = new VulnerableState_BuffObj(stack, maxStack,new [] { BuffTag_E.debuff }, receiver);
+            buffListObj.AddBuff(buff);
+        }
+        
+        var actions = buffListObj._priorityEventCenter.GetEvent("GainBuff");
+        foreach (var action in actions ?? Enumerable.Empty<PriorityEvent>())
+        {
+            (action._delegate as Action<BuffObj, int>)?.Invoke(buff, stack);
+        }
+
         return UniTask.CompletedTask;
     }
 

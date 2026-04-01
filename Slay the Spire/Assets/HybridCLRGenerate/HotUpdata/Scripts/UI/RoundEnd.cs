@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Z_Tools;
@@ -7,11 +8,13 @@ using Z_Tools;
 public class RoundEnd : MonoBehaviour
 {
     private Button _button;
+    private TextMeshProUGUI  _text;
     private CombatManage _combatManage;
 
     private void Awake()
     {
         _button = transform.GetComponent<Button>();
+        _text = transform.GetComponentInChildren<TextMeshProUGUI>();
         _button.onClick.AddListener(OnClick);
     }
 
@@ -31,6 +34,7 @@ public class RoundEnd : MonoBehaviour
         {
             return;
         }
+        _text.SetText("敌方回合");
         var eventList = EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("OnRoundEnd");
         foreach (var VARIABLE in eventList)
         {
@@ -44,6 +48,7 @@ public class RoundEnd : MonoBehaviour
                 Debug.LogWarning($"委托类型不匹配: {VARIABLE._delegate?.GetType()}");
             }
         }
+        _text.SetText("回合结束");
         _combatManage.PlayerTurnStart().Forget();
     }
 }

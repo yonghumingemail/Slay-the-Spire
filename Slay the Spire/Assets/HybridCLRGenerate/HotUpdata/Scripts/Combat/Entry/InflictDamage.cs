@@ -7,10 +7,12 @@ using UnityEngine;
 public struct InflictDamage : IEntry
 {
     public int damage;
-
-    public InflictDamage(int damage)
+    public int calculated_damage;
+   // private Action _OnDamageChanged;
+    public InflictDamage(int damage )
     {
         this.damage = damage;
+        calculated_damage=damage;
     }
 
     public UniTask Trigger(GameObject sender, [NotNull] GameObject receiver)
@@ -41,12 +43,16 @@ public struct InflictDamage : IEntry
             Debug.LogWarning($" 目标对象 {receiver.name} 缺少 IHealth 组件");
             return UniTask.CompletedTask;
         }
-        health.SetHealth(info);
+        health.AddHealth(info);
         return UniTask.CompletedTask;
     }
 
     public string GetDescription()
     {
         return $"造成{damage}点伤害\n";
+    }
+    public string GetDescriptionCalculated()
+    {
+        return $"造成{calculated_damage}点伤害\n";
     }
 }
