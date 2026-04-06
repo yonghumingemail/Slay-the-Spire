@@ -11,7 +11,8 @@ public class DeFendIntent : IIntent
     public Func<Action<Animator>, UniTask> OnAnimatorPlay { get; set; }
 
     private int _value;
-private GainShield _gainShield;
+    private GainShield _gainShield;
+
     public DeFendIntent(int value, PriorityQueueEventCenter priorityQueueEventCenter)
     {
         Initialized().Forget();

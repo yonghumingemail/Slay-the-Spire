@@ -1,28 +1,31 @@
 using System;
 using UnityEngine;
+
 public class Power_BuffObj : BuffObj
 {
-    
-    public Power_BuffObj(int stack, int maxStack, BuffTag_E[] buffTagEs,GameObject carrier) : base(
-        stack, maxStack,buffTagEs , carrier)
+    public Power_BuffObj(int stack, int maxStack, BuffTag_E[] buffTagEs, GameObject carrier) : base(
+        stack, maxStack, buffTagEs, carrier)
     {
-        _name =BuffName_E.strength;
+        _name = BuffName_E.strength;
         name = Enum.GetName(typeof(BuffName_E), _name);
-        priority =5;
+        priority = 5;
     }
 
     private void Effect(ChangeValueInfo info)
     {
-        info.value -=stack;
+        info.value -= stack;
     }
 
-    public int DamageCalculation_Sender(int value)
+    public int DamageCalculation(int value)
     {
-        return value -stack;
+        Debug.Log(value + stack);
+        return value + stack;
     }
+
     public override void OnAddBuff(PriorityQueueEventCenter eventCent)
     {
         eventCent.AddEvent<Action<ChangeValueInfo>>("OnAttack", Effect, priority);
+        eventCent.AddEvent<Func<int,int>>("DamageCalculation_Attack", DamageCalculation, priority);
     }
 
     public override void OnRemoveBuff(PriorityQueueEventCenter eventCent)

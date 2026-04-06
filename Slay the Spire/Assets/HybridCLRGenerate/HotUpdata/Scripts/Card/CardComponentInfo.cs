@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 
 [Serializable]
-public class CardView:MonoBehaviour
+public class CardComponentInfo:MonoBehaviour
 {
     public SpriteRenderer Background => _background;
     public SpriteRenderer Frame => _frame;
@@ -15,7 +15,10 @@ public class CardView:MonoBehaviour
     public TextMeshPro TypeName => _typeName;
     public TextMeshPro OrbValue => _orbValue;
     public TextMeshPro Describe => _describe;
-    public Outline CardOutline => cardOutline;
+    public Outline CardOutline => _cardOutline;
+    public HandPile HandPile => _handPile;
+    public Camera MainCamera => _mainCamera;
+    public Animator Animator => _animator;
 
     [Header("图片信息组件")] [SerializeField] private SpriteRenderer _background;
     [SerializeField] private SpriteRenderer _frame;
@@ -26,7 +29,13 @@ public class CardView:MonoBehaviour
     [SerializeField] private TextMeshPro _typeName;
     [SerializeField] private TextMeshPro _orbValue;
     [SerializeField] private TextMeshPro _describe;
-    [SerializeField] private Outline cardOutline;
+    [SerializeField] private Outline _cardOutline;
+    
+    private HandPile _handPile;
+    private Camera _mainCamera;
+    private Animator  _animator;
+
+  
 
     private void Awake()
     {
@@ -40,25 +49,13 @@ public class CardView:MonoBehaviour
         _typeName = transform.Find("UI/Head/Frame/TypeName").GetComponent<TextMeshPro>();
         _orbValue = transform.Find("UI/Head/Orb/Point").GetComponent<TextMeshPro>();
         _describe = transform.Find("UI/Describe").GetComponent<TextMeshPro>();
-        cardOutline = transform.Find("Outline").GetComponent<Outline>();
+        _cardOutline = transform.Find("Outline").GetComponent<Outline>();
+        
+        _handPile=GetComponentInParent<HandPile>();
+        _mainCamera=Camera.main;
+        _animator = GetComponent<Animator>();
     }
     
-    public void ShowOutline(bool enable)
-    {
-        if (enable)
-        {
-            cardOutline.Enable().Forget();
-        }
-        else
-        {
-            cardOutline.Disable();
-        }
-    }
-
-    public void Enable(bool enable)
-    {
-        _background.gameObject.SetActive(enable);
-    }
 
     public void UpdateCardTextUI(Card card)
     {

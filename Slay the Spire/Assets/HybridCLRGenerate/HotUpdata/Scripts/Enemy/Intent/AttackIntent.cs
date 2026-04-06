@@ -11,55 +11,66 @@ public class AttackIntent : IIntent
     private InflictDamage _inflictDamage;
     private Sprite[] _sprites;
     public Action<IIntent> OnUpdate { get; set; }
-    public  Func<Action<Animator>,UniTask> OnAnimatorPlay { get; set; }
-
+    public Func<Action<Animator>, UniTask> OnAnimatorPlay { get; set; }
+    private PriorityQueueEventCenter  _priorityEventCenter ;
 
     public Sprite _sprite { get; private set; }
     public string _text { get; private set; }
 
-    public AttackIntent(int value, int number, PriorityQueueEventCenter priorityQueueEventCenter)
+    private Player _player;
+    
+    public AttackIntent(int value, int number, PriorityQueueEventCenter priorityQueueEventCenter,Player player)
     {
         Initialized().Forget();
         this.value = value;
         this.number = number;
         _inflictDamage = new InflictDamage(value);
-        
-        priorityQueueEventCenter.AddEvent<Action<BuffObj, int>>("GainBuff", GainBuff, 0);
+        _player = player;
+
+        _priorityEventCenter= priorityQueueEventCenter;
+        _player._priorityEventCenter.AddEvent<Action>("DamageValueChange_BeAttacked", DamageValueChange, 0);
+        _priorityEventCenter.AddEvent<Action>("DamageValueChange_Attack", DamageValueChange, 0);
+       
     }
-
-    private void GainBuff(BuffObj buff, int stack)
+    
+    private void DamageValueChange()
     {
-        //不止在获得力量buff时更新图形，应该在伤害发生变化时都进行更新
-        if (buff.GetType()!=typeof(Power_BuffObj)) return;
-        int total = buff.stack; 
-
+        value=_inflictDamage.damage;
+        foreach (var action in _priorityEventCenter.GetEvent("DamageCalculation_Attack"))
+        {
+            value = (action._delegate as Func<int, int>).Invoke(value);
+        }
+        foreach (var VARIABLE in _player._priorityEventCenter.GetEvent("DamageCalculation_BeAttacked"))
+        {
+            value = (VARIABLE._delegate as Func<int, int>).Invoke(value);
+        }
         // 使用整数除法计算精灵索引
-        int spriteIndex = Math.Min(total / 5, 6);
+        int spriteIndex = Math.Min(value / 5, 6);
 
         // 获取对应的精灵
         _sprite = _sprites[spriteIndex];
-        _text = number == 1 ? $"{value + buff.stack}" : $"{value + buff.stack}X{number}";
+        _text = number == 1 ? $"{value}" : $"{value}X{number}";
         OnUpdate?.Invoke(this);
     }
+    
 
     private async UniTask Initialized()
     {
         var resource = await AddressablesMgr.Instance.LoadAssetAsync<SpriteAtlas>(
-                "Assets/Art/Image/SpriteAtlas/Intent.spriteatlasv2");
-        _sprites = new []
+            "Assets/Art/Image/SpriteAtlas/Intent.spriteatlasv2");
+        _sprites = new[]
         {
-            resource.GetSprite("Assets/Art/Image/ui/intent/attack/attack_intent_1.png"),
-            resource.GetSprite("Assets/Art/Image/ui/intent/attack/attack_intent_2.png"),
-            resource.GetSprite("Assets/Art/Image/ui/intent/attack/attack_intent_3.png"),
-            resource.GetSprite("Assets/Art/Image/ui/intent/attack/attack_intent_4.png"),
-            resource.GetSprite("Assets/Art/Image/ui/intent/attack/attack_intent_5.png"),
-            resource.GetSprite("Assets/Art/Image/ui/intent/attack/attack_intent_6.png"),
-            resource.GetSprite("Assets/Art/Image/ui/intent/attack/attack_intent_7.png"),
+            resource.GetSprite("attack_intent_1"),
+            resource.GetSprite("attack_intent_2"),
+            resource.GetSprite("attack_intent_3"),
+            resource.GetSprite("attack_intent_4"),
+            resource.GetSprite("attack_intent_5"),
+            resource.GetSprite("attack_intent_6"),
+            resource.GetSprite("attack_intent_7"),
         };
-        
         // 使用整数除法计算精灵索引
         int spriteIndex = Math.Min(value / 5, 6);
-        
+
         _sprite = _sprites[spriteIndex];
         _text = number == 1 ? $"{value}" : $"{value}X{number}";
         OnUpdate?.Invoke(this);
@@ -72,8 +83,8 @@ public class AttackIntent : IIntent
         {
             await _inflictDamage.Trigger(sender, receiver);
         }
+
         await OnAnimatorPlay.Invoke(ExecuteAnimator);
-        
     }
 
     private void ExecuteAnimator(Animator animator)

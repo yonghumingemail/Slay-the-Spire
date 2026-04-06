@@ -18,9 +18,15 @@ public class VulnerableState_BuffObj : BuffObj
         info.value *= power;
     }
 
+    public int DamageCalculation(int value)
+    {
+        return (int)(value * power);
+    }
+
     public override void OnAddBuff(PriorityQueueEventCenter eventCent)
     {
         eventCent.AddEvent<Action<ChangeValueInfo>>("OnHealthChange", Effect, priority);
+        eventCent.AddEvent<Func<int, int>>("DamageCalculation_BeAttacked", DamageCalculation, priority);
     }
 
     public override void OnRemoveBuff(PriorityQueueEventCenter eventCent)

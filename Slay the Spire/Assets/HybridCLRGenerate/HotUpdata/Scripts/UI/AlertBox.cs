@@ -33,6 +33,7 @@ public class AlertBox : MonoBehaviour
         RightDown.color = defaultColor;
         RightUp.color = defaultColor;
    
+        
     }
 
     public void Show(Transform _transform, Sprite sprite)

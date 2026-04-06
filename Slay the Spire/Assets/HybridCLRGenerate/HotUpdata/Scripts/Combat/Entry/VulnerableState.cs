@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -15,9 +14,10 @@ public struct VulnerableState : IEntry
 
     public UniTask Trigger(GameObject sender, [NotNull] GameObject receiver)
     {
-        IEventCenterObject<string> eventCenter = receiver.GetComponent<IEventCenterObject<string>>();
-        IBuffList buffListObj = eventCenter.eventCenter.GetEvent<Func<IBuffList>>("IBuffList")?.Invoke();
+        IEventCenterObject<string> eventCenter_receiver = receiver.GetComponent<IEventCenterObject<string>>();
+        IBuffList buffListObj = eventCenter_receiver.eventCenter.GetEvent<Func<IBuffList>>("IBuffList")?.Invoke();
 
+        
         if (buffListObj == null)
         {
             UnityEngine.Debug.LogWarning($"{nameof(Trigger)}: 目标对象 {receiver.name} 缺少 IBuffList 组件");
@@ -32,19 +32,23 @@ public struct VulnerableState : IEntry
             buff = buffObj as VulnerableState_BuffObj;
         }
 
-        if (buff!=null)
+        if (buff != null)
         {
             buff.stack = Math.Min(buff.stack + stack, maxStack);
             buffListObj.UpdateView(buff);
         }
         else
         {
-            buff = new VulnerableState_BuffObj(stack, maxStack,new [] { BuffTag_E.debuff }, receiver);
+            buff = new VulnerableState_BuffObj(stack, maxStack, new[] { BuffTag_E.debuff }, receiver);
             buffListObj.AddBuff(buff);
         }
         
-        var actions = buffListObj._priorityEventCenter.GetEvent("GainBuff");
-        foreach (var action in actions ?? Enumerable.Empty<PriorityEvent>())
+        foreach (var action in buffListObj._priorityEventCenter.GetEvent("DamageValueChange_BeAttacked"))
+        {
+            (action._delegate as Action)?.Invoke();
+        }
+
+        foreach (var action in  buffListObj._priorityEventCenter.GetEvent("GainBuff"))
         {
             (action._delegate as Action<BuffObj, int>)?.Invoke(buff, stack);
         }
@@ -55,5 +59,9 @@ public struct VulnerableState : IEntry
     public string GetDescription()
     {
         return $"给予{stack.ToString()}层易伤\n";
+    }
+    public string GetDescription(int value)
+    {
+        return $"给予{value.ToString()}层易伤\n";
     }
 }

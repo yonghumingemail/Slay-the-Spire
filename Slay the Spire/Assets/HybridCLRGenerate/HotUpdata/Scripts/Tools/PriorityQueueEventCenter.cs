@@ -38,6 +38,8 @@ public class PriorityQueueEventCenter
         //用插排更好
         Event_Dic[eventName].Sort((a, b) => b.priority.CompareTo(a.priority));
     }
+    
+    
 
     public IEnumerable<PriorityEvent> GetEvent(string name)
     {

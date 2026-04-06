@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Splines;
 using Z_Tools;
 
-public class HandPile : MonoBehaviour
+public class HandPile : MonoBehaviour, IPointerEnterHandler,
+    IPointerExitHandler
 {
     private CardArrangement cardArrangement;
 
@@ -15,6 +16,7 @@ public class HandPile : MonoBehaviour
     private DrawPile drawPile;
     public CardDragLine cardDragLine { get; private set; }
     public List<Card> cardInstances = new List<Card>();
+    public Card SelectedCard;
 
     public int drawCardsCount;
     public int drawCardsOffer;
@@ -23,6 +25,8 @@ public class HandPile : MonoBehaviour
 
     public bool isDragging;
     public int maxHandSize { get; private set; } = 10;
+
+  
 
     private void Awake()
     {
@@ -38,8 +42,8 @@ public class HandPile : MonoBehaviour
             OnPlayerTurnStart, 0);
         EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<UniTask>>("OnRoundEnd", OnRoundEnd, 0);
 
-        EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnSelectCard", OnSelectCard);
-        EventCenter_Singleton.Instance.AddEvent<Action<Card>>("OnUnSelectCard", UnOnSelectCard);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action<Enemy>>("OnMouseEnterEnemy", OnMouseEnterEnemy, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action<Enemy>>("OnMouseExitEnemy", OnMouseExitEnemy, 0);
     }
 
     private void Start()
@@ -55,24 +59,52 @@ public class HandPile : MonoBehaviour
         }
     }
 
-    private void OnSelectCard(Card card)
+    private void OnMouseExitEnemy(Enemy enemy)
     {
+        if (!SelectedCard) return;
+        foreach (var priorityEvent in SelectedCard.priorityQueueEventCenter.GetEvent("OnMouseExitEnemy"))
+        {
+            (priorityEvent._delegate as Action<Enemy>)?.Invoke(enemy);
+        }
+    }
+    private void OnMouseEnterEnemy(Enemy enemy)
+    {
+        if (!SelectedCard) return;
+        foreach (var priorityEvent in SelectedCard.priorityQueueEventCenter.GetEvent("OnMouseEnterEnemy"))
+        {
+            (priorityEvent._delegate as Action<Enemy>)?.Invoke(enemy);
+        }
+    }
+
+    public void SetSelectedCard(Card card)
+    {
+        SelectedCard = card;
+        bool isSelected = SelectedCard != null;
         foreach (var VARIABLE in cardInstances)
         {
             if (card != VARIABLE)
             {
-                VARIABLE.isInteractable = false;
+                //card不为空时，即当前选择了卡牌，则将其他卡牌的交互禁用，反之则启用
+                VARIABLE.CardInteraction.isInteractable = !isSelected;
+            }
+        }
+
+        if (isSelected)
+        {
+            foreach (var VARIABLE in   EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("OnSelectCard"))
+            {
+               (VARIABLE._delegate as Action<Card>)?.Invoke(SelectedCard);
+            }
+        }
+        else
+        {
+            foreach (var VARIABLE in   EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("OnUnSelectCard"))
+            {
+                (VARIABLE._delegate as Action)?.Invoke();
             }
         }
     }
 
-    private void UnOnSelectCard(Card card)
-    {
-        foreach (var VARIABLE in cardInstances)
-        {
-            VARIABLE.isInteractable = true;
-        }
-    }
 
     public async UniTaskVoid Test11()
     {
@@ -95,7 +127,6 @@ public class HandPile : MonoBehaviour
             card.gameObject.SetActive(false);
             card.Initialized().Forget();
             drawPile.AddCard(card).Forget();
-            
         }
     }
 
@@ -104,10 +135,10 @@ public class HandPile : MonoBehaviour
         // 创建副本，避免循环中列表变化的影响
         var cardsToProcess = cardInstances.ToArray();
         UniTask[] tasks = new UniTask[cardsToProcess.Length];
-        
+
         for (int i = 0; i < cardsToProcess.Length; i++)
         {
-            cardsToProcess[i].isInteractable = false;
+            cardsToProcess[i].CardInteraction.isInteractable = false;
             tasks[i] = cardsToProcess[i].Recycle_DiscardPile();
         }
 
@@ -118,7 +149,7 @@ public class HandPile : MonoBehaviour
 
     public async UniTask OnPlayerTurnStart(int roundCount)
     {
-       // print("抽牌："+Time.time);
+        // print("抽牌："+Time.time);
         await DrawCard(drawCardsCount + drawCardsOffer);
     }
 
@@ -139,5 +170,21 @@ public class HandPile : MonoBehaviour
     public void SortCards(Action callback = null)
     {
         cardArrangement.UpdateCardPositions(spline, cardInstances, callback);
+    }
+
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (SelectedCard)
+        {
+            SelectedCard.UnSelectCard();
+            SelectedCard.CardInteraction.OnMouseUpDelegate?.Invoke(eventData);
+            cardDragLine.Interrupt(eventData);
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+       
     }
 }

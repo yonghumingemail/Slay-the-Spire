@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class Intent_C : MonoBehaviour
 {
-    public List<IIntent> entryList { get; private set; } = new List<IIntent>();
+    //已经执行的意图列表
+    public List<IIntent> executedList { get; private set; } = new List<IIntent>();
+
     public IIntent currentIntent { get; private set; }
     public Intent_V intentV;
 
@@ -30,7 +32,6 @@ public class Intent_C : MonoBehaviour
 
     public void AddIntent(IIntent intent)
     {
-        entryList.Add(intent);
         intent.OnUpdate += OnIntentUpdate;
         intent.OnAnimatorPlay += AnimatorComplete;
     }
@@ -50,18 +51,44 @@ public class Intent_C : MonoBehaviour
 
         _animatorComplete.onComplete += (clipName) =>
         {
-           // print(clipName+"播放结束："+Time.time);
+            // print(clipName+"播放结束："+Time.time);
             task.TrySetResult();
             _animatorComplete.onComplete = null;
         };
         return task.Task;
     }
 
+
+    private int Choose(IEnumerable<float> list, float total)
+    {
+        // 处理总权重为0的情况
+        if (total <= 0f)
+        {
+            return -1; // 或者抛出异常
+        }
+
+        //在0到总权重之间随机选取一个点
+        float randomPoint = UnityEngine.Random.value * total;
+
+        //确定随机点落在哪个区间
+        int currentIndex = 0;
+        foreach (float weight in list)
+        {
+            if (randomPoint < weight)
+            {
+                return currentIndex;
+            }
+
+            randomPoint -= weight;
+            currentIndex++;
+        }
+
+        //为了防止浮点数精度问题，返回最后一个索引
+        return currentIndex - 1;
+    }
+
     private void OnDestroy()
     {
-        foreach (var entry in entryList)
-        {
-            entry.OnUpdate = null;
-        }
+       
     }
 }

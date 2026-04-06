@@ -11,25 +11,26 @@ public abstract class Card : MonoBehaviour
 {
     #region Property
 
-    public CardView CardView => cardView;
+    public CardComponentInfo CardComponentInfo => cardComponentInfo;
     public CardAnimator CardAnimator => cardAnimator;
+    public CardInteraction CardInteraction => cardInteraction;
     public CardExteriorInfo ExteriorInfo => exteriorInfo;
 
     #endregion
 
-    [SerializeField] protected CardView cardView;
-    [SerializeField] protected CardAnimator cardAnimator;
-    [SerializeField] protected CardExteriorInfo exteriorInfo;
-    public HandPile handPile;
+    //用于监听和触发子类实现的特殊事件
+    public PriorityQueueEventCenter priorityQueueEventCenter { get; private set; }
 
-    public Camera _mainCamera { get; protected set; }
-    public MouseInteraction _mouseInteraction { get; protected set; }
+    [SerializeField] protected CardComponentInfo cardComponentInfo;
+    [SerializeField] protected CardAnimator cardAnimator;
+    [SerializeField] protected CardInteraction cardInteraction;
+    [SerializeField] protected CardExteriorInfo exteriorInfo;
 
     protected Player _player;
     protected CombatManage _combatManage;
     protected Energy _energy;
     protected DiscardPile _discardPile;
-    
+
     protected UniTaskCompletionSource _source;
 
     public string cardName;
@@ -38,51 +39,7 @@ public abstract class Card : MonoBehaviour
     public List<IEntry> cardEntries { get; protected set; }
     public string describe { get; protected set; }
     public bool isStrengthen { get; protected set; }
-
-
-    [Header("位置信息")] [SerializeField] protected Vector3 position;
-    [SerializeField] protected Quaternion rotation;
-    [SerializeField] protected Vector3 scale;
-    [SerializeField] protected Vector3 mouseOverPosition;
-    [SerializeField] protected Vector3 mouseOverScale;
-
-
-    public bool _isDragging;
-    public bool isInteractable = true;
-    public float magnification = 1.1f;
-
-
-    protected virtual void Awake()
-    {
-        _mouseInteraction = GetComponent<MouseInteraction>();
-        handPile = GetComponentInParent<HandPile>();
-
-        _mainCamera = Camera.main;
-        cardView = GetComponent<CardView>();
-        cardAnimator = GetComponent<CardAnimator>();
-
-        scale = transform.localScale;
-        mouseOverScale = transform.localScale * magnification;
-        mouseOverPosition = new Vector3
-        {
-            z = -0.1f * handPile.maxHandSize - 0.1f,
-            y = _mainCamera.ViewportToWorldPoint(new Vector3(0.5f, 0)).y +
-                cardView.Background.bounds.size.y / 2
-        };
-
-        _mouseInteraction.OnMouseDownDelegate += OnPointerDown;
-        _mouseInteraction.OnMouseUpDelegate += OnPointerUp;
-        _mouseInteraction.OnMouseEnterDelegate += OnPointerEnter;
-        _mouseInteraction.OnMouseExitDelegate += OnPointerExit;
-
-        EventCenter_Singleton.Instance.AddEvent<Action>("OnCardArrangementComplete", OnCardArrangementComplete);
-        EventCenter_Singleton.Instance.AddEvent<Action>("OnStartCardArrangement", OnStartCardArrangement);
-    }
-
-    private void Start()
-    {
-        _player= EventCenter_Singleton.Instance.GetEvent<Func<Player>>("Player").Invoke();
-    }
+    public bool isSelect{ get; protected set; }
 
     #region abstract methods
 
@@ -97,12 +54,7 @@ public abstract class Card : MonoBehaviour
     {
         cardEntries.Add(entry);
         describe += entry.GetDescription();
-        cardView.UpdateCardUI(this);
-    }
-
-    public virtual void OnUnSelectedCard()
-    {
-        cardAnimator.TransformEffect(position, rotation.eulerAngles, scale);
+        cardComponentInfo.UpdateCardUI(this);
     }
 
     public virtual bool CanBeTriggered()
@@ -115,30 +67,31 @@ public abstract class Card : MonoBehaviour
         if (enable)
         {
             gameObject.SetActive(true);
-            cardView.Enable(true);
-            isInteractable = true;
+            cardComponentInfo.Background.gameObject.SetActive(true);
+            cardInteraction.isInteractable = true;
         }
         else
         {
             gameObject.SetActive(false);
-            cardView.Enable(false);
-            isInteractable = false;
+            cardComponentInfo.Background.gameObject.SetActive(false);
+            cardInteraction.isInteractable = false;
         }
     }
 
+
     public UniTask Recycle_DiscardPile(UniTaskCompletionSource source = null)
     {
-        handPile.cardInstances.Remove(this);
+        cardComponentInfo.HandPile.cardInstances.Remove(this);
         source ??= new UniTaskCompletionSource();
 
         cardAnimator.Recycle_DiscardPile(() =>
         {
             gameObject.SetActive(false);
             Vector3 screenCenter =
-                _mainCamera.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
+                cardComponentInfo.MainCamera.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
             screenCenter.z = transform.position.z;
             transform.position = screenCenter;
-            transform.localScale = scale;
+            transform.localScale = Vector3.one;
             transform.rotation = Quaternion.identity;
 
             _discardPile.AddCard(this).Forget();
@@ -148,10 +101,16 @@ public abstract class Card : MonoBehaviour
         return source.Task;
     }
 
+    public void UnSelectCard()
+    {
+        isSelect = false;
+        cardInteraction._isDragging = false;
+        cardAnimator.TransformEffectToRotation(gameObject, cardInteraction.position, cardInteraction.rotation, cardInteraction.scale);
+    }
     protected virtual UniTask CardTriggerAnimator()
     {
-        handPile.cardInstances.Remove(this);
-         _source = new UniTaskCompletionSource();
+        cardComponentInfo.HandPile.cardInstances.Remove(this);
+        _source = new UniTaskCompletionSource();
         cardAnimator.MoveToScreenCenter(() => { Recycle_DiscardPile(_source); });
         return _source.Task;
     }
@@ -159,6 +118,23 @@ public abstract class Card : MonoBehaviour
 
     protected virtual async UniTask Initialized(string defaultDataPtah)
     {
+        priorityQueueEventCenter = new PriorityQueueEventCenter();
+
+        cardComponentInfo = GetComponent<CardComponentInfo>();
+        cardAnimator = GetComponent<CardAnimator>();
+        cardInteraction = GetComponent<CardInteraction>();
+
+        cardInteraction.OnMouseDownDelegate += (eventData) =>
+        {
+            isSelect = true;
+            cardComponentInfo.HandPile.SetSelectedCard(this);
+        };
+        cardInteraction.OnMouseUpDelegate += (eventData) =>
+        {
+            cardAnimator.TransformEffectToRotation(gameObject, cardInteraction.position, cardInteraction.rotation, cardInteraction.scale);
+            cardComponentInfo.HandPile.SetSelectedCard(null);
+        };
+
         exteriorInfo = await AddressablesMgr.Instance.LoadAssetAsync<CardExteriorInfo>(defaultDataPtah);
 
         _player = EventCenter_Singleton.Instance.GetEvent<Func<Player>>("Player").Invoke();
@@ -172,61 +148,16 @@ public abstract class Card : MonoBehaviour
         cardType = exteriorInfo.cardType;
         orbValue = exteriorInfo.orbValue;
 
-        cardView.UpdateCardUI(this);
+        cardComponentInfo.UpdateCardUI(this);
     }
 
-    protected virtual void OnCardArrangementComplete()
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        isInteractable = true;
-
-        position = transform.position;
-        rotation = transform.rotation;
-        mouseOverPosition.x = position.x;
+        print(other.gameObject.name);
     }
 
-    protected virtual void OnStartCardArrangement()
+    private void OnCollisionExit2D(Collision2D other)
     {
-        isInteractable = false;
-    }
-
-    #region 交互事件
-
-    private void OnPointerEnter(PointerEventData eventData)
-    {
-        if (!isInteractable || _isDragging) return;
-
-        cardAnimator.TransformEffectToRotation(mouseOverPosition, Quaternion.identity, mouseOverScale);
-    }
-
-    private void OnPointerExit(PointerEventData eventData)
-    {
-        if (!isInteractable || _isDragging) return;
-
-        cardAnimator.TransformEffectToRotation(position, rotation, scale);
-    }
-
-    private void OnPointerDown(PointerEventData eventData)
-    {
-        if (!isInteractable) return;
-
-        EventCenter_Singleton.Instance.GetEvent<Action<Card>>("OnSelectCard")?.Invoke(this);
-        _isDragging = true;
-    }
-
-    private void OnPointerUp(PointerEventData eventData)
-    {
-        EventCenter_Singleton.Instance.GetEvent<Action<Card>>("OnUnSelectCard")?.Invoke(this);
-
-        _isDragging = false;
-    }
-
-    #endregion
-
-    protected virtual void OnDestroy()
-    {
-        EventCenter_Singleton.Instance.RemoveEvent<Action>("OnCardArrangementComplete", OnCardArrangementComplete);
-        EventCenter_Singleton.Instance.RemoveEvent<Action>("OnStartCardArrangement", OnStartCardArrangement);
-        
-        transform.DOKill();
+        print(other.gameObject.name);
     }
 }

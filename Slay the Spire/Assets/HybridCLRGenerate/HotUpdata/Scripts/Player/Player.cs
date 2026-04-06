@@ -26,8 +26,22 @@ public class Player : MonoBehaviour, IEventCenterObject<string>
         Initialize().Forget();
     }
 
+    private GainPower gainPower = new GainPower(2);
+    private VulnerableState vulnerableState = new VulnerableState(2);
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            gainPower.Trigger(null, gameObject);
+            vulnerableState.Trigger(null, gameObject);
+        }
+    }
+
     private async UniTaskVoid Initialize()
     {
+        EventCenter_Singleton.Instance.AddEvent<Func<Player>>("Player", Get);
+        eventCenter.AddEvent<Func<PriorityQueueEventCenter>>("PriorityQueueEventCenter", () => _priorityEventCenter);
+
         health_V = GetComponentInChildren<IHealth_V>();
         health_V.InitializeView(gameObject);
         _health = new SimpleHealth(100, 100, health_V, _priorityEventCenter);
@@ -43,9 +57,8 @@ public class Player : MonoBehaviour, IEventCenterObject<string>
         _buffList = new SimpleBuffList(buffList_V, _priorityEventCenter);
         eventCenter.AddEvent<Func<IBuffList>>("IBuffList", () => _buffList);
 
-
         animator = GetComponent<Animator>();
-        EventCenter_Singleton.Instance.AddEvent<Func<Player>>("Player", Get);
+      
     }
 
     private Player Get() => this;

@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Text;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -44,10 +43,13 @@ public struct GainPower : IEntry
         }
         
         //通知接受者更新伤害信息Get Action
-
         
-        var actions = buffListObj._priorityEventCenter.GetEvent("GainBuff");
-        foreach (var action in actions ?? Enumerable.Empty<PriorityEvent>())
+        foreach (var action in buffListObj._priorityEventCenter.GetEvent("DamageValueChange_Attack"))
+        {
+            (action._delegate as Action)?.Invoke();
+        }
+
+        foreach (var action in buffListObj._priorityEventCenter.GetEvent("GainBuff") )
         {
             (action._delegate as Action<BuffObj, int>)?.Invoke(buff, stack);
         }
@@ -58,5 +60,9 @@ public struct GainPower : IEntry
     public string GetDescription()
     {
         return $"获得{stack.ToString()}点力量\n";
+    }
+    public string GetDescription(int value)
+    {
+        return $"获得{value}点力量\n";
     }
 }

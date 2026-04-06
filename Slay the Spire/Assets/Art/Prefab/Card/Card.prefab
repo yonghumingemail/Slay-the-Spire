@@ -26,7 +26,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 770344792899184338}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -866,7 +866,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5220126367319876412}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1115,9 +1115,9 @@ GameObject:
   m_Component:
   - component: {fileID: 226703569809468817}
   - component: {fileID: -8632270315364346999}
-  - component: {fileID: 3370231055186512107}
   - component: {fileID: 5150682347552092080}
-  - component: {fileID: -2631890333316499108}
+  - component: {fileID: -4177396280908238291}
+  - component: {fileID: 2305417162401317666}
   m_Layer: 0
   m_Name: Card
   m_TagString: Untagged
@@ -1135,7 +1135,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6264155486511405605}
@@ -1164,18 +1164,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3370231055186512107
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7722627056249905881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6096e87f3e5e9ef489c2deb33b7b395a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5150682347552092080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1190,7 +1178,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 0}
   animatorSpeed: 0.25
---- !u!114 &-2631890333316499108
+--- !u!114 &-4177396280908238291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7722627056249905881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51d01e7d00d1bd54dbf6d0fa272d3bda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isDragging: 0
+  isInteractable: 1
+  cardAnimator: {fileID: 0}
+  magnification: 1.1
+  position: {x: 0, y: 0, z: 0}
+  rotation: {x: 0, y: 0, z: 0, w: 0}
+  scale: {x: 0, y: 0, z: 0}
+  mouseOverPosition: {x: 0, y: 0, z: 0}
+  mouseOverScale: {x: 0, y: 0, z: 0}
+  handPile: {fileID: 0}
+  backgroundSprite: {fileID: 0}
+--- !u!114 &2305417162401317666
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1240,7 +1251,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2034686785267874913}

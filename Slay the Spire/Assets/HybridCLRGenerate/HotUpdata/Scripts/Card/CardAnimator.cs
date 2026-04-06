@@ -42,7 +42,7 @@ public class CardAnimator:MonoBehaviour
         Vector3 screenRightDown = _mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0f));
         screenRightDown.z = transform.position.z;
 
-        TransformEffect(screenRightDown, new Vector3(0, 0, -180), Vector3.zero, callback: callback);
+        TransformEffect(gameObject,screenRightDown, new Vector3(0, 0, -180), Vector3.zero, callback: callback);
     }
 
     public void Recycle_DrawPile( Action callback)
@@ -50,38 +50,38 @@ public class CardAnimator:MonoBehaviour
         Vector3 screenLeftDown = _mainCamera.ScreenToWorldPoint(new Vector3(0, 0, 0f));
         screenLeftDown.z = transform.position.z;
 
-        TransformEffect(screenLeftDown, new Vector3(0, 0, 180), Vector3.zero, callback: callback);
+        TransformEffect(gameObject,screenLeftDown, new Vector3(0, 0, 180), Vector3.zero, callback: callback);
     }
 
     // 方法1：绝对旋转（旋转到指定四元数,无方向）
-    public void TransformEffectToRotation( Vector3 targetPosition,
+    public void TransformEffectToRotation(GameObject target, Vector3 targetPosition,
         Quaternion targetRotation, Vector3 targetScale, Action callback = null)
     {
         _sequence.Kill();
         _sequence = DOTween.Sequence();
 
-        var move = transform.DOMove(targetPosition, animatorSpeed);
-        var rotation = transform.DORotateQuaternion(targetRotation, animatorSpeed);
-        var scale = transform.DOScale(targetScale, animatorSpeed);
+        var move = target.transform.DOMove(targetPosition, animatorSpeed);
+        var rotation = target.transform.DORotateQuaternion(targetRotation, animatorSpeed);
+        var scale = target.transform.DOScale(targetScale, animatorSpeed);
 
         _sequence.Insert(0, move);
         _sequence.Insert(0, rotation);
         _sequence.Insert(0, scale);
 
+        
         _sequence.onComplete += () => callback?.Invoke();
     }
-
 // 方法2：相对旋转（旋转指定角度,有方向）
-    public void TransformEffect( Vector3 targetPosition,
+    public void TransformEffect( GameObject target,Vector3 targetPosition,
         Vector3 rotateAngle, Vector3 targetScale, RotateMode rotateMode = RotateMode.LocalAxisAdd,
         Action callback = null)
     {
         _sequence.Kill();
         _sequence = DOTween.Sequence();
 
-        var move = transform.DOMove(targetPosition, animatorSpeed);
-        var rotation = transform.DORotate(rotateAngle, animatorSpeed, rotateMode);
-        var scale = transform.DOScale(targetScale, animatorSpeed);
+        var move = target.transform.DOMove(targetPosition, animatorSpeed);
+        var rotation = target.transform.DORotate(rotateAngle, animatorSpeed, rotateMode);
+        var scale = target.transform.DOScale(targetScale, animatorSpeed);
 
         _sequence.Insert(0, move);
         _sequence.Insert(0, rotation);

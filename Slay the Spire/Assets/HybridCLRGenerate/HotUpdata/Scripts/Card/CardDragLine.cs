@@ -36,14 +36,14 @@ public class CardDragLine : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void Interrupt()
+    public void Interrupt(PointerEventData _data)
     {
         _tokenSource?.Cancel();
     }
-    public void Register(MouseInteraction mouseInteraction)
+    public void Register(CardInteraction cardInteraction)
     {
-        mouseInteraction.OnMouseDownDelegate += _OnMouseDown;
-        mouseInteraction.OnMouseUpDelegate += _OnMouseUp;
+        cardInteraction.OnMouseDownDelegate += _OnMouseDown;
+        cardInteraction.OnMouseUpDelegate += Interrupt;
     }
 
     private CancellationTokenSource _tokenSource;
@@ -59,10 +59,7 @@ public class CardDragLine : MonoBehaviour
         Trigger(_data).Forget();
     }
 
-    private void _OnMouseUp(PointerEventData _data)
-    {
-        _tokenSource?.Cancel();
-    }
+
 
     private async UniTaskVoid Trigger(PointerEventData _data)
     {
