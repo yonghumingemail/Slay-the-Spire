@@ -53,8 +53,6 @@ public class BuffList_V : MonoBehaviour, IBuffList_V
         layout2D = GetComponent<Layout2D>();
     }
 
-    public GameObject GetViewObject() => gameObject;
-
 
     /// <summary>
     /// 添加Buff到UI列表

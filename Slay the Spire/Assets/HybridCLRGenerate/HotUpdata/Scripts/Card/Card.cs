@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Z_Tools;
 
+
 public abstract class Card : MonoBehaviour
 {
     #region Property
@@ -19,7 +20,7 @@ public abstract class Card : MonoBehaviour
     #endregion
 
     //用于监听和触发子类实现的特殊事件
-    public PriorityQueueEventCenter priorityQueueEventCenter { get; private set; }
+    public PriorityQueueEventCenter priorityEventCenter { get; private set; }
 
     [SerializeField] protected CardComponentInfo cardComponentInfo;
     [SerializeField] protected CardAnimator cardAnimator;
@@ -39,7 +40,6 @@ public abstract class Card : MonoBehaviour
     public List<IEntry> cardEntries { get; protected set; }
     public string describe { get; protected set; }
     public bool isStrengthen { get; protected set; }
-    public bool isSelect{ get; protected set; }
 
     #region abstract methods
 
@@ -88,7 +88,8 @@ public abstract class Card : MonoBehaviour
         {
             gameObject.SetActive(false);
             Vector3 screenCenter =
-                cardComponentInfo.MainCamera.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
+                cardComponentInfo.MainCamera.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f,
+                    0f));
             screenCenter.z = transform.position.z;
             transform.position = screenCenter;
             transform.localScale = Vector3.one;
@@ -101,12 +102,20 @@ public abstract class Card : MonoBehaviour
         return source.Task;
     }
 
-    public void UnSelectCard()
+    
+    public virtual void UnSelectCard()
     {
-        isSelect = false;
         cardInteraction._isDragging = false;
-        cardAnimator.TransformEffectToRotation(gameObject, cardInteraction.position, cardInteraction.rotation, cardInteraction.scale);
+        cardComponentInfo.HandPile.SetSelectedCard(null);
+        cardAnimator.TransformEffectToRotation(gameObject, cardInteraction.position, cardInteraction.rotation,
+            cardInteraction.scale);
+        foreach (var VARIABLE in priorityEventCenter.GetEvent("UnSelectCard"))
+        {
+            (VARIABLE._delegate as Action<Card>)?.Invoke(this);
+        }
     }
+
+
     protected virtual UniTask CardTriggerAnimator()
     {
         cardComponentInfo.HandPile.cardInstances.Remove(this);
@@ -118,22 +127,14 @@ public abstract class Card : MonoBehaviour
 
     protected virtual async UniTask Initialized(string defaultDataPtah)
     {
-        priorityQueueEventCenter = new PriorityQueueEventCenter();
+        priorityEventCenter = new PriorityQueueEventCenter();
 
         cardComponentInfo = GetComponent<CardComponentInfo>();
         cardAnimator = GetComponent<CardAnimator>();
         cardInteraction = GetComponent<CardInteraction>();
 
-        cardInteraction.OnMouseDownDelegate += (eventData) =>
-        {
-            isSelect = true;
-            cardComponentInfo.HandPile.SetSelectedCard(this);
-        };
-        cardInteraction.OnMouseUpDelegate += (eventData) =>
-        {
-            cardAnimator.TransformEffectToRotation(gameObject, cardInteraction.position, cardInteraction.rotation, cardInteraction.scale);
-            cardComponentInfo.HandPile.SetSelectedCard(null);
-        };
+        cardInteraction.OnMouseDownDelegate += (eventData) => { cardComponentInfo.HandPile.SetSelectedCard(this); };
+        cardInteraction.OnMouseUpDelegate += (eventData) => { UnSelectCard(); };
 
         exteriorInfo = await AddressablesMgr.Instance.LoadAssetAsync<CardExteriorInfo>(defaultDataPtah);
 
@@ -149,15 +150,5 @@ public abstract class Card : MonoBehaviour
         orbValue = exteriorInfo.orbValue;
 
         cardComponentInfo.UpdateCardUI(this);
-    }
-
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        print(other.gameObject.name);
-    }
-
-    private void OnCollisionExit2D(Collision2D other)
-    {
-        print(other.gameObject.name);
     }
 }

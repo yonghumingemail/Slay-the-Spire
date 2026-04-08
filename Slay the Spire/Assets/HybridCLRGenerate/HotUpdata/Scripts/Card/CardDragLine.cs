@@ -36,17 +36,14 @@ public class CardDragLine : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void Interrupt(PointerEventData _data)
+    public void Register(Card card)
     {
-        _tokenSource?.Cancel();
-    }
-    public void Register(CardInteraction cardInteraction)
-    {
-        cardInteraction.OnMouseDownDelegate += _OnMouseDown;
-        cardInteraction.OnMouseUpDelegate += Interrupt;
+        card.CardInteraction.OnMouseDownDelegate += _OnMouseDown;
+        card.CardInteraction.OnMouseUpDelegate += data => { _tokenSource?.Cancel(); };
+        card.priorityEventCenter.AddEvent<Action<Card>>("UnSelectCard", (data) => { _tokenSource?.Cancel(); }, 0);
     }
 
-    private CancellationTokenSource _tokenSource;
+    public CancellationTokenSource _tokenSource { get; private set; }
 
     private void _OnMouseDown(PointerEventData _data)
     {
@@ -56,9 +53,9 @@ public class CardDragLine : MonoBehaviour
         {
             t.gameObject.SetActive(true);
         }
+
         Trigger(_data).Forget();
     }
-
 
 
     private async UniTaskVoid Trigger(PointerEventData _data)
@@ -72,10 +69,10 @@ public class CardDragLine : MonoBehaviour
         Vector3 pointPosition;
         Vector3 lastPoint;
         Vector3 direction;
-        
+
         _tokenSource = new CancellationTokenSource();
         CancellationToken _token = _tokenSource.Token;
-        
+
         while (!_token.IsCancellationRequested)
         {
             endPoint = mainCamera.ScreenToWorldPoint(Input.mousePosition);
@@ -99,7 +96,7 @@ public class CardDragLine : MonoBehaviour
             lines[^1].transform.eulerAngles = lines[^2].transform.eulerAngles;
             await UniTask.Yield(PlayerLoopTiming.PreLateUpdate);
         }
-        
+
         gameObject.SetActive(false);
         foreach (var t in sprites)
         {

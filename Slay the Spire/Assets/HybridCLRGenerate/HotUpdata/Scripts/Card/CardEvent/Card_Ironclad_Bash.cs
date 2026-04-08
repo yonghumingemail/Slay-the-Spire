@@ -11,7 +11,6 @@ public class Card_Ironclad_Bash : Card
     private InflictDamage _inflictDamage;
     private VulnerableState _vulnerableState;
     private RaycastHit2D _target;
-    private int calculated_damage;
     private Enemy _enemy;
 
     private void OnMouseEnterEnemy(Enemy enemy)
@@ -20,10 +19,10 @@ public class Card_Ironclad_Bash : Card
         enemy.alertBox.Show(enemy.transform, enemy.spriteRenderer.sprite);
         foreach (var action in enemy._priorityEventCenter.GetEvent("DamageCalculation_BeAttacked"))
         {
-            calculated_damage = (action._delegate as Func<int, int>).Invoke(calculated_damage);
+            _inflictDamage.calculated_damage = (action._delegate as Func<int, int>).Invoke( _inflictDamage.calculated_damage);
         }
 
-        describe = _inflictDamage.GetDescription(calculated_damage) + _vulnerableState.GetDescription();
+        describe = _inflictDamage.GetDescription() + _vulnerableState.GetDescription();
         cardComponentInfo.UpdateCardUI(this);
     }
 
@@ -31,16 +30,16 @@ public class Card_Ironclad_Bash : Card
     {
         _enemy = enemy;
         enemy?.alertBox.Close();
-        calculated_damage = _inflictDamage.damage;
+        _inflictDamage.calculated_damage = _inflictDamage.damage;
         foreach (var action in _player._priorityEventCenter.GetEvent("DamageCalculation_Attack"))
         {
-            calculated_damage = (action._delegate as Func<int, int>).Invoke(calculated_damage);
+            _inflictDamage.calculated_damage = (action._delegate as Func<int, int>).Invoke( _inflictDamage.calculated_damage);
         }
 
-        describe = _inflictDamage.GetDescription(calculated_damage) + _vulnerableState.GetDescription();
+        describe = _inflictDamage.GetDescription() + _vulnerableState.GetDescription();
         cardComponentInfo.UpdateCardUI(this);
     }
-
+    
     public override async UniTask<bool> Trigger(CancellationToken cancellationToken, bool conditionCheck = true)
     {
         if (_target.collider != null && (!conditionCheck || _energy.SetEnergy(_energy._energy - exteriorInfo.orbValue)))
@@ -59,7 +58,7 @@ public class Card_Ironclad_Bash : Card
             return true;
         }
 
-        isSelect = false;
+        cardAnimator.TransformEffectToRotation(gameObject, cardInteraction.position, cardInteraction.rotation, cardInteraction.scale);
         return false;
     }
 
@@ -77,12 +76,10 @@ public class Card_Ironclad_Bash : Card
     {
         await base.Initialized("Assets/ScriptableObject/CardEvent/Ironclad_Bash.asset");
 
-        cardComponentInfo.HandPile.cardDragLine.Register(cardInteraction);
-        calculated_damage = _inflictDamage.damage;
-
+        cardComponentInfo.HandPile.cardDragLine.Register(this);
         _player._priorityEventCenter.AddEvent<Action>("DamageValueChange_Attack", () => { OnMouseExitEnemy(null); }, 0);
-        priorityQueueEventCenter.AddEvent<Action<Enemy>>("OnMouseEnterEnemy", OnMouseEnterEnemy, 0);
-        priorityQueueEventCenter.AddEvent<Action<Enemy>>("OnMouseExitEnemy", OnMouseExitEnemy, 0);
+        priorityEventCenter.AddEvent<Action<Enemy>>("OnMouseEnterEnemy", OnMouseEnterEnemy, 0);
+        priorityEventCenter.AddEvent<Action<Enemy>>("OnMouseExitEnemy", OnMouseExitEnemy, 0);
 
         _inflictDamage = new InflictDamage(6);
         _vulnerableState = new VulnerableState(2);
@@ -95,7 +92,7 @@ public class Card_Ironclad_Bash : Card
     private void _OnMouseUp(PointerEventData _data)
     {
         _enemy?.alertBox.Close();
-        if (!isSelect) return;
+        if (!cardInteraction._isDragging) return;
         _target = Physics2D.Raycast(_data.pressEventCamera.ScreenToWorldPoint(_data.position), Vector3.forward,
             15,
             1 << LayerMask.NameToLayer("Enemy"));

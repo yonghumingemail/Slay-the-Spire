@@ -7,11 +7,13 @@ using UnityEngine;
 public struct InflictDamage : IEntry
 {
     public int damage;
-
+    public int calculated_damage;
+    
 
     public InflictDamage(int damage)
     {
         this.damage = damage;
+        calculated_damage = damage;
     }
 
     public UniTask Trigger(GameObject sender, [NotNull] GameObject receiver)
@@ -49,13 +51,10 @@ public struct InflictDamage : IEntry
 
     public string GetDescription()
     {
-        return $"造成{damage}点伤害\n";
+        return $"造成{calculated_damage}点伤害\n";
     }
 
-    public string GetDescription(int value)
-    {
-        return $"造成{value}点伤害\n";
-    }
 
-   
+
+    
 }

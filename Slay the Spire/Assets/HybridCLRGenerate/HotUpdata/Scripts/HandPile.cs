@@ -62,7 +62,7 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
     private void OnMouseExitEnemy(Enemy enemy)
     {
         if (!SelectedCard) return;
-        foreach (var priorityEvent in SelectedCard.priorityQueueEventCenter.GetEvent("OnMouseExitEnemy"))
+        foreach (var priorityEvent in SelectedCard.priorityEventCenter.GetEvent("OnMouseExitEnemy"))
         {
             (priorityEvent._delegate as Action<Enemy>)?.Invoke(enemy);
         }
@@ -70,7 +70,7 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
     private void OnMouseEnterEnemy(Enemy enemy)
     {
         if (!SelectedCard) return;
-        foreach (var priorityEvent in SelectedCard.priorityQueueEventCenter.GetEvent("OnMouseEnterEnemy"))
+        foreach (var priorityEvent in SelectedCard.priorityEventCenter.GetEvent("OnMouseEnterEnemy"))
         {
             (priorityEvent._delegate as Action<Enemy>)?.Invoke(enemy);
         }
@@ -178,8 +178,7 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
         if (SelectedCard)
         {
             SelectedCard.UnSelectCard();
-            SelectedCard.CardInteraction.OnMouseUpDelegate?.Invoke(eventData);
-            cardDragLine.Interrupt(eventData);
+            cardDragLine._tokenSource?.Cancel();
         }
     }
 
