@@ -16,10 +16,14 @@ public class CardArrangement
     }
 
     public float speed;
-    
+
     public void UpdateCardPositions(SplineContainer splineContainer, List<Card> cards, Action callBack)
     {
-        EventCenter_Singleton.Instance.GetEvent<Action>("OnStartCardArrangement")?.Invoke();
+        foreach (var action in EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("OnStartCardArrangement"))
+        {
+            (action._delegate as Action)?.Invoke();
+        }
+
         // 检查卡牌列表是否为空，为空则直接返回避免后续计算
         if (cards.Count == 0)
             return;
@@ -73,7 +77,7 @@ public class CardArrangement
             Quaternion rotation = Quaternion.LookRotation(up, Vector3.Cross(up, forward).normalized);
 
             Transform temp = cards[i].transform;
-            
+
             var positionAnimator = DOTween
                 .To(() => temp.position, value => { temp.position = value; }, splineWorldPos, speed)
                 .SetEase(Ease.OutQuad);
@@ -87,7 +91,11 @@ public class CardArrangement
 
         _sequence.onComplete += () =>
         {
-            EventCenter_Singleton.Instance.GetEvent<Action>("OnCardArrangementComplete")?.Invoke();
+            foreach (var action in EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("OnCardArrangementComplete"))
+            {
+                (action._delegate as Action).Invoke();
+            }
+
             callBack?.Invoke();
         };
     }

@@ -1117,7 +1117,7 @@ GameObject:
   - component: {fileID: -8632270315364346999}
   - component: {fileID: 5150682347552092080}
   - component: {fileID: -4177396280908238291}
-  - component: {fileID: 2305417162401317666}
+  - component: {fileID: -4178447350768168763}
   m_Layer: 0
   m_Name: Card
   m_TagString: Untagged
@@ -1199,9 +1199,7 @@ MonoBehaviour:
   scale: {x: 0, y: 0, z: 0}
   mouseOverPosition: {x: 0, y: 0, z: 0}
   mouseOverScale: {x: 0, y: 0, z: 0}
-  handPile: {fileID: 0}
-  backgroundSprite: {fileID: 0}
---- !u!114 &2305417162401317666
+--- !u!114 &-4178447350768168763
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1222,7 +1220,7 @@ MonoBehaviour:
   _typeName: {fileID: 0}
   _orbValue: {fileID: 0}
   _describe: {fileID: 0}
-  cardOutline: {fileID: 0}
+  _cardOutline: {fileID: 0}
 --- !u!1 &8855185122200895538
 GameObject:
   m_ObjectHideFlags: 0

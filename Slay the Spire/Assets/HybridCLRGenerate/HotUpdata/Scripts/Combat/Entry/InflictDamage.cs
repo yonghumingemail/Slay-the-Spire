@@ -4,11 +4,13 @@ using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
 
-public struct InflictDamage : IEntry
+public class InflictDamage : IEntry
 {
+    //初始伤害
     public int damage;
+    //经过双方buff计算后的伤害
     public int calculated_damage;
-    
+
 
     public InflictDamage(int damage)
     {
@@ -54,7 +56,18 @@ public struct InflictDamage : IEntry
         return $"造成{calculated_damage}点伤害\n";
     }
 
+    public void DamageCalculation(PriorityQueueEventCenter send, PriorityQueueEventCenter receive)
+    {
+        calculated_damage = damage;
+        foreach (var action in send?.GetEvent("DamageCalculation_Attack") ?? Enumerable.Empty<PriorityEvent>())
+        {
+            calculated_damage = (action._delegate as Func<int, int>).Invoke(calculated_damage);
+        }
 
+        foreach (var action in receive?.GetEvent("DamageCalculation_BeAttacked") ?? Enumerable.Empty<PriorityEvent>())
+        {
+            calculated_damage = (action._delegate as Func<int, int>).Invoke(calculated_damage);
+        }
 
-    
+    }
 }

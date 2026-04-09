@@ -43,8 +43,8 @@ public class CardInteraction : MonoBehaviour, IPointerEnterHandler,
                 cardComponentInfo.Background.bounds.size.y / 2
         };
 
-        EventCenter_Singleton.Instance.AddEvent<Action>("OnCardArrangementComplete", OnCardArrangementComplete);
-        EventCenter_Singleton.Instance.AddEvent<Action>("OnStartCardArrangement", OnStartCardArrangement);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action>("OnCardArrangementComplete", OnCardArrangementComplete, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action>("OnStartCardArrangement", OnStartCardArrangement, 0);
     }
 
     public virtual void OnCardArrangementComplete()
@@ -65,16 +65,18 @@ public class CardInteraction : MonoBehaviour, IPointerEnterHandler,
 
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
+        
         if (!isInteractable || _isDragging) return;
-
+        
         cardAnimator.TransformEffectToRotation(gameObject, mouseOverPosition, Quaternion.identity, mouseOverScale);
         OnMouseEnterDelegate?.Invoke(eventData);
     }
 
     public virtual void OnPointerExit(PointerEventData eventData)
     {
+        
         if (!isInteractable || _isDragging) return;
-
+        
         cardAnimator.TransformEffectToRotation(gameObject, position, rotation, scale);
         OnMouseExitDelegate?.Invoke(eventData);
     }

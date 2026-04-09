@@ -4,7 +4,7 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public struct GainShield : IEntry
+public class GainShield : IEntry
 {
     public int _value;
 

@@ -123,9 +123,8 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
             {
                 card = cardObjs[i].AddComponent<Card_Ironclad_Bash>();
             }
-
-            card.gameObject.SetActive(false);
             card.Initialized().Forget();
+            card.Enable(false);
             drawPile.AddCard(card).Forget();
         }
     }

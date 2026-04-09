@@ -11,7 +11,7 @@ public class CombatManage : MonoBehaviour
     [SerializeField] private int roundCount;
 
     public Queue<Card> executeQueue = new Queue<Card>();
-    public bool isExecute=false;
+    public bool isExecute = false;
     public bool isPlayerTurn;
 
     private void Awake()
@@ -50,7 +50,7 @@ public class CombatManage : MonoBehaviour
         bool isTrigger = false;
         while (executeQueue.Count != 0)
         {
-            var current = executeQueue.Dequeue();
+            Card current = executeQueue.Dequeue();
             isTrigger = await current.Trigger(CancellationToken.None) || isTrigger;
         }
 
@@ -69,7 +69,7 @@ public class CombatManage : MonoBehaviour
         var actions = EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("PlayerTurnStart");
         foreach (var VARIABLE in actions)
         {
-           await (VARIABLE._delegate as Func<int,UniTask>).Invoke(roundCount);
+            await (VARIABLE._delegate as Func<int, UniTask>).Invoke(roundCount);
         }
     }
 }

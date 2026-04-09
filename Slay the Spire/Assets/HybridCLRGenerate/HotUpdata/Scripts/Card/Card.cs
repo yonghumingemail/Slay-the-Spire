@@ -7,7 +7,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Z_Tools;
 
-
 public abstract class Card : MonoBehaviour
 {
     #region Property
@@ -27,8 +26,8 @@ public abstract class Card : MonoBehaviour
     [SerializeField] protected CardInteraction cardInteraction;
     [SerializeField] protected CardExteriorInfo exteriorInfo;
 
-    protected Player _player;
-    protected CombatManage _combatManage;
+    public Player _player{ get; private set; }
+    public CombatManage _combatManage { get; private set; }
     protected Energy _energy;
     protected DiscardPile _discardPile;
 
@@ -57,6 +56,10 @@ public abstract class Card : MonoBehaviour
         cardComponentInfo.UpdateCardUI(this);
     }
 
+    public virtual void ReturnToHandPosition()
+    {
+        cardAnimator.TransformEffectToRotation(gameObject, cardInteraction.position, cardInteraction.rotation, cardInteraction.scale);
+    }
     public virtual bool CanBeTriggered()
     {
         return _energy._energy - exteriorInfo.orbValue >= 0;
@@ -72,7 +75,6 @@ public abstract class Card : MonoBehaviour
         }
         else
         {
-            gameObject.SetActive(false);
             cardComponentInfo.Background.gameObject.SetActive(false);
             cardInteraction.isInteractable = false;
         }
@@ -102,7 +104,7 @@ public abstract class Card : MonoBehaviour
         return source.Task;
     }
 
-    
+
     public virtual void UnSelectCard()
     {
         cardInteraction._isDragging = false;
@@ -115,8 +117,17 @@ public abstract class Card : MonoBehaviour
         }
     }
 
+    public virtual void UpdateDescribe()
+    {
+        describe = string.Empty;
+        foreach (var VARIABLE in cardEntries)
+        {
+            describe += VARIABLE.GetDescription();
+        }
+        cardComponentInfo.UpdateCardTextUI(this);
+    }
 
-    protected virtual UniTask CardTriggerAnimator()
+    public virtual UniTask CardTriggerAnimator()
     {
         cardComponentInfo.HandPile.cardInstances.Remove(this);
         _source = new UniTaskCompletionSource();
@@ -134,7 +145,8 @@ public abstract class Card : MonoBehaviour
         cardInteraction = GetComponent<CardInteraction>();
 
         cardInteraction.OnMouseDownDelegate += (eventData) => { cardComponentInfo.HandPile.SetSelectedCard(this); };
-        cardInteraction.OnMouseUpDelegate += (eventData) => { UnSelectCard(); };
+        cardInteraction.OnMouseUpDelegate += (eventData) => { cardComponentInfo.HandPile.SetSelectedCard(null); };
+   
 
         exteriorInfo = await AddressablesMgr.Instance.LoadAssetAsync<CardExteriorInfo>(defaultDataPtah);
 
@@ -150,5 +162,10 @@ public abstract class Card : MonoBehaviour
         orbValue = exteriorInfo.orbValue;
 
         cardComponentInfo.UpdateCardUI(this);
+    }
+
+    private void OnDestroy()
+    {
+        
     }
 }

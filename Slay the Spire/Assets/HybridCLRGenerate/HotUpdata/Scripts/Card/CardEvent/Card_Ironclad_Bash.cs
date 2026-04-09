@@ -3,63 +3,18 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Z_Tools;
-
 
 public class Card_Ironclad_Bash : Card
 {
     private InflictDamage _inflictDamage;
     private VulnerableState _vulnerableState;
-    private RaycastHit2D _target;
-    private Enemy _enemy;
+    private DirectionalCard _directionalCard;
 
-    private void OnMouseEnterEnemy(Enemy enemy)
+    private int calculated_damage; //记录经过我方buff计算后的伤害
+
+    public override UniTask<bool> Trigger(CancellationToken cancellationToken, bool conditionCheck = true)
     {
-        _enemy = enemy;
-        enemy.alertBox.Show(enemy.transform, enemy.spriteRenderer.sprite);
-        foreach (var action in enemy._priorityEventCenter.GetEvent("DamageCalculation_BeAttacked"))
-        {
-            _inflictDamage.calculated_damage = (action._delegate as Func<int, int>).Invoke( _inflictDamage.calculated_damage);
-        }
-
-        describe = _inflictDamage.GetDescription() + _vulnerableState.GetDescription();
-        cardComponentInfo.UpdateCardUI(this);
-    }
-
-    private void OnMouseExitEnemy(Enemy enemy)
-    {
-        _enemy = enemy;
-        enemy?.alertBox.Close();
-        _inflictDamage.calculated_damage = _inflictDamage.damage;
-        foreach (var action in _player._priorityEventCenter.GetEvent("DamageCalculation_Attack"))
-        {
-            _inflictDamage.calculated_damage = (action._delegate as Func<int, int>).Invoke( _inflictDamage.calculated_damage);
-        }
-
-        describe = _inflictDamage.GetDescription() + _vulnerableState.GetDescription();
-        cardComponentInfo.UpdateCardUI(this);
-    }
-    
-    public override async UniTask<bool> Trigger(CancellationToken cancellationToken, bool conditionCheck = true)
-    {
-        if (_target.collider != null && (!conditionCheck || _energy.SetEnergy(_energy._energy - exteriorInfo.orbValue)))
-        {
-            cardInteraction.isInteractable = false;
-            foreach (var VARIABLE in cardEntries)
-            {
-                await VARIABLE.Trigger(_player.gameObject, _target.collider.gameObject);
-            }
-
-            await CardTriggerAnimator();
-            _target = default;
-            Enable(false);
-            cardComponentInfo.HandPile.SortCards();
-
-            return true;
-        }
-
-        cardAnimator.TransformEffectToRotation(gameObject, cardInteraction.position, cardInteraction.rotation, cardInteraction.scale);
-        return false;
+        return _directionalCard.Trigger(this, cancellationToken,  !conditionCheck || _energy.SetEnergy(_energy._energy - exteriorInfo.orbValue));
     }
 
 
@@ -68,35 +23,31 @@ public class Card_Ironclad_Bash : Card
         isStrengthen = true;
         _inflictDamage.damage += 2;
         _vulnerableState.stack += 1;
-        describe = _inflictDamage.GetDescription() + _vulnerableState.GetDescription();
-        cardComponentInfo.UpdateCardUI(this);
+        UpdateDescribe();
     }
 
     public override async UniTask Initialized()
     {
         await base.Initialized("Assets/ScriptableObject/CardEvent/Ironclad_Bash.asset");
 
-        cardComponentInfo.HandPile.cardDragLine.Register(this);
-        _player._priorityEventCenter.AddEvent<Action>("DamageValueChange_Attack", () => { OnMouseExitEnemy(null); }, 0);
-        priorityEventCenter.AddEvent<Action<Enemy>>("OnMouseEnterEnemy", OnMouseEnterEnemy, 0);
-        priorityEventCenter.AddEvent<Action<Enemy>>("OnMouseExitEnemy", OnMouseExitEnemy, 0);
+        _player._priorityEventCenter.AddEvent<Action>("DamageValueChange_Attack", () =>
+        {
+            _inflictDamage.DamageCalculation(_player._priorityEventCenter, null);
+            UpdateDescribe();
+            print(_inflictDamage.calculated_damage);
+            print(_inflictDamage.GetDescription());
+        }, 0);
+
+        cardInteraction.OnMouseUpDelegate += (data) => { _directionalCard.OnMouseUp(this, data); };
+        priorityEventCenter.AddEvent<Action<Enemy>>("OnMouseEnterEnemy", (enemy) => { _inflictDamage.DamageCalculation(_player._priorityEventCenter, enemy._priorityEventCenter); }, 0);
+
+        priorityEventCenter.AddEvent<Action<Enemy>>("OnMouseExitEnemy", (enemy) => { _inflictDamage.DamageCalculation(_player._priorityEventCenter, null); }, 0);
+
+        _directionalCard = new DirectionalCard(this, "Enemy");
 
         _inflictDamage = new InflictDamage(6);
         _vulnerableState = new VulnerableState(2);
         AddCardEntry(_inflictDamage);
         AddCardEntry(_vulnerableState);
-
-        cardInteraction.OnMouseUpDelegate += _OnMouseUp;
-    }
-
-    private void _OnMouseUp(PointerEventData _data)
-    {
-        _enemy?.alertBox.Close();
-        if (!cardInteraction._isDragging) return;
-        _target = Physics2D.Raycast(_data.pressEventCamera.ScreenToWorldPoint(_data.position), Vector3.forward,
-            15,
-            1 << LayerMask.NameToLayer("Enemy"));
-
-        _combatManage.AddCardToExecuteQueue(this);
     }
 }

@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
 
-public struct GainPower : IEntry
+public class GainPower : IEntry
 {
     public int stack;
 
