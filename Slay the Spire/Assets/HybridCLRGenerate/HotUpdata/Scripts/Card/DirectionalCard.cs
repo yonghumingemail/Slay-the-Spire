@@ -1,37 +1,39 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class DirectionalCard
 {
-    public RaycastHit2D target;
+    public RaycastHit2D targetInfo;
     public string detectLayerName;
-    public Enemy enemy { get; private set; }
+    public ISelectableObject SelectableObject { get; private set; }
 
     public DirectionalCard(Card card, string detectLayerName)
     {
         this.detectLayerName = detectLayerName;
 
-        target = default;
-        enemy = null;
+        targetInfo = default;
+        SelectableObject = null;
 
-
-        card.CardComponentInfo.HandPile.cardDragLine.Register(card);
-
-        card.priorityEventCenter.AddEvent<Action<Enemy>>("OnMouseEnterEnemy", OnMouseEnterEnemy, 0);
-        card.priorityEventCenter.AddEvent<Action<Enemy>>("OnMouseExitEnemy", OnMouseExitEnemy, 0);
+        card.CardInteraction.OnMouseDownDelegate += data =>
+        {
+            card.CardComponentInfo.HandPile.DirectionalArrowLine.Enable(data);
+        };
+        card.CardInteraction.OnMouseUpDelegate += data => { OnMouseUp(card, data); };
     }
 
     public async UniTask<bool> Trigger(Card card, CancellationToken cancellationToken, bool conditionCheck)
     {
-        if (target.collider != null &&conditionCheck)
+        if (targetInfo.collider&&conditionCheck)
         {
+            card._energy.SetEnergy(card._energy._energy - card.ExteriorInfo.orbValue);
             card.CardInteraction.isInteractable = false;
             foreach (var VARIABLE in card.cardEntries)
             {
-                await VARIABLE.Trigger(card._player.gameObject, target.collider.gameObject);
+                await VARIABLE.Trigger(card._player.gameObject, targetInfo.collider.gameObject);
                 await UniTask.Yield(cancellationToken);
             }
 
@@ -50,24 +52,25 @@ public class DirectionalCard
 
     public void OnMouseUp(Card card, PointerEventData _data)
     {
-        enemy?.alertBox.Close();
+        SelectableObject?.OnUnSelect();
+        card.CardComponentInfo.HandPile.DirectionalArrowLine.Interrupt();
         if (!card.CardInteraction._isDragging) return;
-        target = Physics2D.Raycast(_data.pressEventCamera.ScreenToWorldPoint(_data.position), Vector3.forward,
+        targetInfo = Physics2D.Raycast(_data.pressEventCamera.ScreenToWorldPoint(_data.position), Vector3.forward,
             15,
             1 << LayerMask.NameToLayer(detectLayerName));
 
         card._combatManage.AddCardToExecuteQueue(card);
     }
 
-    private void OnMouseEnterEnemy(Enemy enemy)
+    public void OnMouseEnterSelectableObject(ISelectableObject selectableObject)
     {
-        this.enemy = enemy;
-        enemy.alertBox.Show(enemy.transform, enemy.spriteRenderer.sprite);
+        SelectableObject = selectableObject;
+        selectableObject.OnSelect();
     }
 
-    private void OnMouseExitEnemy(Enemy enemy)
+    public void OnMouseExitSelectableObject(ISelectableObject selectableObject)
     {
-        this.enemy = enemy;
-        enemy?.alertBox.Close();
+        SelectableObject = selectableObject;
+        SelectableObject.OnUnSelect();
     }
 }

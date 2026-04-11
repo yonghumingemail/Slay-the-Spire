@@ -10,11 +10,9 @@ public class Card_Ironclad_Bash : Card
     private VulnerableState _vulnerableState;
     private DirectionalCard _directionalCard;
 
-    private int calculated_damage; //记录经过我方buff计算后的伤害
-
     public override UniTask<bool> Trigger(CancellationToken cancellationToken, bool conditionCheck = true)
     {
-        return _directionalCard.Trigger(this, cancellationToken,  !conditionCheck || _energy.SetEnergy(_energy._energy - exteriorInfo.orbValue));
+        return _directionalCard.Trigger(this, cancellationToken, !conditionCheck || (_energy._energy - exteriorInfo.orbValue)>-1);
     }
 
 
@@ -34,14 +32,21 @@ public class Card_Ironclad_Bash : Card
         {
             _inflictDamage.DamageCalculation(_player._priorityEventCenter, null);
             UpdateDescribe();
-            print(_inflictDamage.calculated_damage);
-            print(_inflictDamage.GetDescription());
         }, 0);
 
-        cardInteraction.OnMouseUpDelegate += (data) => { _directionalCard.OnMouseUp(this, data); };
-        priorityEventCenter.AddEvent<Action<Enemy>>("OnMouseEnterEnemy", (enemy) => { _inflictDamage.DamageCalculation(_player._priorityEventCenter, enemy._priorityEventCenter); }, 0);
-
-        priorityEventCenter.AddEvent<Action<Enemy>>("OnMouseExitEnemy", (enemy) => { _inflictDamage.DamageCalculation(_player._priorityEventCenter, null); }, 0);
+        priorityEventCenter.AddEvent<Action<Enemy>>("OnMouseEnterEnemy",
+            (enemy) =>
+            {
+                _inflictDamage.DamageCalculation(_player._priorityEventCenter, enemy._priorityEventCenter);
+                _directionalCard.OnMouseEnterSelectableObject(enemy);
+            },
+            0);
+        priorityEventCenter.AddEvent<Action<Enemy>>("OnMouseExitEnemy",
+            (enemy) =>
+            {
+                _inflictDamage.DamageCalculation(_player._priorityEventCenter, null);
+                _directionalCard.OnMouseExitSelectableObject(enemy);
+            }, 0);
 
         _directionalCard = new DirectionalCard(this, "Enemy");
 

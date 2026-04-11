@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.U2D;
@@ -35,15 +36,8 @@ public class AttackIntent : IIntent
     
     private void DamageValueChange()
     {
+       _inflictDamage.DamageCalculation(_priorityEventCenter, _player._priorityEventCenter);
         value=_inflictDamage.damage;
-        foreach (var action in _priorityEventCenter.GetEvent("DamageCalculation_Attack"))
-        {
-            value = (action._delegate as Func<int, int>).Invoke(value);
-        }
-        foreach (var VARIABLE in _player._priorityEventCenter.GetEvent("DamageCalculation_BeAttacked"))
-        {
-            value = (VARIABLE._delegate as Func<int, int>).Invoke(value);
-        }
         // 使用整数除法计算精灵索引
         int spriteIndex = Math.Min(value / 5, 6);
 
@@ -73,15 +67,15 @@ public class AttackIntent : IIntent
 
         _sprite = _sprites[spriteIndex];
         _text = number == 1 ? $"{value}" : $"{value}X{number}";
-        OnUpdate?.Invoke(this);
     }
 
 
-    public async UniTask Execute(GameObject sender, [NotNull] GameObject receiver)
+    public async UniTask Execute(GameObject sender, [NotNull] GameObject receiver,CancellationToken token)
     {
         for (int i = 0; i < number; i++)
         {
             await _inflictDamage.Trigger(sender, receiver);
+            await UniTask.Yield(token);
         }
 
         await OnAnimatorPlay.Invoke(ExecuteAnimator);

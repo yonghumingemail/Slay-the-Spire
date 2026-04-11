@@ -1,8 +1,6 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
-
 
 public class Card_Ironclad_Strike : Card
 {
@@ -11,7 +9,8 @@ public class Card_Ironclad_Strike : Card
 
     public override UniTask<bool> Trigger(CancellationToken cancellationToken, bool conditionCheck = true)
     {
-        return _directionalCard.Trigger(this, cancellationToken,  !conditionCheck || _energy.SetEnergy(_energy._energy - exteriorInfo.orbValue));
+        return _directionalCard.Trigger(this, cancellationToken,
+            !conditionCheck || (_energy._energy - exteriorInfo.orbValue) > -1);
     }
 
     public override void Strengthen()
@@ -31,11 +30,20 @@ public class Card_Ironclad_Strike : Card
             UpdateDescribe();
         }, 0);
 
-        cardInteraction.OnMouseUpDelegate += (data) => {_directionalCard.OnMouseUp(this, data); };
 
-        priorityEventCenter.AddEvent<Action<Enemy>>("OnMouseEnterEnemy", (enemy) => { _inflictDamage.DamageCalculation(_player._priorityEventCenter, enemy._priorityEventCenter); }, 0);
-
-        priorityEventCenter.AddEvent<Action<Enemy>>("OnMouseExitEnemy", (enemy) => { _inflictDamage.DamageCalculation(_player._priorityEventCenter, null); }, 0);
+        priorityEventCenter.AddEvent<Action<Enemy>>("OnMouseEnterEnemy",
+            (enemy) =>
+            {
+                _inflictDamage.DamageCalculation(_player._priorityEventCenter, enemy._priorityEventCenter);
+                _directionalCard.OnMouseEnterSelectableObject(enemy);
+            },
+            0);
+        priorityEventCenter.AddEvent<Action<Enemy>>("OnMouseExitEnemy",
+            (enemy) =>
+            {
+                _inflictDamage.DamageCalculation(_player._priorityEventCenter, null);
+                _directionalCard.OnMouseExitSelectableObject(enemy);
+            }, 0);
 
         _directionalCard = new DirectionalCard(this, "Enemy");
 

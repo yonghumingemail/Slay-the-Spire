@@ -6,11 +6,11 @@ using UnityEngine;
 
 public class GainShield : IEntry
 {
-    public int _value;
+    public int value;
 
     public GainShield(int value)
     {
-        _value = value;
+        this.value = value;
     }
 
     public UniTask Trigger(GameObject sender, [NotNull] GameObject receiver)
@@ -27,10 +27,9 @@ public class GainShield : IEntry
         }
         else
         {
-            var actions = priorityEventCenter?.GetEvent("GainShield");
-            foreach (var action in actions ?? Enumerable.Empty<PriorityEvent>())
+            foreach (var action in priorityEventCenter?.GetEvent("GainShield"))
             {
-                (action._delegate as Action<int>)?.Invoke(_value);
+                (action._delegate as Action<int>)?.Invoke(value);
             }
         }
 
@@ -39,14 +38,14 @@ public class GainShield : IEntry
             Debug.LogWarning($" 目标对象 {receiver.name} 缺少 IShield 组件");
             return UniTask.CompletedTask;
         }
-        
-        shield.AddShieldValue(_value);
+
+        shield.AddShieldValue(value);
 
         return UniTask.CompletedTask;
     }
 
     public string GetDescription()
     {
-        return $"获得{_value.ToString()}点防御\n";
+        return $"获得{value.ToString()}点防御\n";
     }
 }

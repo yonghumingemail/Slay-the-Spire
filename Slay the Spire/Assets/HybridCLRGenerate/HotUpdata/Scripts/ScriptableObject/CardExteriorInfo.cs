@@ -20,4 +20,19 @@ public class CardExteriorInfo : ScriptableObject
     public Sprite orb;
     public Sprite frame;
     public Sprite image;
+
+    public CardExteriorInfo Copy()
+    {
+        var copy = CreateInstance<CardExteriorInfo>();
+        copy.cardName = cardName;
+        copy.cardType = cardType;
+        copy.orbValue = orbValue;
+        
+        copy.banner = banner;
+        copy.background = background;
+        copy.orb = orb;
+        copy.frame = frame;
+        copy.image = image;
+        return copy;
+    }
 }

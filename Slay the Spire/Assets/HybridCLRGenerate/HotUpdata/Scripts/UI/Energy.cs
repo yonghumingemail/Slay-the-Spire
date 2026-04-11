@@ -32,7 +32,7 @@ public class Energy : MonoBehaviour
         image3.transform.rotation *= Quaternion.AngleAxis(Time.deltaTime * speed, Vector3.forward);
         image4.transform.rotation *= Quaternion.AngleAxis(-Time.deltaTime * speed, Vector3.forward);
     }
-
+    
     public bool SetEnergy(int energy)
     {
         if (energy < 0 )

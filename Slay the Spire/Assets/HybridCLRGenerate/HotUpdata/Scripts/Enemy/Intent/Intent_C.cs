@@ -9,25 +9,21 @@ public class Intent_C : MonoBehaviour
     public List<IIntent> executedList { get; private set; } = new List<IIntent>();
 
     public IIntent currentIntent { get; private set; }
-    public Intent_V intentV;
+    public Intent_V[] intentV;
 
     private Animator _animator;
     private AnimatorComplete _animatorComplete;
 
     private void Awake()
     {
-        intentV = GetComponentInChildren<Intent_V>();
+        intentV = GetComponentsInChildren<Intent_V>();
         _animatorComplete = GetComponent<AnimatorComplete>();
         _animator = GetComponent<Animator>();
-        intentV.Enable(true);
     }
 
     private void OnIntentUpdate(IIntent intent)
     {
-        if (currentIntent == intent)
-        {
-            intentV.UpdateUI(intent);
-        }
+        
     }
 
     public void AddIntent(IIntent intent)
@@ -39,7 +35,7 @@ public class Intent_C : MonoBehaviour
     public void ShowIntent(IIntent intent)
     {
         currentIntent = intent;
-        intentV.UpdateUI(intent);
+        
     }
 
     public UniTask AnimatorComplete(Action<Animator> action)
@@ -86,9 +82,5 @@ public class Intent_C : MonoBehaviour
         //为了防止浮点数精度问题，返回最后一个索引
         return currentIndex - 1;
     }
-
-    private void OnDestroy()
-    {
-       
-    }
+    
 }

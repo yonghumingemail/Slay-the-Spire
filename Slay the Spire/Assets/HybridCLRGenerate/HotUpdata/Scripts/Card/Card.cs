@@ -26,16 +26,12 @@ public abstract class Card : MonoBehaviour
     [SerializeField] protected CardInteraction cardInteraction;
     [SerializeField] protected CardExteriorInfo exteriorInfo;
 
-    public Player _player{ get; private set; }
+    public Player _player { get; private set; }
     public CombatManage _combatManage { get; private set; }
-    protected Energy _energy;
+    public Energy _energy;
     protected DiscardPile _discardPile;
-
     protected UniTaskCompletionSource _source;
 
-    public string cardName;
-    public CardType cardType;
-    public int orbValue;
     public List<IEntry> cardEntries { get; protected set; }
     public string describe { get; protected set; }
     public bool isStrengthen { get; protected set; }
@@ -58,8 +54,10 @@ public abstract class Card : MonoBehaviour
 
     public virtual void ReturnToHandPosition()
     {
-        cardAnimator.TransformEffectToRotation(gameObject, cardInteraction.position, cardInteraction.rotation, cardInteraction.scale);
+        cardAnimator.TransformEffectToRotation(gameObject, cardInteraction.position, cardInteraction.rotation,
+            cardInteraction.scale);
     }
+
     public virtual bool CanBeTriggered()
     {
         return _energy._energy - exteriorInfo.orbValue >= 0;
@@ -109,6 +107,8 @@ public abstract class Card : MonoBehaviour
     {
         cardInteraction._isDragging = false;
         cardComponentInfo.HandPile.SetSelectedCard(null);
+        cardComponentInfo.HandPile.DirectionalArrowLine.Interrupt();
+
         cardAnimator.TransformEffectToRotation(gameObject, cardInteraction.position, cardInteraction.rotation,
             cardInteraction.scale);
         foreach (var VARIABLE in priorityEventCenter.GetEvent("UnSelectCard"))
@@ -124,6 +124,7 @@ public abstract class Card : MonoBehaviour
         {
             describe += VARIABLE.GetDescription();
         }
+
         cardComponentInfo.UpdateCardTextUI(this);
     }
 
@@ -144,28 +145,23 @@ public abstract class Card : MonoBehaviour
         cardAnimator = GetComponent<CardAnimator>();
         cardInteraction = GetComponent<CardInteraction>();
 
-        cardInteraction.OnMouseDownDelegate += (eventData) => { cardComponentInfo.HandPile.SetSelectedCard(this); };
-        cardInteraction.OnMouseUpDelegate += (eventData) => { cardComponentInfo.HandPile.SetSelectedCard(null); };
-   
-
-        exteriorInfo = await AddressablesMgr.Instance.LoadAssetAsync<CardExteriorInfo>(defaultDataPtah);
+        exteriorInfo = (await AddressablesMgr.Instance.LoadAssetAsync<CardExteriorInfo>(defaultDataPtah)).Copy();
 
         _player = EventCenter_Singleton.Instance.GetEvent<Func<Player>>("Player").Invoke();
         _combatManage = EventCenter_Singleton.Instance.GetEvent<Func<CombatManage>>("CombatManage").Invoke();
         _energy = EventCenter_Singleton.Instance.GetEvent<Func<Energy>>("Energy").Invoke();
         _discardPile = EventCenter_Singleton.Instance.GetEvent<Func<DiscardPile>>("DiscardPile").Invoke();
 
+        cardInteraction.OnMouseDownDelegate += (eventData) => { cardComponentInfo.HandPile.SetSelectedCard(this); };
+        cardInteraction.OnMouseUpDelegate += (eventData) => { cardComponentInfo.HandPile.SetSelectedCard(null); };
+
         isStrengthen = false;
         cardEntries = new List<IEntry>();
-        cardName = exteriorInfo.cardName;
-        cardType = exteriorInfo.cardType;
-        orbValue = exteriorInfo.orbValue;
 
         cardComponentInfo.UpdateCardUI(this);
     }
 
     private void OnDestroy()
     {
-        
     }
 }

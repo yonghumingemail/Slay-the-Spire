@@ -7,7 +7,8 @@ using UnityEngine.EventSystems;
 using Z_Tools;
 
 [Serializable]
-public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IEventCenterObject<string>
+public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectableObject,
+    IEventCenterObject<string>
 {
     public IEventCenter<string> eventCenter { get; } = new EventCenter<string>(); //用于提供接口对象
 
@@ -58,8 +59,7 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         health_V.InitializeView(_ui);
         _health = new SimpleHealth(50, 100, health_V, _priorityEventCenter);
         eventCenter.AddEvent<Func<IHealth>>("IHealth", () => _health);
-
-
+        
         shield_V = GetComponentInChildren<IShield_V>();
         shield_V.InitializeView(_ui, health_V);
         _shield = new SimpleShield(shield_V, _priorityEventCenter);
@@ -97,7 +97,7 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
 
         CancellationToken token = this.GetCancellationTokenOnDestroy();
 
-        await intentC.currentIntent.Execute(gameObject, _player.gameObject);
+        await intentC.currentIntent.Execute(gameObject, _player.gameObject,token);
     }
 
 
@@ -115,5 +115,15 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         {
             (VARIABLE._delegate as Action<Enemy>)?.Invoke(this);
         }
+    }
+
+    public void OnSelect()
+    {
+        alertBox.Show(transform, spriteRenderer.sprite);
+    }
+
+    public void OnUnSelect()
+    {
+        alertBox.Close();
     }
 }

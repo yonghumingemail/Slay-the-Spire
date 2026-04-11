@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 
 [Serializable]
-public class CardComponentInfo:MonoBehaviour
+public class CardComponentInfo : MonoBehaviour
 {
     public SpriteRenderer Background => _background;
     public SpriteRenderer Frame => _frame;
@@ -30,12 +30,11 @@ public class CardComponentInfo:MonoBehaviour
     [SerializeField] private TextMeshPro _orbValue;
     [SerializeField] private TextMeshPro _describe;
     [SerializeField] private Outline _cardOutline;
-    
+
     private HandPile _handPile;
     private Camera _mainCamera;
-    private Animator  _animator;
+    private Animator _animator;
 
-  
 
     private void Awake()
     {
@@ -50,18 +49,18 @@ public class CardComponentInfo:MonoBehaviour
         _orbValue = transform.Find("UI/Head/Orb/Point").GetComponent<TextMeshPro>();
         _describe = transform.Find("UI/Describe").GetComponent<TextMeshPro>();
         _cardOutline = transform.Find("Outline").GetComponent<Outline>();
-        
-        _handPile=GetComponentInParent<HandPile>();
-        _mainCamera=Camera.main;
+
+        _handPile = GetComponentInParent<HandPile>();
+        _mainCamera = Camera.main;
         _animator = GetComponent<Animator>();
     }
-    
+
 
     public void UpdateCardTextUI(Card card)
     {
-        _name.SetText(card.cardName);
-        _typeName.SetText(Enum.GetName(card.cardType.GetType(), card.cardType));
-        _orbValue.SetText(card.orbValue.ToString());
+        _name.SetText(card.ExteriorInfo.cardName);
+        _typeName.SetText(Enum.GetName(card.ExteriorInfo.cardType.GetType(), card.ExteriorInfo.cardType));
+        _orbValue.SetText(card.ExteriorInfo.orbValue.ToString());
         _describe.SetText(card.describe);
     }
 

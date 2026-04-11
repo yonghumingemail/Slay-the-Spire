@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.U2D;
@@ -10,14 +12,12 @@ public class DeFendIntent : IIntent
     public Action<IIntent> OnUpdate { get; set; }
     public Func<Action<Animator>, UniTask> OnAnimatorPlay { get; set; }
 
-    private int _value;
     private GainShield _gainShield;
 
     public DeFendIntent(int value, PriorityQueueEventCenter priorityQueueEventCenter)
     {
         Initialized().Forget();
-        _value = value;
-        _gainShield = new GainShield(_value);
+        _gainShield = new GainShield(value);
     }
 
     private async UniTask Initialized()
@@ -26,11 +26,17 @@ public class DeFendIntent : IIntent
             "Assets/Art/Image/SpriteAtlas/Intent.spriteatlasv2");
         _sprite = resource.GetSprite("Assets/Art/Image/ui/intent/defend.png");
         _text = string.Empty;
-        OnUpdate?.Invoke(this);
     }
 
-    public UniTask Execute(GameObject sender, GameObject receiver)
+    public async UniTask Execute(GameObject sender, [NotNull] GameObject receiver,CancellationToken token)
     {
-        return UniTask.CompletedTask;
+        var task1 = _gainShield.Trigger(sender, receiver);
+        var task2 = OnAnimatorPlay.Invoke(ExecuteAnimator);
+        await UniTask.WhenAll(task1, task2);
+    }
+
+    private void ExecuteAnimator(Animator animator)
+    {
+       // animator.Play("Attack");
     }
 }

@@ -18,7 +18,6 @@ public class Power_BuffObj : BuffObj
 
     public int DamageCalculation(int value)
     {
-        Debug.Log(_carrier.name+value + stack);
         return value + stack;
     }
 

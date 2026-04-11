@@ -11,10 +11,9 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
     IPointerExitHandler
 {
     private CardArrangement cardArrangement;
-
     private SplineContainer spline;
     private DrawPile drawPile;
-    public CardDragLine cardDragLine { get; private set; }
+    public DirectionalArrowLine DirectionalArrowLine { get; private set; }
     public List<Card> cardInstances = new List<Card>();
     public Card SelectedCard;
 
@@ -23,7 +22,6 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
 
     public float speed;
 
-    public bool isDragging;
     public int maxHandSize { get; private set; } = 10;
 
   
@@ -32,7 +30,7 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
     {
         cardArrangement = new CardArrangement(maxHandSize);
         spline = transform.Find("Spline").GetComponent<SplineContainer>();
-        cardDragLine = transform.Find("DragLineUI").GetComponent<CardDragLine>();
+        DirectionalArrowLine = transform.Find("DirectionalArrowLine").GetComponent<DirectionalArrowLine>();
 
 
         EventCenter_Singleton.Instance.GetEvent<Func<DrawPile>>("DrawPile",
@@ -59,20 +57,20 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
         }
     }
 
-    private void OnMouseExitEnemy(Enemy enemy)
-    {
-        if (!SelectedCard) return;
-        foreach (var priorityEvent in SelectedCard.priorityEventCenter.GetEvent("OnMouseExitEnemy"))
-        {
-            (priorityEvent._delegate as Action<Enemy>)?.Invoke(enemy);
-        }
-    }
-    private void OnMouseEnterEnemy(Enemy enemy)
+    private void OnMouseEnterEnemy(Enemy selectableObject)
     {
         if (!SelectedCard) return;
         foreach (var priorityEvent in SelectedCard.priorityEventCenter.GetEvent("OnMouseEnterEnemy"))
         {
-            (priorityEvent._delegate as Action<Enemy>)?.Invoke(enemy);
+            (priorityEvent._delegate as Action<Enemy>)?.Invoke(selectableObject);
+        }
+    }
+    private void OnMouseExitEnemy(Enemy selectableObject )
+    {
+        if (!SelectedCard) return;
+        foreach (var priorityEvent in SelectedCard.priorityEventCenter.GetEvent("OnMouseExitEnemy"))
+        {
+            (priorityEvent._delegate as Action<Enemy>)?.Invoke(selectableObject);
         }
     }
 
@@ -177,7 +175,6 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
         if (SelectedCard)
         {
             SelectedCard.UnSelectCard();
-            cardDragLine._tokenSource?.Cancel();
         }
     }
 
