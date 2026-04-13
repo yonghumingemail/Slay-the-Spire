@@ -1,59 +1,91 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class Intent_C : MonoBehaviour
 {
-    //已经执行的意图列表
-    public List<IIntent> executedList { get; private set; } = new List<IIntent>();
+    public List<Intent_V> intentsViewArray;
+    private IIntent[] displayedIntents;
 
-    public IIntent currentIntent { get; private set; }
-    public Intent_V[] intentV;
+    public GameObject prefab;
+    public float intentSpacing;
+    public bool isInitialized;
 
-    private Animator _animator;
-    private AnimatorComplete _animatorComplete;
+
+    
+    private Action OnComplete;
 
     private void Awake()
     {
-        intentV = GetComponentsInChildren<Intent_V>();
-        _animatorComplete = GetComponent<AnimatorComplete>();
-        _animator = GetComponent<Animator>();
+        Initialize().Forget();
+        intentsViewArray = new List<Intent_V>(transform.GetComponentsInChildren<Intent_V>(true));
     }
 
-    private void OnIntentUpdate(IIntent intent)
+    private async UniTask Initialize()
     {
-        
+       
+        prefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/Enemy/Intent.prefab");
+
+        isInitialized = true;
+        OnComplete?.Invoke();
+        OnComplete = null;
     }
 
-    public void AddIntent(IIntent intent)
+
+    public void ShowIntent(IIntent[] intents)
     {
-        intent.OnUpdate += OnIntentUpdate;
-        intent.OnAnimatorPlay += AnimatorComplete;
-    }
-
-    public void ShowIntent(IIntent intent)
-    {
-        currentIntent = intent;
-        
-    }
-
-    public UniTask AnimatorComplete(Action<Animator> action)
-    {
-        action.Invoke(_animator);
-        var task = new UniTaskCompletionSource();
-
-        _animatorComplete.onComplete?.Invoke($"Error:{_animatorComplete._clipName}动画片段中断,onComplete事件提前执行");
-
-        _animatorComplete.onComplete += (clipName) =>
+        if (isInitialized)
         {
-            // print(clipName+"播放结束："+Time.time);
-            task.TrySetResult();
-            _animatorComplete.onComplete = null;
-        };
-        return task.Task;
+            foreach (var intent in displayedIntents ?? Enumerable.Empty<IIntent>())
+            {
+                intent.OnHide();
+            }
+
+            displayedIntents = intents;
+            for (; intents.Length > intentsViewArray.Count;)
+            {
+                intentsViewArray.Add(Instantiate(prefab, transform).GetComponent<Intent_V>());
+            }
+
+            float firstCardPosition = -((intents.Length - 1) * intentSpacing / 2);
+
+            Vector3 temp;
+            for (int i = 0; i < intents.Length; i++)
+            {
+                intents[i].OnShow(intentsViewArray[i]);
+                float p = firstCardPosition + i * intentSpacing;
+
+                temp = intentsViewArray[i].transform.localPosition;
+                temp.x = p;
+
+                intentsViewArray[i].gameObject.SetActive(true);
+                intentsViewArray[i].transform.localPosition = temp;
+                intentsViewArray[i].UpdateUI(intents[i]);
+                print(1);
+            }
+
+            for (int i = intents.Length; i < intentsViewArray.Count; i++)
+            {
+                intentsViewArray[i].gameObject.SetActive(false);
+                print(2);
+            }
+        }
+        else
+        {
+            OnComplete += () => { ShowIntent(intents); };
+        }
     }
 
+    public void HideIntent()
+    {
+        foreach (var VARIABLE in intentsViewArray)
+        {
+            VARIABLE.gameObject.SetActive(false);
+        }
+    }
 
     private int Choose(IEnumerable<float> list, float total)
     {
@@ -82,5 +114,4 @@ public class Intent_C : MonoBehaviour
         //为了防止浮点数精度问题，返回最后一个索引
         return currentIndex - 1;
     }
-    
 }

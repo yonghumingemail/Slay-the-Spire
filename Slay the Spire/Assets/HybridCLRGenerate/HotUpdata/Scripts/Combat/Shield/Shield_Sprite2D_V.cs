@@ -1,16 +1,17 @@
 using System;
+using System.Globalization;
 using TMPro;
 using UnityEngine;
 
 public class Shield_Sprite2D_V : MonoBehaviour, IShield_V
 {
     private TextMeshPro _textMeshPro;
-
+    private float scale_X; 
     public GameObject GetViewObject() => gameObject;
 
     public void UpdateView(IShield shieldInfo)
     {
-        _textMeshPro.SetText(shieldInfo.ShieldValue.ToString());
+        _textMeshPro.SetText(shieldInfo.ShieldValue.ToString(CultureInfo.CurrentCulture));
         gameObject.SetActive(shieldInfo.ShieldValue > 0);
     }
 
@@ -28,7 +29,7 @@ public class Shield_Sprite2D_V : MonoBehaviour, IShield_V
         Sprite targetSprite = targetSpriteRenderer.sprite;
 
         AdaptiveResize_Renderer _renderer = transform.GetComponent<AdaptiveResize_Renderer>();
-        _renderer.SpriteResize(targetSpriteRenderer);
+        _renderer.SpriteResize(targetSpriteRenderer,healthV.Scale_X);
         
         GameObject block = transform.Find("Block").gameObject;
         _textMeshPro = block.transform.Find("Value").GetComponent<TextMeshPro>();

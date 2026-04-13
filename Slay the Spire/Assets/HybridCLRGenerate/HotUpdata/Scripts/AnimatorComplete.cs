@@ -1,17 +1,16 @@
 using System;
 using UnityEngine;
 
-public class AnimatorComplete : MonoBehaviour
+public class AnimatorComplete
 {
-    
     public Action<string> onComplete;
     public string _clipName;
     private Animator _animator;
     private AnimatorOverrideController _animatorOverrideController;
 
-    private void Awake()
+    public void Awake(Animator animator)
     {
-        _animator = GetComponent<Animator>();
+        _animator = animator;
         _animatorOverrideController = new AnimatorOverrideController(_animator.runtimeAnimatorController);
 
         foreach (var animationClip in _animatorOverrideController.animationClips)
@@ -24,10 +23,10 @@ public class AnimatorComplete : MonoBehaviour
             };
             animationClip.AddEvent(completeEvent);
         }
-        
+
         _animator.runtimeAnimatorController = _animatorOverrideController;
     }
-    
+
     public void OnComplete(string clipName)
     {
         _clipName = clipName;

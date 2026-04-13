@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Z_Tools
 {
+    //全局事件应该是图形化界面
     public class EventCenter_Singleton : SingletonBase<EventCenter_Singleton>
     {
         private readonly EventCenter<string> EventCenter = new();

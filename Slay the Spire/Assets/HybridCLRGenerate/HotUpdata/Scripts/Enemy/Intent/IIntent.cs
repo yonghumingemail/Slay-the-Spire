@@ -1,16 +1,14 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.U2D;
 
 
 public interface IIntent
 {
-    Sprite _sprite { get; }
-    string _text { get; }
-    Action<IIntent> OnUpdate { get; set; }
-    Func<Action<Animator>,UniTask> OnAnimatorPlay { get; set; }
-    UniTask Execute(GameObject sender, [NotNull] GameObject receiver,CancellationToken  token);
-}
+    public Sprite _sprite { get;  }
+    public string _text { get; }
 
+    void OnShow( Intent_V intentV);
+    void OnHide();
+    string GetDescription();
+}

@@ -4,53 +4,55 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.U2D;
 using Z_Tools;
 
 [Serializable]
-public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectableObject,
+public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectableObject,
     IEventCenterObject<string>
 {
     public IEventCenter<string> eventCenter { get; } = new EventCenter<string>(); //用于提供接口对象
 
-    public PriorityQueueEventCenter _priorityEventCenter { get; private set; } =
+    public PriorityQueueEventCenter _priorityEventCenter { get; protected set; } =
         new PriorityQueueEventCenter(); //用于记录和触发buff事件
 
-    [SerializeField] private SimpleHealth _health;
-    private IHealth_V health_V;
+    [SerializeField] protected SimpleHealth _health;
+    protected IHealth_V health_V;
 
-    [SerializeField] private SimpleShield _shield;
-    private IShield_V shield_V;
+    [SerializeField] protected SimpleShield _shield;
+    protected IShield_V shield_V;
 
-    [SerializeField] private SimpleBuffList _buffList;
-    private IBuffList_V buffList_V;
+    [SerializeField] protected SimpleBuffList _buffList;
+    protected IBuffList_V buffList_V;
 
 
-    public SpriteRenderer spriteRenderer { get; private set; }
+    public SpriteRenderer spriteRenderer { get; protected set; }
 
-    private Animator _animator;
-    private GameObject _ui;
-    private Intent_C intentC;
-    public AlertBox alertBox { get; private set; }
+    protected Animator _animator;
 
-    private Player _player;
+    protected GameObject _ui;
+    protected Intent_C intentC;
+    protected List<EnemyAction> actionList = new List<EnemyAction>();
+    protected EnemyAction currentAction;
+    protected SpriteAtlas _spriteAtlas;
+    public AlertBox alertBox { get; protected set; }
+    protected Player _player;
 
-    private void Awake()
-    {
-    }
+    public abstract EnemyAction GetNextAction();
 
-    private void Start()
+    protected virtual void Start()
     {
         Initialize().Forget();
     }
 
-    private async UniTask Initialize()
+    protected virtual async UniTask Initialize()
     {
         _player = EventCenter_Singleton.Instance.GetEvent<Func<Player>>("Player")?.Invoke();
         _ui = transform.Find("UI").gameObject;
         alertBox = GetComponentInChildren<AlertBox>();
 
         spriteRenderer = _ui.GetComponent<SpriteRenderer>();
-        intentC = GetComponent<Intent_C>();
+        intentC = GetComponentInChildren<Intent_C>();
         _animator = GetComponent<Animator>();
 
         eventCenter.AddEvent<Func<PriorityQueueEventCenter>>("PriorityQueueEventCenter", () => _priorityEventCenter);
@@ -59,7 +61,7 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         health_V.InitializeView(_ui);
         _health = new SimpleHealth(50, 100, health_V, _priorityEventCenter);
         eventCenter.AddEvent<Func<IHealth>>("IHealth", () => _health);
-        
+
         shield_V = GetComponentInChildren<IShield_V>();
         shield_V.InitializeView(_ui, health_V);
         _shield = new SimpleShield(shield_V, _priorityEventCenter);
@@ -69,16 +71,16 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         await buffList_V.Initialized();
         _buffList = new SimpleBuffList(buffList_V, _priorityEventCenter);
         eventCenter.AddEvent<Func<IBuffList>>("IBuffList", () => _buffList);
-
-        _buffList.AddBuff(new Anger_BuffObj(2, 999, new[] { BuffTag_E.buff }, gameObject));
-        IIntent temp = new AttackIntent(6, 2, _priorityEventCenter, _player);
-        IIntent temp2 = new AttackIntent(4, 1, _priorityEventCenter, _player);
-        intentC.AddIntent(temp);
-        intentC.AddIntent(temp2);
-        intentC.ShowIntent(temp2);
+        
+        _spriteAtlas = await AddressablesMgr.Instance.LoadAssetAsync<SpriteAtlas>("Assets/Art/Image/SpriteAtlas/Intent.spriteatlasv2");
     }
 
-    public virtual async UniTask ExecuteEntry(int roundCount)
+
+    /// <summary>
+    /// 在敌人回合结束时的回调,不需要外部调用，执行完意图后执行
+    /// </summary>
+    /// <param name="roundCount"></param>
+    protected virtual async UniTask OnRoundEnd(int roundCount)
     {
         //通知buff，回合开始
         var actions = _priorityEventCenter.GetEvent("OnRoundEnd");
@@ -94,14 +96,44 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
                 Debug.LogWarning($"委托类型不匹配: {action._delegate?.GetType()}");
             }
         }
-
-        CancellationToken token = this.GetCancellationTokenOnDestroy();
-
-        await intentC.currentIntent.Execute(gameObject, _player.gameObject,token);
     }
 
 
-    public void OnPointerEnter(PointerEventData eventData)
+    /// <summary>
+    /// 在敌人回合开始时的回调,需要由外部调用
+    /// </summary>
+    /// <param name="roundCount"></param>
+    public virtual async UniTask OnRoundStart(int roundCount)
+    {
+        //通知buff，回合开始
+        var actions = _priorityEventCenter.GetEvent("OnRoundStart");
+        foreach (var action in actions)
+        {
+            if (action._delegate is Func<int, UniTask> func)
+            {
+                await func(roundCount);
+            }
+            else
+            {
+                // 处理类型不匹配的情况
+                Debug.LogWarning($"委托类型不匹配: {action._delegate?.GetType()}");
+            }
+        }
+        
+        await currentAction.Execute.Invoke();
+        actionList.Add(currentAction);
+        currentAction = GetNextAction();
+        intentC.HideIntent();
+        await OnRoundEnd(roundCount);
+    }
+
+    public virtual UniTask OnPlayerRoundStart(int roundCount)
+    {
+        intentC.ShowIntent(currentAction.intents);
+        return UniTask.CompletedTask;
+    }
+
+    public virtual void OnPointerEnter(PointerEventData eventData)
     {
         foreach (var VARIABLE in EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("OnMouseEnterEnemy"))
         {
@@ -109,7 +141,7 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         }
     }
 
-    public void OnPointerExit(PointerEventData eventData)
+    public virtual void OnPointerExit(PointerEventData eventData)
     {
         foreach (var VARIABLE in EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("OnMouseExitEnemy"))
         {
@@ -117,12 +149,12 @@ public class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         }
     }
 
-    public void OnSelect()
+    public virtual void OnSelect()
     {
         alertBox.Show(transform, spriteRenderer.sprite);
     }
 
-    public void OnUnSelect()
+    public virtual void OnUnSelect()
     {
         alertBox.Close();
     }

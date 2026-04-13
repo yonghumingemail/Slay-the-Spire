@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Z_Tools;
@@ -10,6 +11,8 @@ public class Player : MonoBehaviour, IEventCenterObject<string>
     public PriorityQueueEventCenter _priorityEventCenter { get; private set; } =
         new PriorityQueueEventCenter(); //用于记录buff事件
 
+    public CancellationTokenSource tokenSource { get; } = new CancellationTokenSource();
+    
     [SerializeField] public SimpleHealth _health;
     private IHealth_V health_V;
 
@@ -58,7 +61,7 @@ public class Player : MonoBehaviour, IEventCenterObject<string>
         eventCenter.AddEvent<Func<IBuffList>>("IBuffList", () => _buffList);
 
         animator = GetComponent<Animator>();
-      
+      //监听玩家死亡，将token设置为取消
     }
 
     private Player Get() => this;

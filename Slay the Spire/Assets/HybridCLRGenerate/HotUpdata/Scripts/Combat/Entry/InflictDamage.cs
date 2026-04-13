@@ -8,6 +8,7 @@ public class InflictDamage : IEntry
 {
     //初始伤害
     public int damage;
+
     //经过双方buff计算后的伤害
     public int calculated_damage;
 
@@ -68,6 +69,5 @@ public class InflictDamage : IEntry
         {
             calculated_damage = (action._delegate as Func<int, int>).Invoke(calculated_damage);
         }
-
     }
 }

@@ -21,11 +21,8 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
     public int drawCardsOffer;
 
     public float speed;
-
     public int maxHandSize { get; private set; } = 10;
-
-  
-
+    
     private void Awake()
     {
         cardArrangement = new CardArrangement(maxHandSize);
@@ -36,9 +33,9 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
         EventCenter_Singleton.Instance.GetEvent<Func<DrawPile>>("DrawPile",
             (action) => { drawPile = action.Invoke(); });
         EventCenter_Singleton.Instance.AddEvent<Func<HandPile>>("HandPile", () => this);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int, UniTask>>("PlayerTurnStart",
-            OnPlayerTurnStart, 0);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<UniTask>>("OnRoundEnd", OnRoundEnd, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int, UniTask>>("OnRoundStart",
+            OnRoundStart, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int,UniTask>>("OnRoundEnd", OnRoundEnd, 0);
 
         EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action<Enemy>>("OnMouseEnterEnemy", OnMouseEnterEnemy, 0);
         EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action<Enemy>>("OnMouseExitEnemy", OnMouseExitEnemy, 0);
@@ -127,7 +124,7 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
         }
     }
 
-    private async UniTask OnRoundEnd()
+    private async UniTask OnRoundEnd(int roundCount)
     {
         // 创建副本，避免循环中列表变化的影响
         var cardsToProcess = cardInstances.ToArray();
@@ -144,7 +141,7 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
 
     public float speed2;
 
-    public async UniTask OnPlayerTurnStart(int roundCount)
+    public async UniTask OnRoundStart(int roundCount)
     {
         // print("抽牌："+Time.time);
         await DrawCard(drawCardsCount + drawCardsOffer);

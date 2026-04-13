@@ -12,21 +12,19 @@ public class CombatManage : MonoBehaviour
 
     public Queue<Card> executeQueue = new Queue<Card>();
     public bool isExecute = false;
-    public bool isPlayerTurn;
 
     private void Awake()
     {
         EventCenter_Singleton.Instance.AddEvent<Func<CombatManage>>("CombatManage", Get);
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action>("PlayerRoundEnded", PlayerRoundEnded,
-            -1);
+
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            PlayerTurnStart().Forget();
+            OnRoundStart().Forget();
         }
     }
 
@@ -57,16 +55,12 @@ public class CombatManage : MonoBehaviour
         isExecute = false;
     }
 
-    public void PlayerRoundEnded()
-    {
-        isPlayerTurn = false;
-    }
 
-    public async UniTaskVoid PlayerTurnStart()
+
+    public async UniTaskVoid OnRoundStart()
     {
         roundCount++;
-        isPlayerTurn = true;
-        var actions = EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("PlayerTurnStart");
+        var actions = EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("OnRoundStart");
         foreach (var VARIABLE in actions)
         {
             await (VARIABLE._delegate as Func<int, UniTask>).Invoke(roundCount);

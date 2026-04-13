@@ -13,30 +13,38 @@ public class EnemySpawner : MonoBehaviour
     private void Awake()
     {
         EventCenter_Singleton.Instance.AddEvent<Func<EnemySpawner>>("EnemySpawner", () => this);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<UniTask>>("OnRoundEnd",OnRoundEnd,0 );
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int, UniTask>>("OnRoundEnd", OnRoundEnd, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int, UniTask>>("OnRoundStart", OnRoundStart, 5);
+
         for (int i = 0; i < transform.childCount; i++)
         {
             enemyList.Add(transform.GetChild(i).GetComponent<Enemy>());
         }
     }
+
     void Start()
     {
-        _combatManage =   EventCenter_Singleton.Instance.GetEvent<Func<CombatManage>>("CombatManage").Invoke();
+        _combatManage = EventCenter_Singleton.Instance.GetEvent<Func<CombatManage>>("CombatManage").Invoke();
     }
 
 
-    private async UniTask OnRoundEnd()
+    /// <summary>
+    /// 点击回合结束后，顺序通知所有怪物回合开始
+    /// </summary>
+    private async UniTask OnRoundEnd(int roundCount)
     {
         foreach (var VARIABLE in enemyList)
         {
-            await VARIABLE.ExecuteEntry(_combatManage.RoundCount);
+            await VARIABLE.OnRoundStart(_combatManage.RoundCount);
         }
-
     }
-   
- 
-    void Update()
+
+    private async UniTask OnRoundStart(int roundCount)
     {
-        
+        //通知所有敌人玩家回合开始（显示意图）
+        foreach (var VARIABLE in enemyList)
+        {
+            await VARIABLE.OnPlayerRoundStart(_combatManage.RoundCount);
+        }
     }
 }

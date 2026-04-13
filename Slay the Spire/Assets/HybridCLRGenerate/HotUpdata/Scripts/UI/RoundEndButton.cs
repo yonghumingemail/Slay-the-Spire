@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Z_Tools;
 
-public class RoundEnd : MonoBehaviour
+public class RoundEndButton : MonoBehaviour
 {
     private Button _button;
     private TextMeshProUGUI  _text;
@@ -38,9 +38,9 @@ public class RoundEnd : MonoBehaviour
         var eventList = EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("OnRoundEnd");
         foreach (var VARIABLE in eventList)
         {
-            if (VARIABLE._delegate is Func<UniTask> func)
+            if (VARIABLE._delegate is Func<int,UniTask> func)
             {
-                await func.Invoke();
+                await func.Invoke(_combatManage.RoundCount);
             }
             else
             {
@@ -48,7 +48,7 @@ public class RoundEnd : MonoBehaviour
                 Debug.LogWarning($"委托类型不匹配: {VARIABLE._delegate?.GetType()}");
             }
         }
-        _text.SetText("回合结束");
-        _combatManage.PlayerTurnStart().Forget();
+        _text.SetText("结束回合");
+        _combatManage.OnRoundStart().Forget();
     }
 }
