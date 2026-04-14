@@ -32,7 +32,7 @@ public class DirectionalCard
             card.CardInteraction.isInteractable = false;
             foreach (var VARIABLE in card.cardEntries)
             {
-                await VARIABLE.Trigger(card._player.gameObject, targetInfo.collider.gameObject);
+                 VARIABLE.Trigger(card._player.gameObject, targetInfo.collider.gameObject);
                 await UniTask.Yield(cancellationToken);
             }
 

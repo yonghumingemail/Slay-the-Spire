@@ -60,7 +60,7 @@ public class AttackIntent : IIntent
     {
         for (int i = 0; i < number; i++)
         {
-            await _inflictDamage.Trigger(sender, receiver);
+             _inflictDamage.Trigger(sender, receiver);
             await UniTask.Yield(token);
         }
     }

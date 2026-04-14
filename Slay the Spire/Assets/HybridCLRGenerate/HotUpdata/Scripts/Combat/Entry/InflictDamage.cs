@@ -19,8 +19,14 @@ public class InflictDamage : IEntry
         calculated_damage = damage;
     }
 
-    public UniTask Trigger(GameObject sender, [NotNull] GameObject receiver)
+    public void Trigger(GameObject sender, GameObject receiver)
     {
+        if (!receiver)
+        {
+            Debug.Log("接收者为空");
+            return;
+        }
+        
         IEventCenterObject<string> eventCenter_Sender = sender.GetComponent<IEventCenterObject<string>>();
         IEventCenterObject<string> eventCenter_Receiver = receiver.GetComponent<IEventCenterObject<string>>();
 
@@ -45,11 +51,10 @@ public class InflictDamage : IEntry
         if (health == null)
         {
             Debug.LogWarning($" 目标对象 {receiver.name} 缺少 IHealth 组件");
-            return UniTask.CompletedTask;
+            return;
         }
 
         health.AddHealth(info);
-        return UniTask.CompletedTask;
     }
 
     public string GetDescription()

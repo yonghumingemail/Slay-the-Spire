@@ -73,13 +73,14 @@ public class BuffList_V : MonoBehaviour, IBuffList_V
         var tempBuff_V = buffPool.Pop();
 
         // 初始化Buff UI（设置图标、数据等）
-        tempBuff_V.Initialized(buffObj, spriteAtlas);
+        tempBuff_V.UpdateBuffUI(buffObj, spriteAtlas);
         tempBuff_V.gameObject.SetActive(true); // 激活显示
 
         // 添加到布局组件中自动排列
         layout2D.AddChild(tempBuff_V.gameObject);
 
         // 添加到字典中建立映射关系
+        buffObj.view = tempBuff_V.gameObject;
         buffGameDic.Add(buffObj, tempBuff_V);
         tempBuff_V.TriggerAnimator();
     }
@@ -97,21 +98,22 @@ public class BuffList_V : MonoBehaviour, IBuffList_V
             return;
         }
 
-        // 获取UI对象
-        GameObject tempObj = tempBuff_V.gameObject;
 
         // 重置位置
-        tempObj.transform.localPosition = new Vector3(0, 0, tempObj.transform.localPosition.z);
-        tempObj.SetActive(false); // 隐藏对象
+        tempBuff_V.gameObject.transform.localPosition =
+            new Vector3(0, 0, tempBuff_V.gameObject.transform.localPosition.z);
+        tempBuff_V.UpdateBuffUI(null,null);
+        tempBuff_V.gameObject.SetActive(false); // 隐藏对象
 
         // 从布局中移除
-        layout2D.RemoveChild(tempObj.gameObject);
+        layout2D.RemoveChild(tempBuff_V.gameObject.gameObject);
 
         // 从字典中移除映射关系
+        buffObj.view = null;
         buffGameDic.Remove(buffObj);
 
         // 回收对象到对象池
-        buffPool.Push(tempObj.GetComponent<Buff_V>());
+        buffPool.Push(tempBuff_V);
     }
 
     /// <summary>

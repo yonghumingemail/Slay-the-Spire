@@ -13,14 +13,21 @@ public class GainShield : IEntry
         this.value = value;
     }
 
-    public UniTask Trigger(GameObject sender, [NotNull] GameObject receiver)
+    public void Trigger(GameObject sender, GameObject receiver)
     {
+        if (!receiver)
+        {
+            Debug.Log("接收者为空");
+            return;
+        }
+
         IEventCenterObject<string> eventCenter = receiver.GetComponent<IEventCenterObject<string>>();
 
         PriorityQueueEventCenter priorityEventCenter = eventCenter.eventCenter
             .GetEvent<Func<PriorityQueueEventCenter>>("PriorityQueueEventCenter")?.Invoke();
 
         IShield shield = eventCenter.eventCenter.GetEvent<Func<IShield>>("IShield")?.Invoke();
+        ChangeValueInfo info = new ChangeValueInfo(sender, receiver, value);
         if (priorityEventCenter == null)
         {
             Debug.LogWarning($" 目标对象 {receiver.name} 缺少 priorityEventCenter 组件");
@@ -29,19 +36,17 @@ public class GainShield : IEntry
         {
             foreach (var action in priorityEventCenter?.GetEvent("GainShield"))
             {
-                (action._delegate as Action<int>)?.Invoke(value);
+                (action._delegate as Action<ChangeValueInfo>)?.Invoke(info);
             }
         }
 
         if (shield == null)
         {
             Debug.LogWarning($" 目标对象 {receiver.name} 缺少 IShield 组件");
-            return UniTask.CompletedTask;
+            return;
         }
 
-        shield.AddShieldValue(value);
-
-        return UniTask.CompletedTask;
+        shield.AddShieldValue(info);
     }
 
     public string GetDescription()

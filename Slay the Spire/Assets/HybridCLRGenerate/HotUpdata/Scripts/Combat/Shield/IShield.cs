@@ -1,8 +1,7 @@
 using UnityEngine;
 
-public interface IShield 
+public interface IShield
 {
-   float ShieldValue { get; }
-   void AddShieldValue(float value);
-   void ShieldTrigger(ChangeValueInfo info);
+    int ShieldValue { get; }
+    void AddShieldValue(ChangeValueInfo value);
 }

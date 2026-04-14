@@ -7,22 +7,22 @@ public class SimpleHealth : IHealth
     private IHealth_V _healthV;
     private PriorityQueueEventCenter _priorityEventCenter;
 
-    public float HealthValue
+    public int HealthValue
     {
         get => healthValue;
         private set => healthValue = value;
     }
 
-    public float MaxHealth
+    public int MaxHealth
     {
         get => maxHealthValue;
         private set => maxHealthValue = value;
     }
 
-    public float healthValue;
-    public float maxHealthValue;
+    public int healthValue;
+    public int maxHealthValue;
 
-    public SimpleHealth(float health, float maxHealth, IHealth_V healthV,PriorityQueueEventCenter priorityEventCenter)
+    public SimpleHealth(int health, int maxHealth, IHealth_V healthV, PriorityQueueEventCenter priorityEventCenter)
     {
         HealthValue = health;
         MaxHealth = maxHealth;
@@ -33,17 +33,22 @@ public class SimpleHealth : IHealth
 
     public void AddHealth(ChangeValueInfo info)
     {
-        var eventList = _priorityEventCenter.GetEvent("OnHealthChange");
-        if (eventList != null)
+        Debug.Log(info.value);
+
+        foreach (var VARIABLE in _priorityEventCenter.GetEvent("OnBeAttacked"))
         {
-            foreach (var VARIABLE in eventList)
-            {
-                (VARIABLE._delegate as Action<ChangeValueInfo>)?.Invoke(info);
-            }
+            (VARIABLE._delegate as Action<ChangeValueInfo>)?.Invoke(info);
         }
 
-        HealthValue = Mathf.Clamp(HealthValue + info.value, 0, MaxHealth);
+        HealthValue = (int)Mathf.Clamp(HealthValue + info.value, 0, MaxHealth);
         _healthV.UpdateView(this);
+
+        foreach (var VARIABLE in _priorityEventCenter.GetEvent("OnHealthChange"))
+        {
+            (VARIABLE._delegate as Action<ChangeValueInfo>)?.Invoke(info);
+        }
+
+
         // Debug.Log(HealthValue);
     }
 }

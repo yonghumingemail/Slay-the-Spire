@@ -24,8 +24,8 @@ public class SimpleBuffList : IBuffList
         // 初始化Buff对象列表
         _buffListObj = new List<BuffObj>();
 
+        priorityEventCenter.AddEvent<Action>("OnDestroy", OnDestroy, 0);
     }
-
 
 
     // 添加Buff对象
@@ -36,7 +36,7 @@ public class SimpleBuffList : IBuffList
         // 通知视图更新，显示新添加的Buff
         _buffListV.AddBuff(buffObj);
         // 触发Buff对象的添加事件，传入事件中心
-        buffObj.OnAddBuff(_priorityEventCenter);
+        buffObj.OnAddBuff(_priorityEventCenter, UpdateView);
     }
 
     // 移除Buff对象
@@ -53,6 +53,12 @@ public class SimpleBuffList : IBuffList
     // 更新指定Buff对象的视图显示
     public void UpdateView(BuffObj buffObj)
     {
+        //buff层数为0时移除buff
+        if (buffObj.stack < 1)
+        {
+            RemoveBuff(buffObj);
+        }
+
         // 通知视图接口更新指定Buff的显示
         _buffListV.UpdateBuffView(buffObj);
     }
@@ -62,5 +68,18 @@ public class SimpleBuffList : IBuffList
     {
         // 返回内部Buff对象列表
         return _buffListObj;
+    }
+
+    private void OnDestroy()
+    {
+        foreach (var VARIABLE in _buffListObj)
+        {
+            VARIABLE.OnRemoveBuff(_priorityEventCenter);
+        }
+
+        _buffListObj.Clear();
+        _buffListV = null;
+
+        Debug.Log(this + "OnDestroy执行");
     }
 }

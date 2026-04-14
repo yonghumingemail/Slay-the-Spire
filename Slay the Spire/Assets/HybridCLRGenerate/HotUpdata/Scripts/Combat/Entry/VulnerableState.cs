@@ -12,8 +12,14 @@ public class VulnerableState : IEntry
         this.stack = stack;
     }
 
-    public UniTask Trigger(GameObject sender, [NotNull] GameObject receiver)
+    public void Trigger(GameObject sender, GameObject receiver)
     {
+        if (!receiver)
+        {
+            Debug.Log("接收者为空");
+            return;
+        }
+        
         IEventCenterObject<string> eventCenter_receiver = receiver.GetComponent<IEventCenterObject<string>>();
         IBuffList buffListObj = eventCenter_receiver.eventCenter.GetEvent<Func<IBuffList>>("IBuffList")?.Invoke();
 
@@ -21,7 +27,7 @@ public class VulnerableState : IEntry
         if (buffListObj == null)
         {
             UnityEngine.Debug.LogWarning($"{nameof(Trigger)}: 目标对象 {receiver.name} 缺少 IBuffList 组件");
-            return UniTask.CompletedTask;
+            return;
         }
 
         int maxStack = 999;
@@ -39,7 +45,7 @@ public class VulnerableState : IEntry
         }
         else
         {
-            buff = new VulnerableState_BuffObj(stack, maxStack, new[] { BuffTag_E.debuff }, receiver);
+            buff = new VulnerableState_BuffObj(stack, maxStack, receiver);
             buffListObj.AddBuff(buff);
         }
 
@@ -52,17 +58,10 @@ public class VulnerableState : IEntry
         {
             (action._delegate as Action<BuffObj, int>)?.Invoke(buff, stack);
         }
-
-        return UniTask.CompletedTask;
     }
 
     public string GetDescription()
     {
         return $"给予{stack.ToString()}层易伤\n";
-    }
-
-    public string GetDescription(int value)
-    {
-        return $"给予{value.ToString()}层易伤\n";
     }
 }

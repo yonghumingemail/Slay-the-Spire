@@ -13,14 +13,20 @@ public class GainPower : IEntry
         this.stack = stack;
     }
 
-    public UniTask Trigger(GameObject sender, [NotNull] GameObject receiver)
+    public void Trigger(GameObject sender, GameObject receiver)
     {
+        if (!receiver)
+        {
+            Debug.Log("接收者为空");
+            return;
+        }
+        
         IEventCenterObject<string> eventCenter = receiver.GetComponent<IEventCenterObject<string>>();
         IBuffList buffListObj = eventCenter.eventCenter.GetEvent<Func<IBuffList>>("IBuffList")?.Invoke();
         if (buffListObj == null)
         {
             Debug.LogWarning($" 目标对象 {receiver.name} 缺少 IBuffList 组件");
-            return UniTask.CompletedTask;
+            return;
         }
 
         int maxStack = 999;
@@ -38,31 +44,26 @@ public class GainPower : IEntry
         }
         else
         {
-            buff = new Power_BuffObj(stack, maxStack, new[] { BuffTag_E.buff }, receiver);
+            buff = new Power_BuffObj(stack, maxStack, receiver);
             buffListObj.AddBuff(buff);
         }
-        
+
         //通知接受者更新伤害信息Get Action
-        
+
         foreach (var action in buffListObj._priorityEventCenter.GetEvent("DamageValueChange_Attack"))
         {
             (action._delegate as Action)?.Invoke();
         }
 
-        foreach (var action in buffListObj._priorityEventCenter.GetEvent("GainBuff") )
+        foreach (var action in buffListObj._priorityEventCenter.GetEvent("GainBuff"))
         {
             (action._delegate as Action<BuffObj, int>)?.Invoke(buff, stack);
         }
-
-        return UniTask.CompletedTask;
     }
 
     public string GetDescription()
     {
         return $"获得{stack.ToString()}点力量\n";
     }
-    public string GetDescription(int value)
-    {
-        return $"获得{value}点力量\n";
-    }
+
 }

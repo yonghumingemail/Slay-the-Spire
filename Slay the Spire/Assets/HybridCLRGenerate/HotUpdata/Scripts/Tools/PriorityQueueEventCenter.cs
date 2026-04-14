@@ -38,8 +38,7 @@ public class PriorityQueueEventCenter
         //用插排更好
         Event_Dic[eventName].Sort((a, b) => b.priority.CompareTo(a.priority));
     }
-    
-    
+
 
     public IEnumerable<PriorityEvent> GetEvent(string name)
     {
@@ -53,8 +52,8 @@ public class PriorityQueueEventCenter
         Event_Dic[eventName] = null;
         return Event_Dic.Remove(eventName);
     }
-    
-    public bool RemoveEvent(string eventName,Delegate _delegate)
+
+    public bool RemoveEvent<D>(string eventName, D _delegate) where D : Delegate
     {
         if (!Event_Dic.TryGetValue(eventName, out var delegates)) return false;
 
@@ -64,9 +63,10 @@ public class PriorityQueueEventCenter
             delegates.RemoveAt(i);
             return true;
         }
-        
+
         return false;
     }
+
     public void Clear()
     {
         Event_Dic.Clear();

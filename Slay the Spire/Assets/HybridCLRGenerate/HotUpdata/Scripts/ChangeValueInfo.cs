@@ -9,9 +9,9 @@ public class ChangeValueInfo
     
     public GameObject receiver;
     
-    public float value;
+    public int value;
     private ChangeValueInfo(){}
-    public ChangeValueInfo(GameObject sender, GameObject receiver, float value)
+    public ChangeValueInfo(GameObject sender, GameObject receiver, int value)
     {
         this.sender = sender;
         this.receiver = receiver;

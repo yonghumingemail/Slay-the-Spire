@@ -3,7 +3,7 @@ using UnityEngine;
 
 public interface IHealth
 {
-    float HealthValue { get; }
-    float MaxHealth { get; }
+    int HealthValue { get; }
+    int MaxHealth { get; }
     void AddHealth(ChangeValueInfo  changeValueInfo);
 }

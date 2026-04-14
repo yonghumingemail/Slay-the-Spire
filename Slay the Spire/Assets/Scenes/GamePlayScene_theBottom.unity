@@ -7258,7 +7258,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roundCount: 0
   isExecute: 0
-  isPlayerTurn: 0
 --- !u!4 &1734707292
 Transform:
   m_ObjectHideFlags: 0
@@ -7606,6 +7605,7 @@ GameObject:
   - component: {fileID: 1810546601}
   - component: {fileID: 1810546603}
   - component: {fileID: 1810546604}
+  - component: {fileID: 1810546605}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: Untagged
@@ -7716,6 +7716,19 @@ MonoBehaviour:
     shieldVale: 0
   _buffList:
     _buffListObj: []
+--- !u!114 &1810546605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1810546598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb295691c5b92b04ab3c05f4156c105f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _clipName: 
 --- !u!1 &1905114366
 GameObject:
   m_ObjectHideFlags: 0

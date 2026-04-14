@@ -11,8 +11,8 @@ public class Player : MonoBehaviour, IEventCenterObject<string>
     public PriorityQueueEventCenter _priorityEventCenter { get; private set; } =
         new PriorityQueueEventCenter(); //用于记录buff事件
 
-    public CancellationTokenSource tokenSource { get; } = new CancellationTokenSource();
-    
+    public CancellationTokenSource TokenSource { get; } = new CancellationTokenSource();
+
     [SerializeField] public SimpleHealth _health;
     private IHealth_V health_V;
 
@@ -31,6 +31,7 @@ public class Player : MonoBehaviour, IEventCenterObject<string>
 
     private GainPower gainPower = new GainPower(2);
     private VulnerableState vulnerableState = new VulnerableState(2);
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.A))
@@ -43,6 +44,8 @@ public class Player : MonoBehaviour, IEventCenterObject<string>
     private async UniTaskVoid Initialize()
     {
         EventCenter_Singleton.Instance.AddEvent<Func<Player>>("Player", Get);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int, UniTask>>("OnRoundEnd", OnRoundEnd,
+            0);
         eventCenter.AddEvent<Func<PriorityQueueEventCenter>>("PriorityQueueEventCenter", () => _priorityEventCenter);
 
         health_V = GetComponentInChildren<IHealth_V>();
@@ -61,8 +64,38 @@ public class Player : MonoBehaviour, IEventCenterObject<string>
         eventCenter.AddEvent<Func<IBuffList>>("IBuffList", () => _buffList);
 
         animator = GetComponent<Animator>();
-      //监听玩家死亡，将token设置为取消
+        //监听玩家死亡，将token设置为取消
     }
 
     private Player Get() => this;
+
+
+    private async UniTask OnRoundEnd(int roundCount)
+    {
+        //通知事件，回合开始
+        var actions = _priorityEventCenter.GetEvent("OnRoundEnd");
+        foreach (var action in actions)
+        {
+            if (action._delegate is Func<int, UniTask> func)
+            {
+                await func(roundCount);
+            }
+            else
+            {
+                // 处理类型不匹配的情况
+                Debug.LogWarning($"委托类型不匹配: {action._delegate?.GetType()}");
+            }
+        }
+        
+    }
+
+    private void OnDestroy()
+    {
+        foreach (var VARIABLE in _priorityEventCenter.GetEvent("OnDestroy"))
+        {
+            (VARIABLE._delegate as Action)?.Invoke();
+        }
+
+        _priorityEventCenter.Clear();
+    }
 }

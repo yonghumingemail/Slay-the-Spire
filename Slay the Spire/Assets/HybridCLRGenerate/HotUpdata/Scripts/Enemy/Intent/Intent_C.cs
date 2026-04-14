@@ -64,13 +64,11 @@ public class Intent_C : MonoBehaviour
                 intentsViewArray[i].gameObject.SetActive(true);
                 intentsViewArray[i].transform.localPosition = temp;
                 intentsViewArray[i].UpdateUI(intents[i]);
-                print(1);
             }
 
             for (int i = intents.Length; i < intentsViewArray.Count; i++)
             {
                 intentsViewArray[i].gameObject.SetActive(false);
-                print(2);
             }
         }
         else

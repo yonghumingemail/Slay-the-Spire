@@ -41,7 +41,7 @@ public class Hp_Sprite2D_V : MonoBehaviour, IHealth_V
     public void UpdateView(IHealth health)
     {
         // 计算当前生命值比例（0-1）
-        float value = health.HealthValue / health.MaxHealth;
+        float value = (float)health.HealthValue / health.MaxHealth;
 
         // 计算血条新位置：基于生命值比例横向移动
         var pos = _hp.transform.localPosition;

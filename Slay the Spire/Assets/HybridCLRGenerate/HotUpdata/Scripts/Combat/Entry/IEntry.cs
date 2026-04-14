@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface IEntry
 {
-    UniTask Trigger(GameObject sender, [NotNull] GameObject receiver);
+    void Trigger(GameObject sender, GameObject receiver);
     string GetDescription();
 }
