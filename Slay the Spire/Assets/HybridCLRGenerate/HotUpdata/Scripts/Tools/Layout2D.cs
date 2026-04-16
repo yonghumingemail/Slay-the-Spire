@@ -144,7 +144,7 @@ public class Layout2D : MonoBehaviour
     {
         if (child != null && child.transform.parent == transform)
         {
-            DestroyImmediate(child);
+            
             if (refreshLayout)
             {
                 RefreshLayout();

@@ -39,6 +39,7 @@ public class Card_Ironclad_Bash : Card
             {
                 _inflictDamage.DamageCalculation(_player._priorityEventCenter, enemy._priorityEventCenter);
                 _directionalCard.OnMouseEnterSelectableObject(enemy);
+                UpdateDescribe();
             },
             0);
         priorityEventCenter.AddEvent<Action<Enemy>>("OnMouseExitEnemy",
@@ -46,6 +47,7 @@ public class Card_Ironclad_Bash : Card
             {
                 _inflictDamage.DamageCalculation(_player._priorityEventCenter, null);
                 _directionalCard.OnMouseExitSelectableObject(enemy);
+                UpdateDescribe();
             }, 0);
 
         _directionalCard = new DirectionalCard(this, "Enemy");

@@ -71,6 +71,6 @@ public class SimpleShield : IShield
         _shield_V = null;
         _priorityEventCenter = null;
         OnRoundStartAction = null;
-        Debug.Log(this + "OnDestroy执行");
+        //  Debug.Log(this + "OnDestroy执行");
     }
 }

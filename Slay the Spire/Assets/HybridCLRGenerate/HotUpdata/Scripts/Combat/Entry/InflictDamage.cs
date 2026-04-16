@@ -26,7 +26,7 @@ public class InflictDamage : IEntry
             Debug.Log("接收者为空");
             return;
         }
-        
+
         IEventCenterObject<string> eventCenter_Sender = sender.GetComponent<IEventCenterObject<string>>();
         IEventCenterObject<string> eventCenter_Receiver = receiver.GetComponent<IEventCenterObject<string>>();
 
@@ -65,6 +65,7 @@ public class InflictDamage : IEntry
     public void DamageCalculation(PriorityQueueEventCenter send, PriorityQueueEventCenter receive)
     {
         calculated_damage = damage;
+        // Debug.Log($"计算前的伤害：{calculated_damage}");
         foreach (var action in send?.GetEvent("DamageCalculation_Attack") ?? Enumerable.Empty<PriorityEvent>())
         {
             calculated_damage = (action._delegate as Func<int, int>).Invoke(calculated_damage);
@@ -74,5 +75,6 @@ public class InflictDamage : IEntry
         {
             calculated_damage = (action._delegate as Func<int, int>).Invoke(calculated_damage);
         }
+        //  Debug.Log($"计算后的伤害：{calculated_damage}");
     }
 }

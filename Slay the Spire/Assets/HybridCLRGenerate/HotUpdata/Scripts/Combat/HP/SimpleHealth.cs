@@ -33,8 +33,7 @@ public class SimpleHealth : IHealth
 
     public void AddHealth(ChangeValueInfo info)
     {
-        Debug.Log(info.value);
-
+        
         foreach (var VARIABLE in _priorityEventCenter.GetEvent("OnBeAttacked"))
         {
             (VARIABLE._delegate as Action<ChangeValueInfo>)?.Invoke(info);

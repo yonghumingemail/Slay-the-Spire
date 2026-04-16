@@ -30,7 +30,7 @@ public class Buff_V : MonoBehaviour, IBuff_V
         if (BuffObj == null) return;
 
         _buffSprite.sprite = spriteAtlas?.GetSprite(BuffObj.name);
-        _buffEffectSprite.sprite = _buffSprite.sprite;
+        _buffEffectSprite.sprite = _buffSprite?.sprite;
         UpdateBuffUI(BuffObj);
     }
 

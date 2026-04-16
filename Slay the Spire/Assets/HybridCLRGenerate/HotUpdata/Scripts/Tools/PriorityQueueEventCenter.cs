@@ -19,16 +19,7 @@ public class PriorityQueueEventCenter
         {
             Event_Dic.Add(eventName, new List<PriorityEvent>());
         }
-        else
-        {
-            if (Event_Dic[eventName][0]._delegate is not D)
-            {
-                Debug.Log(
-                    $"事件类型不统一,原事件类型为{Event_Dic[eventName][0]._delegate.GetType()}|,传递的参数类型为{_delegate.GetType()}");
-                return;
-            }
-        }
-
+        
         var temp = new PriorityEvent
         {
             priority = priority,
@@ -42,7 +33,8 @@ public class PriorityQueueEventCenter
 
     public IEnumerable<PriorityEvent> GetEvent(string name)
     {
-        return Event_Dic.GetValueOrDefault(name) ?? Enumerable.Empty<PriorityEvent>();
+        return new List<PriorityEvent>(Event_Dic.GetValueOrDefault(name) ?? Enumerable.Empty<PriorityEvent>());
+        //return Event_Dic.GetValueOrDefault(name) ?? Enumerable.Empty<PriorityEvent>();
     }
 
     public bool RemoveEvent(string eventName)
@@ -56,14 +48,14 @@ public class PriorityQueueEventCenter
     public bool RemoveEvent<D>(string eventName, D _delegate) where D : Delegate
     {
         if (!Event_Dic.TryGetValue(eventName, out var delegates)) return false;
-
+        
         for (int i = 0; i < delegates.Count; i++)
         {
             if (delegates[i]._delegate != _delegate) continue;
             delegates.RemoveAt(i);
             return true;
         }
-
+      
         return false;
     }
 

@@ -80,6 +80,6 @@ public class SimpleBuffList : IBuffList
         _buffListObj.Clear();
         _buffListV = null;
 
-        Debug.Log(this + "OnDestroy执行");
+     //   Debug.Log(this + "OnDestroy执行");
     }
 }
