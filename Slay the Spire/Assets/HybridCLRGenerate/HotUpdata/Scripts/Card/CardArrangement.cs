@@ -7,7 +7,7 @@ using Z_Tools;
 
 public class CardArrangement
 {
-    public int _maxCardsCount { get; private set; }
+    public int _maxCardsCount;
     private Sequence _sequence;
 
     public CardArrangement(int maxCardsCount = 10)

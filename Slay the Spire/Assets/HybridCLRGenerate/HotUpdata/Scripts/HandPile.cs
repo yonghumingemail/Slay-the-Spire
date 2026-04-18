@@ -22,23 +22,25 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
 
     public float speed;
     public int maxHandSize { get; private set; } = 10;
-    
+
     private void Awake()
     {
         cardArrangement = new CardArrangement(maxHandSize);
         spline = transform.Find("Spline").GetComponent<SplineContainer>();
         DirectionalArrowLine = transform.Find("DirectionalArrowLine").GetComponent<DirectionalArrowLine>();
 
-
         EventCenter_Singleton.Instance.GetEvent<Func<DrawPile>>("DrawPile",
             (action) => { drawPile = action.Invoke(); });
         EventCenter_Singleton.Instance.AddEvent<Func<HandPile>>("HandPile", () => this);
         EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int, UniTask>>("OnRoundStart",
             OnRoundStart, 0);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int,UniTask>>("OnRoundEnd", OnRoundEnd, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int, UniTask>>("OnRoundEnd", OnRoundEnd,
+            0);
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action<Enemy>>("OnMouseEnterEnemy", OnMouseEnterEnemy, 0);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action<Enemy>>("OnMouseExitEnemy", OnMouseExitEnemy, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action<Enemy>>("OnMouseEnterEnemy",
+            OnMouseEnterEnemy, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action<Enemy>>("OnMouseExitEnemy",
+            OnMouseExitEnemy, 0);
     }
 
     private void Start()
@@ -62,7 +64,8 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
             (priorityEvent._delegate as Action<Enemy>)?.Invoke(selectableObject);
         }
     }
-    private void OnMouseExitEnemy(Enemy selectableObject )
+
+    private void OnMouseExitEnemy(Enemy selectableObject)
     {
         if (!SelectedCard) return;
         foreach (var priorityEvent in SelectedCard.priorityEventCenter.GetEvent("OnMouseExitEnemy"))
@@ -86,14 +89,15 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
 
         if (isSelected)
         {
-            foreach (var VARIABLE in   EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("OnSelectCard"))
+            foreach (var VARIABLE in EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("OnSelectCard"))
             {
-               (VARIABLE._delegate as Action<Card>)?.Invoke(SelectedCard);
+                (VARIABLE._delegate as Action<Card>)?.Invoke(SelectedCard);
             }
         }
         else
         {
-            foreach (var VARIABLE in   EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("OnUnSelectCard"))
+            foreach (var VARIABLE in
+                     EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("OnUnSelectCard"))
             {
                 (VARIABLE._delegate as Action)?.Invoke();
             }
@@ -118,6 +122,7 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
             {
                 card = cardObjs[i].AddComponent<Card_Ironclad_Bash>();
             }
+
             card.Initialized().Forget();
             card.Enable(false);
             drawPile.AddCard(card).Forget();
@@ -177,6 +182,5 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
 
     public void OnPointerExit(PointerEventData eventData)
     {
-       
     }
 }
