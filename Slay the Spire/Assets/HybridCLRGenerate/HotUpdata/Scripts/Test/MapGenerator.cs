@@ -7,25 +7,6 @@ using UnityEngine;
 namespace CardCrawlGame.Map
 {
     /// <summary>
-    /// 地图全局颜色配置（静态常量，统一管理所有UI颜色）
-    /// </summary>
-    public class MapColors
-    {
-        // 未被选中/不可到达的节点颜色
-        public static readonly Color NotTakenColor = new Color(0.34f, 0.34f, 0.34f, 1.0f);
-
-        // 可到达/可选择的节点颜色
-        public static readonly Color AvailableColor = new Color(0.09f, 0.13f, 0.17f, 1.0f);
-
-        // 节点外描边颜色
-        public static readonly Color OutlineColor = new Color(0.55f, 0.55f, 0.5f, 1.0f);
-
-        // 禁用/半透明颜色
-        public static readonly Color DisabledColor = new Color(0.0f, 0.0f, 0.0f, 0.25f);
-    }
-
-
-    /// <summary>
     /// 地图连线：连接两个节点的路径
     /// </summary>
     public struct MapEdge : IComparable<MapEdge>, IEquatable<MapEdge>
@@ -145,45 +126,45 @@ namespace CardCrawlGame.Map
         /// </summary>
         private List<List<MapRoomNode>> CreatePaths(List<List<MapRoomNode>> map, int pathDensity, System.Random rng)
         {
-            // int firstRow = 0;
-            // int rowSize = map[firstRow].Count - 1;
-            // int currentNode = -1;
-            // int lastNode = -1;
-            //
-            // // 生成N条独立路径
-            // for (int i = 0; i < pathDensity; i++)
-            // {
-            //     currentNode = RandRange(rng, 0, rowSize);
-            //     
-            //     //上次生成的起点不能和这次生成的起点相同
-            //     while (currentNode == lastNode )
-            //         currentNode = RandRange(rng, 0, rowSize);
-            //
-            //     // 从起点开始生成路径
-            //     var startEdge = new MapEdge(currentNode, 0, currentNode, 0);
-            //     _CreatePaths(map, startEdge, rng);
-            //     lastNode = currentNode;
-            // }
-
             int firstRow = 0;
             int rowSize = map[firstRow].Count - 1;
-            int firstStartingNode = -1;
+            int currentNode = -1;
+            int lastNode = -1;
 
             // 生成N条独立路径
             for (int i = 0; i < pathDensity; i++)
             {
-                int startingNode = RandRange(rng, 0, rowSize);
-                if (i == 0)
-                    firstStartingNode = startingNode;
+                currentNode = RandRange(rng, 0, rowSize);
 
-                // 第二条路径不能与第一条同一起点
-                while (startingNode == firstStartingNode && i == 1)
-                    startingNode = RandRange(rng, 0, rowSize);
+                //上次生成的起点不能和这次生成的起点相同
+                while (currentNode == lastNode)
+                    currentNode = RandRange(rng, 0, rowSize);
 
                 // 从起点开始生成路径
-                var startEdge = new MapEdge(startingNode, -1, startingNode, 0);
+                var startEdge = new MapEdge(currentNode, 0, currentNode, 0);
                 _CreatePaths(map, startEdge, rng);
+                lastNode = currentNode;
             }
+
+            // int firstRow = 0;
+            // int rowSize = map[firstRow].Count - 1;
+            // int firstStartingNode = -1;
+            //
+            // // 生成N条独立路径
+            // for (int i = 0; i < pathDensity; i++)
+            // {
+            //     int startingNode = RandRange(rng, 0, rowSize);
+            //     if (i == 0)
+            //         firstStartingNode = startingNode;
+            //
+            //     // 第二条路径不能与第一条同一起点
+            //     while (startingNode == firstStartingNode && i == 1)
+            //         startingNode = RandRange(rng, 0, rowSize);
+            //
+            //     // 从起点开始生成路径
+            //     var startEdge = new MapEdge(startingNode, -1, startingNode, 0);
+            //     _CreatePaths(map, startEdge, rng);
+            // }
 
 
             return map;
@@ -195,9 +176,9 @@ namespace CardCrawlGame.Map
         /// </summary>
         private void _CreatePaths(List<List<MapRoomNode>> nodes, MapEdge edge, System.Random rng)
         {
-            List<MapEdge> edges = new List<MapEdge>();
-            for (int i = 0; i < 3; i++)
-            {
+            List<MapEdge> mapEdges = new List<MapEdge>();
+            for (int j = 0; j < 3; j++)
+            {Debug.Log(1111);
                 while (true)
                 {
                     MapRoomNode currentNode = GetNode(edge.DstX, edge.DstY, nodes);
@@ -208,8 +189,14 @@ namespace CardCrawlGame.Map
                     {
                         var bossEdge = new MapEdge(edge.DstX, edge.DstY, 3, nextY + 1);
 
-                        currentNode.AddEdge(bossEdge);
+                        //  currentNode.AddEdge(bossEdge);
+                        mapEdges.Add(bossEdge);
                         currentNode.Edges.Sort();
+                        foreach (var VARIABLE in mapEdges)
+                        {
+                            GetNode(VARIABLE.SrcX, VARIABLE.SrcY, nodes).AddEdge(VARIABLE);
+                        }
+
                         return;
                     }
 
@@ -239,14 +226,14 @@ namespace CardCrawlGame.Map
                     int newEdgeY = nextY;
 
                     MapRoomNode target = GetNode(newEdgeX, newEdgeY, nodes);
-                    if (target.HasEdges())
-                    {
-                        newEdgeX = edge.DstX + RandRange(rng, min, max);
-                        target = GetNode(newEdgeX, newEdgeY, nodes);
-                    }
+                    // if (target.HasEdges())
+                    // {
+                    //     newEdgeX = edge.DstX + RandRange(rng, min, max);
+                    //     target = GetNode(newEdgeX, newEdgeY, nodes);
+                    // }
 
                     // 防环路核心：检测公共祖先，避免路径过早汇合
-                    const int minAncestorGap = 3;
+                    int minAncestorGap = 3;
                     var parents = target.Parents;
 
                     if (parents != null && parents.Count > 0)
@@ -260,6 +247,7 @@ namespace CardCrawlGame.Map
                             int gap = newEdgeY - ancestor.Y;
                             if (gap >= minAncestorGap) continue;
                             // 调整X，避免过近形成环路
+
                             if (target.X > currentNode.X)
                             {
                                 newEdgeX = edge.DstX + RandRange(rng, -1, 0);
@@ -278,7 +266,39 @@ namespace CardCrawlGame.Map
                                 if (newEdgeX > rowEnd) newEdgeX = edge.DstX;
                             }
 
-                            target = GetNode(newEdgeX, newEdgeY, nodes);
+                            int i = 0;
+                            int maxIndex = 1;
+                            int targetX = ConstraintEdge(edge, newEdgeX, nodes);
+
+                            if (edge.DstX != 0 && edge.DstX <= rowEnd)
+                            {
+                                i = -1;
+                            }
+                            else if (edge.DstX == rowEnd)
+                            {
+                                i = -1;
+                                maxIndex = 0;
+                            }
+
+                            while (targetX == newEdgeX && i <= maxIndex)
+                            {
+                                targetX = ConstraintEdge(edge, edge.DstX + i, nodes);
+                                i++;
+                            }
+
+                            if (targetX != newEdgeX)
+                            {
+                                newEdgeX = targetX;
+                                continue;
+                            }
+
+                            mapEdges = null;
+                            break;
+                        }
+
+                        if (mapEdges == null)
+                        {
+                            break;
                         }
                     }
 
@@ -306,12 +326,14 @@ namespace CardCrawlGame.Map
                         }
                     }
 
+                    //   Debug.Log($"newEdgeX{newEdgeX}, newEdgeY{newEdgeY},target{target}");
                     target = GetNode(newEdgeX, newEdgeY, nodes);
 
                     // 创建最终连线
                     MapEdge newEdge = new MapEdge(edge.DstX, edge.DstY, newEdgeX, newEdgeY);
 
-                    currentNode.AddEdge(newEdge);
+                    //  currentNode.AddEdge(newEdge);
+                    mapEdges.Add(newEdge);
                     currentNode.Edges.Sort();
                     target.AddParent(currentNode);
 
@@ -321,36 +343,38 @@ namespace CardCrawlGame.Map
             }
         }
 
-        // public int[] ConstraintEdge(MapEdge edge, List<List<MapRoomNode>> map)
-        // {
-        //     int rowEnd = map[edge.DstY].Count - 1;
-        //     int[] returnValue=new int[3];
-        //     int i=0;
-        //     //获取当前节点可行走的目标节点（包含交叉节点）
-        //     // 左边界约束：防止路径交叉覆盖
-        //     if (edge.DstX != 0)
-        //     {
-        //         MapRoomNode leftNode = map[edge.DstY][edge.DstX - 1];
-        //         if (leftNode.HasEdges())
-        //         {
-        //             MapEdge maxEdge = GetMaxEdge(leftNode.Edges);
-        //             if (maxEdge.DstX > edge.DstX) targetX = maxEdge.DstX;
-        //         }
-        //     }
-        //
-        //     // 右边界约束
-        //     if (edge.DstX < rowEnd)
-        //     {
-        //         MapRoomNode rightNode = map[edge.DstY][edge.DstX + 1];
-        //         if (rightNode.HasEdges())
-        //         {
-        //             MapEdge minEdge = GetMinEdge(rightNode.Edges);
-        //             if (minEdge.DstX < targetX) targetX = minEdge.DstX;
-        //         }
-        //     }
-        //   
-        //     
-        // }
+        private int ConstraintEdge(MapEdge edge, int newX, List<List<MapRoomNode>> map)
+        {
+            int rowEnd = map[edge.DstY].Count - 1;
+            int newEdgeX = newX;
+            // 左边界约束：防止路径交叉覆盖
+            if (edge.DstX != 0)
+            {
+                MapRoomNode leftNode = map[edge.DstY][edge.DstX - 1];
+                if (leftNode.HasEdges())
+                {
+                    MapEdge maxEdge = GetMaxEdge(leftNode.Edges);
+                    if (maxEdge.DstX > newEdgeX)
+                        newEdgeX = maxEdge.DstX;
+                }
+            }
+
+            // 右边界约束
+            if (edge.DstX < rowEnd)
+            {
+                MapRoomNode rightNode = map[edge.DstY][edge.DstX + 1];
+                if (rightNode.HasEdges())
+                {
+                    MapEdge minEdge = GetMinEdge(rightNode.Edges);
+                    if (minEdge.DstX < newEdgeX)
+                        newEdgeX = minEdge.DstX;
+                }
+            }
+
+            Debug.Log(newX + "  " + newEdgeX);
+            return newX;
+        }
+
 
         /// <summary>
         /// 过滤冗余边：删除重复连线
@@ -490,12 +514,7 @@ namespace CardCrawlGame.Map
     }
 
 
-    // ====================== 依赖桩（外部系统对接） ======================
-    /// <summary>
-    /// 房间基类（需项目自行实现）
-    /// </summary>
     public class AbstractRoom
     {
-        public virtual string GetMapSymbol() => "";
     }
 }

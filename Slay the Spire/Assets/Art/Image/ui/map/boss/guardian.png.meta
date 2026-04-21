@@ -1,45 +1,12 @@
 fileFormatVersion: 2
 guid: 2f08a6ed9a782c3449d98e2b7c53093b
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: 7372506090233280903
-    second: guardian_0
-  - first:
-      213: -1146653307794891736
-    second: guardian_1
-  - first:
-      213: 4207029543579217408
-    second: guardian_2
-  - first:
-      213: 6884181491478046164
-    second: guardian_3
-  - first:
-      213: 1008892327028523402
-    second: guardian_4
-  - first:
-      213: 7190472585737496919
-    second: guardian_5
-  - first:
-      213: -1773716847038928575
-    second: guardian_6
-  - first:
-      213: 5238299137691754321
-    second: guardian_7
-  - first:
-      213: 966925554550877503
-    second: guardian_8
-  - first:
-      213: -4830078146327579466
-    second: guardian_9
-  - first:
-      213: -720057492804085194
-    second: guardian_10
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 0
+    enableMipMap: 1
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -70,13 +37,13 @@ TextureImporter:
     filterMode: 1
     aniso: 1
     mipBias: 0
-    wrapU: 1
-    wrapV: 1
-    wrapW: 1
-  nPOTScale: 0
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+  nPOTScale: 1
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 0
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -85,9 +52,9 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 1
+  alphaIsTransparency: 0
   spriteTessellationDetail: -1
-  textureType: 8
+  textureType: 0
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -126,264 +93,9 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: guardian_0
-      rect:
-        serializedVersion: 2
-        x: 70
-        y: 330
-        width: 35
-        height: 51
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 78932c45a37605660800000000000000
-      internalID: 7372506090233280903
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: guardian_1
-      rect:
-        serializedVersion: 2
-        x: 89
-        y: 326
-        width: 68
-        height: 111
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 82cdb5c44e44610f0800000000000000
-      internalID: -1146653307794891736
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: guardian_2
-      rect:
-        serializedVersion: 2
-        x: 98
-        y: 62
-        width: 332
-        height: 425
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 00eec90841f526a30800000000000000
-      internalID: 4207029543579217408
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: guardian_3
-      rect:
-        serializedVersion: 2
-        x: 403
-        y: 337
-        width: 35
-        height: 51
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 4d52ed0b796898f50800000000000000
-      internalID: 6884181491478046164
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: guardian_4
-      rect:
-        serializedVersion: 2
-        x: 406
-        y: 282
-        width: 35
-        height: 56
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a810721e93e400e00800000000000000
-      internalID: 1008892327028523402
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: guardian_5
-      rect:
-        serializedVersion: 2
-        x: 47
-        y: 218
-        width: 34
-        height: 84
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 759611058b0b9c360800000000000000
-      internalID: 7190472585737496919
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: guardian_6
-      rect:
-        serializedVersion: 2
-        x: 67
-        y: 275
-        width: 35
-        height: 56
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 1496e18dced7267e0800000000000000
-      internalID: -1773716847038928575
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: guardian_7
-      rect:
-        serializedVersion: 2
-        x: 427
-        y: 225
-        width: 35
-        height: 84
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 15f1a51ef4d22b840800000000000000
-      internalID: 5238299137691754321
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: guardian_8
-      rect:
-        serializedVersion: 2
-        x: 75
-        y: 170
-        width: 23
-        height: 41
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f3da04b3ba53b6d00800000000000000
-      internalID: 966925554550877503
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: guardian_9
-      rect:
-        serializedVersion: 2
-        x: 78
-        y: 208
-        width: 23
-        height: 62
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 6b474ca448d18fcb0800000000000000
-      internalID: -4830078146327579466
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: guardian_10
-      rect:
-        serializedVersion: 2
-        x: 410
-        y: 176
-        width: 24
-        height: 42
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 63add8b7687d106f0800000000000000
-      internalID: -720057492804085194
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     customData: 
     physicsShape: []
@@ -397,18 +109,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      guardian_0: 7372506090233280903
-      guardian_1: -1146653307794891736
-      guardian_10: -720057492804085194
-      guardian_2: 4207029543579217408
-      guardian_3: 6884181491478046164
-      guardian_4: 1008892327028523402
-      guardian_5: 7190472585737496919
-      guardian_6: -1773716847038928575
-      guardian_7: 5238299137691754321
-      guardian_8: 966925554550877503
-      guardian_9: -4830078146327579466
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

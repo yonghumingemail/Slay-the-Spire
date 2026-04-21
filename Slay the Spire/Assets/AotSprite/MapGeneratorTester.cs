@@ -18,7 +18,7 @@ public class MapVisualizer : MonoBehaviour
     public Color unvisitedColor = Color.gray;
 
     public List<List<MapRoomNode>> _currentMap = new();
-    [Range(1, 7)] public int pathCount = 2; // 路径密度
+    [Range(1, 7)] public int pathCount = 6; // 路径密度
     public int seed = 0;
     public Vector3 Offest;
 
