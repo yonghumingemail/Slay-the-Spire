@@ -7,87 +7,36 @@ namespace Z_Tools
     //全局事件应该是图形化界面
     public class EventCenter_Singleton : SingletonBase<EventCenter_Singleton>
     {
-        private readonly EventCenter<string> EventCenter = new();
-        private Dictionary<string, Delegate> UnregisteredEnum = new();
+        private readonly EventManage EventManage = new();
 
         public readonly PriorityQueueEventCenter _priorityQueueEventCenter = new();
 
-        /// <summary>
-        /// 添加事件
-        /// </summary>
-        /// <param name="eventKey">事件名</param>
-        /// <param name="_delegate">事件</param>
-        public void AddEvent<T>(string eventKey, T _delegate)
-            where T : Delegate
+
+        public void AddEvent(int id, GameEventHandler<EventArgs> _delegate)
         {
-           // Debug.Log(eventKey);
-            EventCenter.AddEvent(eventKey + typeof(T), _delegate);
-            if (!UnregisteredEnum.TryGetValue(eventKey, out Delegate eventData)) return;
-
-            if (eventData is Action<T> action)
-            {
-                action.Invoke(_delegate);
-            }
-            else
-            {
-                Debug.Log($"数据类型不匹配{eventKey}类型为" + _delegate.GetType() + "| 原事件类型" + eventData.GetType());
-            }
-
-            UnregisteredEnum.Remove(eventKey);
+            // Debug.Log(eventKey);
+            EventManage.Subscribe(id, _delegate);
         }
 
-        /// <summary>
-        /// 获取事件实例
-        /// </summary>
-        /// <param name="eventKey">事件名</param>
-        /// <param name="callBack">回调函数</param>
-        /// <returns></returns>
-        public void GetEvent<T>(string eventKey, Action<T> callBack) where T : Delegate
+
+        public void GetEvent(object send, EventArgs args)
         {
-            T ret = EventCenter.GetEvent<T>(eventKey + typeof(T));
-            if (ret == null)
-            {
-                if (UnregisteredEnum.TryGetValue(eventKey, out Delegate eventData))
-                {
-                    if (eventData is Action<T> eventDelegate)
-                    {
-                        UnregisteredEnum[eventKey] = Delegate.Combine(eventDelegate, callBack);
-                    }
-                    else
-                    {
-                        Debug.Log($"事件类型错误{eventData.GetType()},{typeof(T)},{eventKey}");
-                    }
-                }
-                else
-                {
-                    UnregisteredEnum.Add(eventKey, callBack);
-                }
-            }
-            else
-            {
-                callBack.Invoke(ret);
-            }
+            EventManage.Fire(send, args);
         }
+
         
-        public T GetEvent<T>(string eventKey) where T : Delegate
+        public void RemoveEvent(int id, GameEventHandler<EventArgs> _delegate)
         {
-           return EventCenter.GetEvent<T>(eventKey + typeof(T));
+             EventManage.UnSubscribe(id, _delegate);
         }
-
-        public bool RemoveEvent(string eventKey)
+        public void RemoveEventAll(int id)
         {
-            return EventCenter.RemoveEvent(eventKey);
+            EventManage.UnSubscribeAll(id);
         }
-
-        public bool RemoveEvent<T>(string eventKey, T _delegate) where T : Delegate
-        {
-            return EventCenter.RemoveEvent(eventKey, _delegate);
-        }
-        
 
         public void Clear()
         {
-            EventCenter.Clear();
+            EventManage.Clear();
         }
     }
 }

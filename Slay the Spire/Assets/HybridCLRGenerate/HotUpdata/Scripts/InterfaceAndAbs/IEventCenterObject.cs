@@ -1,8 +1,8 @@
 using UnityEngine;
 using Z_Tools;
 
-public interface IEventCenterObject<in T>
+public interface IEventCenterObject<T> where T : EventArgs
 {
-    IEventCenter<T>  eventCenter { get; }
+    IEventManage<T>  EventManage { get; }
 }
 

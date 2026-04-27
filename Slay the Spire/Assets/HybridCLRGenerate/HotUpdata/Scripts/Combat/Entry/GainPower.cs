@@ -22,7 +22,7 @@ public class GainPower : IEntry
         }
         
         IEventCenterObject<string> eventCenter = receiver.GetComponent<IEventCenterObject<string>>();
-        IBuffList buffListObj = eventCenter.eventCenter.GetEvent<Func<IBuffList>>("IBuffList")?.Invoke();
+        IBuffList buffListObj = eventCenter.EventManage.GetEvent<Func<IBuffList>>("IBuffList")?.Invoke();
         if (buffListObj == null)
         {
             Debug.LogWarning($" 目标对象 {receiver.name} 缺少 IBuffList 组件");

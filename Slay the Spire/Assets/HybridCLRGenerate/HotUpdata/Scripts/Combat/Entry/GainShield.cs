@@ -23,10 +23,10 @@ public class GainShield : IEntry
 
         IEventCenterObject<string> eventCenter = receiver.GetComponent<IEventCenterObject<string>>();
 
-        PriorityQueueEventCenter priorityEventCenter = eventCenter.eventCenter
+        PriorityQueueEventCenter priorityEventCenter = eventCenter.EventManage
             .GetEvent<Func<PriorityQueueEventCenter>>("PriorityQueueEventCenter")?.Invoke();
 
-        IShield shield = eventCenter.eventCenter.GetEvent<Func<IShield>>("IShield")?.Invoke();
+        IShield shield = eventCenter.EventManage.GetEvent<Func<IShield>>("IShield")?.Invoke();
         ChangeValueInfo info = new ChangeValueInfo(sender, receiver, value);
         if (priorityEventCenter == null)
         {

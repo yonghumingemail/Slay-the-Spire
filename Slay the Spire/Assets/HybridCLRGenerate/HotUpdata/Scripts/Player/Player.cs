@@ -4,9 +4,11 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Z_Tools;
 
-public class Player : MonoBehaviour, IEventCenterObject<string>
+
+
+public class Player : MonoBehaviour, IEventCenterObject<EventArgs>
 {
-    public IEventCenter<string> eventCenter { get; } = new EventCenter<string>(); //用于提供接口对象
+    public IEventManage<EventArgs> EventManage { get; } = new EventManage(); //用于提供接口对象
 
     public PriorityQueueEventCenter _priorityEventCenter { get; private set; } =
         new PriorityQueueEventCenter(); //用于记录buff事件
@@ -43,31 +45,34 @@ public class Player : MonoBehaviour, IEventCenterObject<string>
 
     private async UniTaskVoid Initialize()
     {
-        EventCenter_Singleton.Instance.AddEvent<Func<Player>>("Player", Get);
+        EventCenter_Singleton.Instance.AddEvent(GetObject_EventArgs<Player>.id, Get);
         EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int, UniTask>>("OnRoundEnd", OnRoundEnd,
             0);
-        eventCenter.AddEvent<Func<PriorityQueueEventCenter>>("PriorityQueueEventCenter", () => _priorityEventCenter);
+        EventManage.Subscribe(GetObject_EventArgs<PriorityQueueEventCenter>.id, (send, handler) => { GetObject_EventArgs<PriorityQueueEventCenter>.Get(handler, _priorityEventCenter); });
 
         health_V = GetComponentInChildren<IHealth_V>();
         health_V.InitializeView(gameObject);
         _health = new SimpleHealth(100, 100, health_V, _priorityEventCenter);
-        eventCenter.AddEvent<Func<IHealth>>("IHealth", () => _health);
+        EventManage.Subscribe(GetObject_EventArgs<IHealth>.id, (send, handler) => { GetObject_EventArgs<IHealth>.Get(handler, _health); });
 
         shield_V = GetComponentInChildren<IShield_V>();
         shield_V.InitializeView(gameObject, health_V);
         _shield = new SimpleShield(shield_V, _priorityEventCenter);
-        eventCenter.AddEvent<Func<IShield>>("IShield", () => _shield);
+        EventManage.Subscribe(GetObject_EventArgs<IShield>.id, (send, handler) => { GetObject_EventArgs<IShield>.Get(handler, _shield); });
 
         buffList_V = GetComponentInChildren<IBuffList_V>();
         await buffList_V.Initialized();
         _buffList = new SimpleBuffList(buffList_V, _priorityEventCenter);
-        eventCenter.AddEvent<Func<IBuffList>>("IBuffList", () => _buffList);
+        EventManage.Subscribe(GetObject_EventArgs<IBuffList>.id, (send, handler) => { GetObject_EventArgs<IBuffList>.Get(handler, _buffList); });
 
         animator = GetComponent<Animator>();
         //监听玩家死亡，将token设置为取消
     }
 
-    private Player Get() => this;
+    private void Get(object send, EventArgs eventHandler)
+    {
+        GetObject_EventArgs<Player>.Get(eventHandler, this);
+    }
 
 
     private async UniTask OnRoundEnd(int roundCount)
@@ -86,11 +91,11 @@ public class Player : MonoBehaviour, IEventCenterObject<string>
                 Debug.LogWarning($"委托类型不匹配: {action._delegate?.GetType()}");
             }
         }
-        
     }
 
     private void OnDestroy()
     {
+        EventManage.Clear();
         foreach (var VARIABLE in _priorityEventCenter.GetEvent("OnDestroy"))
         {
             (VARIABLE._delegate as Action)?.Invoke();
