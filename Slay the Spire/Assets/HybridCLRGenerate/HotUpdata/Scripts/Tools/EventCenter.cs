@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 namespace Z_Tools
@@ -24,16 +23,14 @@ namespace Z_Tools
                 Event_Dic.Add(eventKey, _delegate);
                 return true;
             }
+
+            if (_delegate.GetType() == action.GetType())
+            {
+                Event_Dic[eventKey] = Delegate.Combine(action, _delegate);
+            }
             else
             {
-                if (_delegate.GetType() == action.GetType())
-                {
-                    Event_Dic[eventKey] = Delegate.Combine(action, _delegate);
-                }
-                else
-                {
-                    Debug.Log($"事件类型不一致，事件:{eventKey}的原类型为{action.GetType()},添加的事件类型为{_delegate.GetType()}");
-                }
+                Debug.Log($"事件类型不一致，事件:{eventKey}的原类型为{action.GetType()},添加的事件类型为{_delegate.GetType()}");
             }
 
             return false;
