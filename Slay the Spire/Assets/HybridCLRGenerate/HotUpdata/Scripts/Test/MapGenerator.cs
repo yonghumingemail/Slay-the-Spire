@@ -63,43 +63,55 @@ namespace CardCrawlGame.Map
 
     public class MapGenerator
     {
+        // 主入口
         public MapRoomNode[,] Generate(int height, int width, int pathDensity, System.Random rng)
         {
-            var map = CreateNodes(height, width);
-            map = CreatePaths(map, pathDensity, rng);
-           // map = FilterRedundantEdges(map);
+            if (height < 2 || width < 1)
+                throw new ArgumentException("Map dimensions too small");
+
+            MapRoomNode[,] map = CreateNodes(height, width);
+            map = CreatePaths(map, width, pathDensity, rng);
             return map;
         }
 
+        // 只是分配数组，实际节点在 GetOrCreateNode 中按需创建
         private MapRoomNode[,] CreateNodes(int height, int width)
         {
             return new MapRoomNode[height, width];
         }
 
-        private MapRoomNode[,] CreatePaths(MapRoomNode[,] map, int pathDensity, System.Random rng)
+        private MapRoomNode[,] CreatePaths(MapRoomNode[,] map, int width, int pathDensity, System.Random rng)
         {
-            int cols = map.GetLength(1);
             int firstStartingNode = -1;
 
             for (int i = 0; i < pathDensity; i++)
             {
-                int startingNode = RandRange(rng, 0, cols - 1);
-                if (i == 0) firstStartingNode = startingNode;
+                int startX = RandRange(rng, 0, width - 1);
+                if (i == 0) firstStartingNode = startX;
+                else if (i == 1 && startX == firstStartingNode)
+                {
+                    // 保证第二条路径起点不同
+                    do
+                    {
+                        startX = RandRange(rng, 0, width - 1);
+                    } while (startX == firstStartingNode);
+                }
 
-                while (startingNode == firstStartingNode && i == 1)
-                    startingNode = RandRange(rng, 0, cols - 1);
-
-                var startEdge = new MapEdge(startingNode, -1, startingNode, 0);
-                _CreatePaths(map, startEdge, rng);
+                // 起始边：从 (startX, -1) 到 (startX, 0)
+                var startEdge = new MapEdge(startX, -1, startX, 0);
+                BuildPath(map, startEdge, rng);
             }
 
             return map;
         }
 
-        private MapRoomNode[,] _CreatePaths(MapRoomNode[,] nodes, MapEdge edge, System.Random rng)
+        private void BuildPath(MapRoomNode[,] nodes, MapEdge startEdge, System.Random rng)
         {
             int rows = nodes.GetLength(0);
             int cols = nodes.GetLength(1);
+
+            // 当前边即“即将延伸的位置”
+            MapEdge edge = startEdge;
 
             while (true)
             {
@@ -107,136 +119,142 @@ namespace CardCrawlGame.Map
                 int currY = edge.DstY;
                 int nextY = currY + 1;
 
-                // --------------------------
-                // 到达顶部，连接BOSS
-                // --------------------------
+                // 到达顶部：直接在当前节点生成 Boss 边（虚拟行，Y = rows）
                 if (nextY >= rows)
                 {
-                    MapRoomNode currentNode = GetOrCreateNode(nodes, currX, currY);
-                    var bossEdge = new MapEdge(currX, currY, 3, nextY + 1);
-                    currentNode.AddEdge(bossEdge);
-                    currentNode.Edges.Sort();
-                    return nodes;
+                    MapRoomNode node = GetOrCreateNode(nodes, currX, currY);
+                    var bossEdge = new MapEdge(currX, currY, cols/2, rows); // Boss 行
+                    node.AddEdge(bossEdge);
+                    return; // 路径结束
                 }
 
-                // --------------------------
-                // 计算可移动方向
-                // --------------------------
-                int rowEnd = cols - 1;
-                int min, max;
-                if (currX == 0)
-                {
-                    min = 0;
-                    max = 1;
-                }
-                else if (currX == rowEnd)
-                {
-                    min = -1;
-                    max = 0;
-                }
-                else
-                {
-                    min = -1;
-                    max = 1;
-                }
+                // 确定当前节点可能移动的方向
+                int minDelta = currX == 0 ? 0 : -1;
+                int maxDelta = currX == cols - 1 ? 0 : 1;
+                
+                // 选择下一个 X，并确保不越界、不产生过近环路
+                int nextX = ChooseNextX(currX, currY, nextY, minDelta, maxDelta, nodes, rng);
+                nextX = Math.Clamp(nextX, 0, cols - 1);
 
-                // --------------------------
-                // 尝试获取下一个节点
-                // --------------------------
-                int newEdgeX = currX + RandRange(rng, min, max);
-                int newEdgeY = nextY;
-                MapRoomNode target = GetNode(newEdgeX, newEdgeY, nodes);
-
-                // 重试一次
-                if (target != null)
-                {
-                    newEdgeX = currX + RandRange(rng, min, max);
-                    target = GetNode(newEdgeX, newEdgeY, nodes);
-                }
-
-                // --------------------------
-                // 防环路调整
-                // --------------------------
-                int minAncestorGap = 3;
-                if (target != null && target.Parents != null)
-                {
-                    foreach (var parent in target.Parents)
-                    {
-                        if (parent == null) continue;
-                        MapRoomNode ancestor = GetCommonAncestor(parent, GetOrCreateNode(nodes, currX, currY),
-                            minAncestorGap);
-                        int? gap = newEdgeY - ancestor?.Y;
-                        if (gap < minAncestorGap)
-                        {
-                            int i = 0;
-                            while (target.X == newEdgeX || i++ < 2)
-                            {
-                                if (target.X > currX)
-                                {
-                                    newEdgeX = currX + RandRange(rng, -1, 0);
-                                    if (newEdgeX < 0) newEdgeX = currX;
-                                }
-                                else if (target.X == currX)
-                                {
-                                    newEdgeX = currX + RandRange(rng, -1, 1);
-                                    if (newEdgeX > rowEnd) newEdgeX = currX - 1;
-                                    else if (newEdgeX < 0) newEdgeX = currX + 1;
-                                }
-                                else
-                                {
-                                    newEdgeX = currX + RandRange(rng, 0, 1);
-                                    if (newEdgeX > rowEnd) newEdgeX = currX;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // --------------------------
-                // 边界约束
-                // --------------------------
-                if (currX != 0)
-                {
-                    MapRoomNode leftNode = GetNode(currX - 1, currY, nodes);
-                    if (leftNode != null && leftNode.HasEdges())
-                    {
-                        MapEdge maxEdge = GetMaxEdge(leftNode.Edges);
-                        if (maxEdge.DstX > newEdgeX) newEdgeX = maxEdge.DstX;
-                    }
-                }
-
-                if (currX < rowEnd)
-                {
-                    MapRoomNode rightNode = GetNode(currX + 1, currY, nodes);
-                    if (rightNode != null && rightNode.HasEdges())
-                    {
-                        MapEdge minEdge = GetMinEdge(rightNode.Edges);
-                        if (minEdge.DstX < newEdgeX) newEdgeX = minEdge.DstX;
-                    }
-                }
-
-                // --------------------------
-                // ✅ 路径确定可以走通，才创建节点！
-                // --------------------------
+                // 创建当前节点和目标节点
                 MapRoomNode currNode = GetOrCreateNode(nodes, currX, currY);
-                MapRoomNode nextNode = GetOrCreateNode(nodes, newEdgeX, newEdgeY);
+                MapRoomNode nextNode = GetOrCreateNode(nodes, nextX, nextY);
 
                 // 添加边和父子关系
-                MapEdge newEdge = new MapEdge(currX, currY, newEdgeX, newEdgeY);
-                
+                MapEdge newEdge = new MapEdge(currX, currY, nextX, nextY);
                 currNode.AddEdge(newEdge);
-                currNode.Edges.Sort();
                 nextNode.AddParent(currNode);
 
-                // 继续下一步
-                edge = newEdge;
+                edge = newEdge; // 继续向前延伸
             }
         }
 
-        // ====================== 工具 ======================
+        /// <summary>
+        /// 选择一个合法的下一列，避开已有的会导致短环路的节点
+        /// </summary>
+        private int ChooseNextX(int currX, int currY, int nextY, 
+            int minDelta, int maxDelta,
+            MapRoomNode[,] nodes, System.Random rng)
+        {
+            int cols = nodes.GetLength(1);
+            int bestX = currX + RandRange(rng, minDelta, maxDelta);
+            bestX = Math.Clamp(bestX, 0, cols - 1);
+
+            // 寻找最合适的节点（优先空节点 + 无小环路）
+            for (int attempt = 0; attempt < 3; attempt++)
+            {
+                MapRoomNode existing = GetNode(bestX, nextY, nodes);
+                bool isEmpty = (existing == null);
+
+                // 检查是否会在 3 层内形成环路（只对非空节点有意义）
+                bool wouldLoop = false;
+                if (!isEmpty)
+                {
+                    MapRoomNode currNode = GetOrCreateNode(nodes, currX, currY);
+                    wouldLoop = HasNearAncestor(existing, currNode, 3);
+                }
+                
+                // 理想情况：空节点 且 不产生环路
+                if (isEmpty && !wouldLoop)
+                    break;
+
+                // 如果当前尝试不是完美，则重新随机一次
+                bestX = currX + RandRange(rng, minDelta, maxDelta);
+                bestX = Math.Clamp(bestX, 0, cols - 1);
+            }
+
+            // 边界对齐（保持视觉干净）
+            bestX = AlignWithNeighbors(currX, currY, bestX, nodes);
+            return bestX;
+        }
 
         /// <summary>
-        /// 安全获取，没有就创建（确保路径走通才调用）
+        /// 保证当前列的出边 X 不小于左列的出边 X，不大于右列的出边 X，
+        /// 以此避免视觉上的边交叉。
+        /// </summary>
+        private int AlignWithNeighbors(int currX, int currY, int nextX, MapRoomNode[,] nodes)
+        {
+            int cols = nodes.GetLength(1);
+
+            // 左列约束
+            if (currX > 0)
+            {
+                MapRoomNode leftNode = GetNode(currX - 1, currY, nodes);
+                if (leftNode != null && leftNode.Edges.Count > 0)
+                {
+                    // 左列所有出边的最大 DstX 不应小于我们的 DstX
+                    int leftMaxDstX = leftNode.Edges.Max(e => e.DstX);
+                    if (leftMaxDstX > nextX)
+                        nextX = leftMaxDstX;
+                }
+            }
+
+            // 右列约束
+            if (currX < cols - 1)
+            {
+                MapRoomNode rightNode = GetNode(currX + 1, currY, nodes);
+                if (rightNode != null && rightNode.Edges.Count > 0)
+                {
+                    int rightMinDstX = rightNode.Edges.Min(e => e.DstX);
+                    if (rightMinDstX < nextX)
+                        nextX = rightMinDstX;
+                }
+            }
+
+            return Math.Clamp(nextX, 0, cols - 1);
+        }
+
+        /// <summary>
+        /// 检查 target 是否在 node 的 maxDepth 层祖先之内（防止短短几层内出现环路）
+        /// </summary>
+        private bool HasNearAncestor(MapRoomNode node, MapRoomNode target, int maxDepth)
+        {
+            if (node == target) return true;
+
+            Queue<(MapRoomNode current, int depth)> queue = new Queue<(MapRoomNode, int)>();
+            HashSet<MapRoomNode> visited = new HashSet<MapRoomNode> { node };
+
+            queue.Enqueue((node, 0));
+            while (queue.Count > 0)
+            {
+                var (curr, depth) = queue.Dequeue();
+                if (depth >= maxDepth) continue;
+
+                foreach (var parent in curr.Parents)
+                {
+                    if (parent == null) continue;
+                    if (parent == target) return true;
+                    if (visited.Add(parent))
+                        queue.Enqueue((parent, depth + 1));
+                }
+            }
+            return false;
+        }
+
+        // ====================== 基础工具方法 ======================
+
+        /// <summary>
+        /// 安全获取节点，不存在则创建
         /// </summary>
         private MapRoomNode GetOrCreateNode(MapRoomNode[,] nodes, int x, int y)
         {
@@ -245,70 +263,12 @@ namespace CardCrawlGame.Map
             if (x >= nodes.GetLength(1)) return null;
 
             nodes[y, x] ??= new MapRoomNode(x, y);
-
             return nodes[y, x];
         }
 
-
-
-        private MapEdge GetMaxEdge(List<MapEdge> edges)
-        {
-            if (edges == null || edges.Count == 0) return default;
-            edges.Sort();
-            return edges.Last();
-        }
-
-        private MapEdge GetMinEdge(List<MapEdge> edges)
-        {
-            if (edges == null || edges.Count == 0) return default;
-            edges.Sort();
-            return edges.First();
-        }
-
-        private MapRoomNode GetNodeWithMaxX(List<MapRoomNode> nodes)
-        {
-            if (nodes == null || nodes.Count == 0) return null;
-            var max = nodes[0];
-            foreach (var n in nodes)
-                if (n.X > max.X)
-                    max = n;
-            return max;
-        }
-
-        private MapRoomNode GetNodeWithMinX(List<MapRoomNode> nodes)
-        {
-            if (nodes == null || nodes.Count == 0) return null;
-            var min = nodes[0];
-            foreach (var n in nodes)
-                if (n.X < min.X)
-                    min = n;
-            return min;
-        }
-
-        private MapRoomNode GetCommonAncestor(MapRoomNode a, MapRoomNode b, int maxDepth)
-        {
-            if (a == null || b == null) return null;
-            if (a.Y != b.Y || a == b) return null;
-
-            MapRoomNode left = a.X < b.X ? a : b;
-            MapRoomNode right = a.X < b.X ? b : a;
-            int currY = a.Y;
-
-            while (currY >= 0 && currY >= a.Y - maxDepth)
-            {
-                if (left.Parents == null || right.Parents == null) return null;
-                if (left.Parents.Count == 0 || right.Parents.Count == 0) return null;
-
-                left = GetNodeWithMaxX(left.Parents);
-                right = GetNodeWithMinX(right.Parents);
-
-                if (left == right) return left;
-                currY--;
-            }
-
-            return null;
-        }
-
+        /// <summary>
+        /// 只获取，不创建
+        /// </summary>
         private MapRoomNode GetNode(int x, int y, MapRoomNode[,] nodes)
         {
             if (x < 0 || y < 0) return null;

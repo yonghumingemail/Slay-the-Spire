@@ -22,16 +22,18 @@ public class MapVisualizer : MonoBehaviour
     public int seed = 0;
     public Vector3 Offest;
 
-    private const int BOSS_X = 3;
-    private const int BOSS_Y = 17;
+    public int BOSS_X;
+    public int BOSS_Y;
 
     [ContextMenu("生成并显示地图")]
     public void GenerateAndVisualize()
     {
         var mapGenerator = new MapGenerator();
+
         _currentMap = mapGenerator.Generate(16, 7, pathCount, new System.Random(seed));
         Debug.Log($"地图生成成功，种子：{seed}，总层数：" + _currentMap.GetLength(0));
-        
+        BOSS_X = _currentMap.GetLength(1) / 2;
+        BOSS_Y = _currentMap.GetLength(0) ;
     }
 
     // ================================================================================
@@ -134,25 +136,23 @@ public class MapVisualizer : MonoBehaviour
         Gizmos.DrawSphere(bossPos, nodeSize.x * 0.6f);
 
         if (_currentMap == null) return;
-        int rows = _currentMap.GetLength(0);
+        int rows = _currentMap.GetLength(0)-1;
         int cols = _currentMap.GetLength(1);
 
-        for (int y = 0; y < rows; y++)
-        {
-            for (int x = 0; x < cols; x++)
-            {
-                MapRoomNode node = _currentMap[y, x];
-                if (node == null || node.Edges == null) continue;
 
-                foreach (var edge in node.Edges)
+        for (int x = 0; x < cols; x++)
+        {
+            MapRoomNode node = _currentMap[rows, x];
+            if (node == null || node.Edges == null) continue;
+
+            foreach (var edge in node.Edges)
+            {
+                if (edge.DstX == BOSS_X && edge.DstY == BOSS_Y)
                 {
-                    if (edge.DstX == BOSS_X && edge.DstY == BOSS_Y)
-                    {
-                        Vector3 from = GetWorldPos(node.X, node.Y);
-                        Gizmos.color = Color.yellow;
-                        Gizmos.DrawLine(from, bossPos);
-                        DrawArrow(from, bossPos);
-                    }
+                    Vector3 from = GetWorldPos(node.X, node.Y);
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawLine(from, bossPos);
+                    DrawArrow(from, bossPos);
                 }
             }
         }
