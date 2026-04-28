@@ -10,9 +10,13 @@ public class DrawPile : Pile
     {
         base.Awake();
         _discardPile = transform.parent.Find("DiscardPile").GetComponent<DiscardPile>();
-        EventCenter_Singleton.Instance.AddEvent<Func<DrawPile>>("DrawPile", () => this);
+        EventCenter_Singleton.Instance.Subscribe(GetObject_EventArgs<DrawPile>.id, Get);
     }
-
+    private void Get(object send, BaseEventArgs baseEventHandler)
+    {
+        GetObject_EventArgs<DrawPile>.Subscribe(baseEventHandler, this);
+    }
+    
     public virtual List<Card> GetRandomSampleCards(int count)
     {
         if (cardList.Count == 0 || cardList.Count < count)

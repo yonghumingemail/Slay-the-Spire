@@ -21,12 +21,12 @@ public class GainShield : IEntry
             return;
         }
 
-        IEventCenterObject<string> eventCenter = receiver.GetComponent<IEventCenterObject<string>>();
+        IEventCenterObject<BaseEventArgs> eventCenter = receiver.GetComponent<IEventCenterObject<BaseEventArgs>>();
 
-        PriorityQueueEventCenter priorityEventCenter = eventCenter.EventManage
-            .GetEvent<Func<PriorityQueueEventCenter>>("PriorityQueueEventCenter")?.Invoke();
-
-        IShield shield = eventCenter.EventManage.GetEvent<Func<IShield>>("IShield")?.Invoke();
+        IShield shield  = GetObject_EventArgs<IShield>.Fire(this,eventCenter.EventManage);
+        var priorityEventCenter = GetObject_EventArgs<PriorityQueueEventCenter>.Fire(this,eventCenter.EventManage);
+       
+        
         ChangeValueInfo info = new ChangeValueInfo(sender, receiver, value);
         if (priorityEventCenter == null)
         {

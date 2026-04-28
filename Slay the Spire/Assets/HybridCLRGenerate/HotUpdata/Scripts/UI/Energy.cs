@@ -22,9 +22,14 @@ public class Energy : MonoBehaviour
         image4 = transform.GetChild(0).GetChild(3).GetComponent<RectTransform>();
         _text = transform.Find("Text").GetComponent<TextMeshProUGUI>();
         UpdateUIInfo();
-        EventCenter_Singleton.Instance.AddEvent<Func<Energy>>("Energy", () => this);
+        EventCenter_Singleton.Instance.Subscribe(GetObject_EventArgs<Energy>.id, Get);
     }
 
+    private void Get(object send, BaseEventArgs baseEventHandler)
+    {
+        GetObject_EventArgs<Energy>.Subscribe(baseEventHandler, this);
+    }
+    
     private void FixedUpdate()
     {
         image1.transform.rotation *= Quaternion.AngleAxis(Time.deltaTime * speed, Vector3.forward);

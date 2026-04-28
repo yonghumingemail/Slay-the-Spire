@@ -20,9 +20,11 @@ public class GainPower : IEntry
             Debug.Log("接收者为空");
             return;
         }
-        
-        IEventCenterObject<string> eventCenter = receiver.GetComponent<IEventCenterObject<string>>();
-        IBuffList buffListObj = eventCenter.EventManage.GetEvent<Func<IBuffList>>("IBuffList")?.Invoke();
+
+        IEventCenterObject<BaseEventArgs> eventCenter = receiver.GetComponent<IEventCenterObject<BaseEventArgs>>();
+        IBuffList buffListObj = GetObject_EventArgs<IBuffList>.Fire(this,eventCenter.EventManage);
+
+
         if (buffListObj == null)
         {
             Debug.LogWarning($" 目标对象 {receiver.name} 缺少 IBuffList 组件");
@@ -65,5 +67,4 @@ public class GainPower : IEntry
     {
         return $"获得{stack.ToString()}点力量\n";
     }
-
 }

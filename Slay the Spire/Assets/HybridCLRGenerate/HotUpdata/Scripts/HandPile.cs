@@ -28,10 +28,8 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
         cardArrangement = new CardArrangement(maxHandSize);
         spline = transform.Find("Spline").GetComponent<SplineContainer>();
         DirectionalArrowLine = transform.Find("DirectionalArrowLine").GetComponent<DirectionalArrowLine>();
-
-        EventCenter_Singleton.Instance.GetEvent<Func<DrawPile>>("DrawPile",
-            (action) => { drawPile = action.Invoke(); });
-        EventCenter_Singleton.Instance.AddEvent<Func<HandPile>>("HandPile", () => this);
+        
+        
         EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int, UniTask>>("OnRoundStart",
             OnRoundStart, 0);
         EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int, UniTask>>("OnRoundEnd", OnRoundEnd,
@@ -107,6 +105,9 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
 
     public async UniTaskVoid Test11()
     {
+        
+        drawPile =GetObject_EventArgs<DrawPile>.Fire(this,EventCenter_Singleton.Instance);
+
         GameObject prefab =
             await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/Card/Card.prefab");
         GameObject[] cardObjs = new GameObject[10];

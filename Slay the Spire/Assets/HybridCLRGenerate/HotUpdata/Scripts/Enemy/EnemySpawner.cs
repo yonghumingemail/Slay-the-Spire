@@ -7,12 +7,16 @@ using Z_Tools;
 public class EnemySpawner : MonoBehaviour
 {
     public List<Enemy> enemyList = new List<Enemy>();
-    public EventCenter<string> eventCenter { get; private set; } = new EventCenter<string>();
+    public EventManage eventCenter { get; private set; } = new EventManage();
     private CombatManage _combatManage;
+
 
     private void Awake()
     {
-        EventCenter_Singleton.Instance.AddEvent<Func<EnemySpawner>>("EnemySpawner", () => this);
+        _combatManage = transform.GetComponentInParent<CombatManage>();
+        
+        EventCenter_Singleton.Instance.Subscribe(GetObject_EventArgs<EnemySpawner>.id, Get);
+
         EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int, UniTask>>("OnRoundEnd", OnRoundEnd, 0);
         EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int, UniTask>>("OnRoundStart", OnRoundStart, 5);
 
@@ -21,10 +25,13 @@ public class EnemySpawner : MonoBehaviour
             enemyList.Add(transform.GetChild(i).GetComponent<Enemy>());
         }
     }
-
+    private void Get(object send, BaseEventArgs baseEventHandler)
+    {
+        GetObject_EventArgs<EnemySpawner>.Subscribe(baseEventHandler, this);
+    }
     void Start()
     {
-        _combatManage = EventCenter_Singleton.Instance.GetEvent<Func<CombatManage>>("CombatManage").Invoke();
+       
     }
 
 

@@ -16,6 +16,6 @@ public class CardScrollView : MonoBehaviour
         canvasGroup.alpha = 0;
         canvasGroup.blocksRaycasts = false;
 
-        EventCenter_Singleton.Instance.AddEvent<Func<CardScrollView>>("CardScrollView", () => this);
+        
     }
 }

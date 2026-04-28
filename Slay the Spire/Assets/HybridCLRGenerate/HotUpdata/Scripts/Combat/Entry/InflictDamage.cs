@@ -27,11 +27,13 @@ public class InflictDamage : IEntry
             return;
         }
 
-        IEventCenterObject<string> eventCenter_Sender = sender.GetComponent<IEventCenterObject<string>>();
-        IEventCenterObject<string> eventCenter_Receiver = receiver.GetComponent<IEventCenterObject<string>>();
+        IEventCenterObject<BaseEventArgs> eventCenter_Sender = sender.GetComponent<IEventCenterObject<BaseEventArgs>>();
+        IEventCenterObject<BaseEventArgs> eventCenter_Receiver =
+            receiver.GetComponent<IEventCenterObject<BaseEventArgs>>();
 
-        IBuffList buffList_Sender = eventCenter_Sender.EventManage.GetEvent<Func<IBuffList>>("IBuffList")?.Invoke();
-        IHealth health = eventCenter_Receiver.EventManage.GetEvent<Func<IHealth>>("IHealth")?.Invoke();
+        IBuffList buffList_Sender = GetObject_EventArgs<IBuffList>.Fire(this, eventCenter_Sender.EventManage);
+        IHealth health = GetObject_EventArgs<IHealth>.Fire(this, eventCenter_Receiver.EventManage);
+
 
         ChangeValueInfo info = new ChangeValueInfo(sender, receiver, -damage);
 

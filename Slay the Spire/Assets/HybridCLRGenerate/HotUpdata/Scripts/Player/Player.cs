@@ -6,9 +6,9 @@ using Z_Tools;
 
 
 
-public class Player : MonoBehaviour, IEventCenterObject<EventArgs>
+public class Player : MonoBehaviour, IEventCenterObject<BaseEventArgs>
 {
-    public IEventManage<EventArgs> EventManage { get; } = new EventManage(); //用于提供接口对象
+    public IEventManage<BaseEventArgs> EventManage { get; } = new EventManage(); //用于提供接口对象
 
     public PriorityQueueEventCenter _priorityEventCenter { get; private set; } =
         new PriorityQueueEventCenter(); //用于记录buff事件
@@ -45,33 +45,33 @@ public class Player : MonoBehaviour, IEventCenterObject<EventArgs>
 
     private async UniTaskVoid Initialize()
     {
-        EventCenter_Singleton.Instance.AddEvent(GetObject_EventArgs<Player>.id, Get);
+        EventCenter_Singleton.Instance.Subscribe(GetObject_EventArgs<Player>.id, Get);
         EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int, UniTask>>("OnRoundEnd", OnRoundEnd,
             0);
-        EventManage.Subscribe(GetObject_EventArgs<PriorityQueueEventCenter>.id, (send, handler) => { GetObject_EventArgs<PriorityQueueEventCenter>.Get(handler, _priorityEventCenter); });
+        EventManage.Subscribe(GetObject_EventArgs<PriorityQueueEventCenter>.id, (send, handler) => { GetObject_EventArgs<PriorityQueueEventCenter>.Subscribe(handler, _priorityEventCenter); });
 
         health_V = GetComponentInChildren<IHealth_V>();
         health_V.InitializeView(gameObject);
         _health = new SimpleHealth(100, 100, health_V, _priorityEventCenter);
-        EventManage.Subscribe(GetObject_EventArgs<IHealth>.id, (send, handler) => { GetObject_EventArgs<IHealth>.Get(handler, _health); });
+        EventManage.Subscribe(GetObject_EventArgs<IHealth>.id, (send, handler) => { GetObject_EventArgs<IHealth>.Subscribe(handler, _health); });
 
         shield_V = GetComponentInChildren<IShield_V>();
         shield_V.InitializeView(gameObject, health_V);
         _shield = new SimpleShield(shield_V, _priorityEventCenter);
-        EventManage.Subscribe(GetObject_EventArgs<IShield>.id, (send, handler) => { GetObject_EventArgs<IShield>.Get(handler, _shield); });
+        EventManage.Subscribe(GetObject_EventArgs<IShield>.id, (send, handler) => { GetObject_EventArgs<IShield>.Subscribe(handler, _shield); });
 
         buffList_V = GetComponentInChildren<IBuffList_V>();
         await buffList_V.Initialized();
         _buffList = new SimpleBuffList(buffList_V, _priorityEventCenter);
-        EventManage.Subscribe(GetObject_EventArgs<IBuffList>.id, (send, handler) => { GetObject_EventArgs<IBuffList>.Get(handler, _buffList); });
+        EventManage.Subscribe(GetObject_EventArgs<IBuffList>.id, (send, handler) => { GetObject_EventArgs<IBuffList>.Subscribe(handler, _buffList); });
 
         animator = GetComponent<Animator>();
         //监听玩家死亡，将token设置为取消
     }
 
-    private void Get(object send, EventArgs eventHandler)
+    private void Get(object send, BaseEventArgs baseEventHandler)
     {
-        GetObject_EventArgs<Player>.Get(eventHandler, this);
+        GetObject_EventArgs<Player>.Subscribe(baseEventHandler, this);
     }
 
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using GameFramework;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Z_Tools;
@@ -146,11 +147,11 @@ public abstract class Card : MonoBehaviour
         cardInteraction = GetComponent<CardInteraction>();
 
         exteriorInfo = (await AddressablesMgr.Instance.LoadAssetAsync<CardExteriorInfo>(defaultDataPtah)).Copy();
-
-        _player = EventCenter_Singleton.Instance.GetEvent<Func<Player>>("Player").Invoke();
-        _combatManage = EventCenter_Singleton.Instance.GetEvent<Func<CombatManage>>("CombatManage").Invoke();
-        _energy = EventCenter_Singleton.Instance.GetEvent<Func<Energy>>("Energy").Invoke();
-        _discardPile = EventCenter_Singleton.Instance.GetEvent<Func<DiscardPile>>("DiscardPile").Invoke();
+        
+        _player =  GetObject_EventArgs<Player>.Fire(this,EventCenter_Singleton.Instance);
+        _combatManage = GetObject_EventArgs<CombatManage>.Fire(this,EventCenter_Singleton.Instance);
+        _energy = GetObject_EventArgs<Energy>.Fire(this,EventCenter_Singleton.Instance);
+        _discardPile =  GetObject_EventArgs<DiscardPile>.Fire(this,EventCenter_Singleton.Instance);
 
         cardInteraction.OnMouseDownDelegate += (eventData) => { cardComponentInfo.HandPile.SetSelectedCard(this); };
         cardInteraction.OnMouseUpDelegate += (eventData) => { cardComponentInfo.HandPile.SetSelectedCard(null); };
@@ -160,6 +161,7 @@ public abstract class Card : MonoBehaviour
 
         cardComponentInfo.UpdateCardUI(this);
     }
+    
 
     private void OnDestroy()
     {

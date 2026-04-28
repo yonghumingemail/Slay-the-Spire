@@ -3861,7 +3861,6 @@ GameObject:
   - component: {fileID: 641282119}
   - component: {fileID: 641282118}
   - component: {fileID: 641282117}
-  - component: {fileID: 641282121}
   m_Layer: 5
   m_Name: CardScrollView
   m_TagString: Untagged
@@ -3971,19 +3970,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 641282115}
   m_CullTransparentMesh: 1
---- !u!114 &641282121
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 641282115}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39f61c99274d9a940be4cf574b0db767, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  content: {fileID: 0}
 --- !u!1 &664021767
 GameObject:
   m_ObjectHideFlags: 0

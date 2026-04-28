@@ -20,7 +20,7 @@ public class RoundEndButton : MonoBehaviour
 
     private void Start()
     {
-        _combatManage = EventCenter_Singleton.Instance.GetEvent<Func<CombatManage>>("CombatManage").Invoke();
+        _combatManage = GetObject_EventArgs<CombatManage>.Fire(this,EventCenter_Singleton.Instance);
     }
 
     private void OnClick()

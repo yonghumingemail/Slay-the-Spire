@@ -5,31 +5,31 @@ using UnityEngine;
 namespace Z_Tools
 {
     //全局事件应该是图形化界面
-    public class EventCenter_Singleton : SingletonBase<EventCenter_Singleton>
+    public class EventCenter_Singleton : SingletonBase<EventCenter_Singleton>,IEventManage<BaseEventArgs>
     {
         private readonly EventManage EventManage = new();
 
         public readonly PriorityQueueEventCenter _priorityQueueEventCenter = new();
 
 
-        public void AddEvent(int id, GameEventHandler<EventArgs> _delegate)
+        public void Subscribe(int id, GameEventHandler<BaseEventArgs> _delegate)
         {
             // Debug.Log(eventKey);
             EventManage.Subscribe(id, _delegate);
         }
 
 
-        public void GetEvent(object send, EventArgs args)
+        public void Fire(object send, BaseEventArgs args)
         {
             EventManage.Fire(send, args);
         }
 
         
-        public void RemoveEvent(int id, GameEventHandler<EventArgs> _delegate)
+        public void UnSubscribe(int id, GameEventHandler<BaseEventArgs> _delegate)
         {
              EventManage.UnSubscribe(id, _delegate);
         }
-        public void RemoveEventAll(int id)
+        public void UnSubscribeAll(int id)
         {
             EventManage.UnSubscribeAll(id);
         }

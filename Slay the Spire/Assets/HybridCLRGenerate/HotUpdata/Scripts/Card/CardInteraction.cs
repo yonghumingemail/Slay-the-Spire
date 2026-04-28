@@ -104,8 +104,8 @@ public class CardInteraction : MonoBehaviour, IPointerEnterHandler,
         OnMouseEnterDelegate = null;
         OnMouseExitDelegate = null;
 
-        EventCenter_Singleton.Instance.RemoveEvent<Action>("OnCardArrangementComplete", OnCardArrangementComplete);
-        EventCenter_Singleton.Instance.RemoveEvent<Action>("OnStartCardArrangement", OnStartCardArrangement);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.RemoveEvent<Action>("OnCardArrangementComplete", OnCardArrangementComplete);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.RemoveEvent<Action>("OnStartCardArrangement", OnStartCardArrangement);
 
         transform.DOKill();
     }

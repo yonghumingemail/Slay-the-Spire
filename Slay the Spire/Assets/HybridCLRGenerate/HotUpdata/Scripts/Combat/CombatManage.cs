@@ -15,9 +15,7 @@ public class CombatManage : MonoBehaviour
 
     private void Awake()
     {
-        EventCenter_Singleton.Instance.AddEvent<Func<CombatManage>>("CombatManage", Get);
-
-
+        EventCenter_Singleton.Instance.Subscribe(GetObject_EventArgs<CombatManage>.id, Get);
     }
 
     private void Update()
@@ -28,9 +26,9 @@ public class CombatManage : MonoBehaviour
         }
     }
 
-    private CombatManage Get()
+    private void Get(object send, BaseEventArgs baseEventHandler)
     {
-        return this;
+        GetObject_EventArgs<CombatManage>.Subscribe(baseEventHandler, this);
     }
 
     public void AddCardToExecuteQueue(Card action)

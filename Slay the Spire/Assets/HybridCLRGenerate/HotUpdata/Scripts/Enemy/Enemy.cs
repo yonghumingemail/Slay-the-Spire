@@ -9,9 +9,9 @@ using Z_Tools;
 
 [Serializable]
 public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectableObject,
-    IEventCenterObject<EventArgs>
+    IEventCenterObject<BaseEventArgs>
 {
-    public IEventManage<EventArgs> EventManage { get; } = new EventManage(); //用于提供接口对象
+    public IEventManage<BaseEventArgs> EventManage { get; } = new EventManage(); //用于提供接口对象
     public CancellationTokenSource TokenSource { get; } = new CancellationTokenSource();
 
     public PriorityQueueEventCenter _priorityEventCenter { get; protected set; } =
@@ -48,9 +48,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     protected virtual async UniTask Initialize()
     {
-        GetObject_EventArgs<Player> eventArgs = new GetObject_EventArgs<Player>();
-        EventCenter_Singleton.Instance.GetEvent(GetObject_EventArgs<Player>.id, eventArgs);
-        _player = eventArgs.value;
+        _player = GetObject_EventArgs<Player>.Fire(this,EventCenter_Singleton.Instance);
 
         spriteRenderer = transform.Find("UI").gameObject.GetComponent<SpriteRenderer>();
         intentC = GetComponentInChildren<Intent_C>();
@@ -58,22 +56,22 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         _animator = GetComponent<Animator>();
         _animatorComplete = GetComponent<AnimatorComplete>();
 
-        EventManage.Subscribe(GetObject_EventArgs<PriorityQueueEventCenter>.id, (send, handler) => { GetObject_EventArgs<PriorityQueueEventCenter>.Get(handler, _priorityEventCenter); });
+        EventManage.Subscribe(GetObject_EventArgs<PriorityQueueEventCenter>.id, (send, handler) => { GetObject_EventArgs<PriorityQueueEventCenter>.Subscribe(handler, _priorityEventCenter); });
 
         health_V = GetComponentInChildren<IHealth_V>();
         health_V.InitializeView(spriteRenderer.gameObject);
         _health = new SimpleHealth(50, 100, health_V, _priorityEventCenter);
-        EventManage.Subscribe(GetObject_EventArgs<IHealth>.id, (send, handler) => { GetObject_EventArgs<IHealth>.Get(handler, _health); });
+        EventManage.Subscribe(GetObject_EventArgs<IHealth>.id, (send, handler) => { GetObject_EventArgs<IHealth>.Subscribe(handler, _health); });
 
         shield_V = GetComponentInChildren<IShield_V>();
         shield_V.InitializeView(spriteRenderer.gameObject, health_V);
         _shield = new SimpleShield(shield_V, _priorityEventCenter);
-        EventManage.Subscribe(GetObject_EventArgs<IShield>.id, (send, handler) => { GetObject_EventArgs<IShield>.Get(handler, _shield); });
+        EventManage.Subscribe(GetObject_EventArgs<IShield>.id, (send, handler) => { GetObject_EventArgs<IShield>.Subscribe(handler, _shield); });
 
         buffList_V = GetComponentInChildren<IBuffList_V>();
         await buffList_V.Initialized();
         _buffList = new SimpleBuffList(buffList_V, _priorityEventCenter);
-        EventManage.Subscribe(GetObject_EventArgs<IBuffList>.id, (send, handler) => { GetObject_EventArgs<IBuffList>.Get(handler, _buffList); });
+        EventManage.Subscribe(GetObject_EventArgs<IBuffList>.id, (send, handler) => { GetObject_EventArgs<IBuffList>.Subscribe(handler, _buffList); });
 
         //改，不应该由enemy加载
         _spriteAtlas =

@@ -20,8 +20,8 @@ public class VulnerableState : IEntry
             return;
         }
         
-        IEventCenterObject<string> eventCenter_receiver = receiver.GetComponent<IEventCenterObject<string>>();
-        IBuffList buffListObj = eventCenter_receiver.EventManage.GetEvent<Func<IBuffList>>("IBuffList")?.Invoke();
+        IEventCenterObject<BaseEventArgs> eventCenter_receiver = receiver.GetComponent<IEventCenterObject<BaseEventArgs>>();
+        IBuffList buffListObj = GetObject_EventArgs<IBuffList>.Fire(this,eventCenter_receiver.EventManage);
 
 
         if (buffListObj == null)

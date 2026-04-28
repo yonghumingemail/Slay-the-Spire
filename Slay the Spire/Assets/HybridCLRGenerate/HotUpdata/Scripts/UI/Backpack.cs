@@ -7,15 +7,12 @@ using Z_Tools;
 public class Backpack : Pile
 {
     protected RectTransform Content;
-    private HandPile _handPile;
+
 
     protected override void Awake()
     {
         base.Awake();
 
-        EventCenter_Singleton.Instance.GetEvent<Func<HandPile>>("HandPile",
-            (action) => { _handPile = action.Invoke(); });
-        EventCenter_Singleton.Instance.AddEvent<Func<Backpack>>("Backpack", () => this);
     }
 
     private void Start()

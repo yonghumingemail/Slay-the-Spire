@@ -33,8 +33,8 @@ public class Pile : MonoBehaviour
         View = transform.Find("View").GetComponent<CanvasGroup>();
 
         // 从事件中心获取卡牌滚动视图
-        EventCenter_Singleton.Instance.GetEvent<Func<CardScrollView>>("CardScrollView",
-            (action) => { cardScrollView = action.Invoke(); });
+        // EventCenter_Singleton.Instance.GetEvent<Func<CardScrollView>>("CardScrollView",
+        //     (action) => { cardScrollView = action.Invoke(); });
 
         // 绑定按钮点击事件
         UI.onClick.AddListener(OnClick);
