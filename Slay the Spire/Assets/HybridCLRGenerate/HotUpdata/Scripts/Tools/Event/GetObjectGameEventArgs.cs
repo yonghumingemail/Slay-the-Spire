@@ -5,7 +5,7 @@ using Z_Tools;
 public class GetObject_EventArgs<T> : GameEventArgs
 {
     public override int Id => id;
-    public static readonly int id = typeof(T).GetHashCode();
+    public static readonly int id = typeof(GetObject_EventArgs<T>).GetHashCode();
 
     public T value;
 

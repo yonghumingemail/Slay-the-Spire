@@ -1,23 +1,21 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public struct PriorityEvent
 {
     public int priority;
-    public Delegate _delegate;
+    public GameEventHandler<BaseEventArgs> _delegate;
 }
 
 public class PriorityQueueEventCenter
 {
-    private Dictionary<string, List<PriorityEvent>> Event_Dic = new();
+    private Dictionary<int, List<PriorityEvent>> Event_Dic = new();
 
-    public void AddEvent<D>(string eventName, D _delegate, int priority) where D : Delegate
+    public void AddEvent(int id, GameEventHandler<BaseEventArgs> _delegate, int priority) 
     {
-        if (!Event_Dic.TryGetValue(eventName, out var _))
+        if (!Event_Dic.TryGetValue(id, out var _))
         {
-            Event_Dic.Add(eventName, new List<PriorityEvent>());
+            Event_Dic.Add(id, new List<PriorityEvent>());
         }
         
         var temp = new PriorityEvent
@@ -25,38 +23,43 @@ public class PriorityQueueEventCenter
             priority = priority,
             _delegate = _delegate
         };
-        Event_Dic[eventName].Add(temp);
+        Event_Dic[id].Add(temp);
         //用插排更好
-        Event_Dic[eventName].Sort((a, b) => b.priority.CompareTo(a.priority));
+        Event_Dic[id].Sort((a, b) => b.priority.CompareTo(a.priority));
     }
 
 
-    public IEnumerable<PriorityEvent> GetEvent(string name)
+    public void GetEvent(object send, BaseEventArgs args)
     {
-        return new List<PriorityEvent>(Event_Dic.GetValueOrDefault(name) ?? Enumerable.Empty<PriorityEvent>());
-        //return Event_Dic.GetValueOrDefault(name) ?? Enumerable.Empty<PriorityEvent>();
-    }
-
-    public bool RemoveEvent(string eventName)
-    {
-        if (!Event_Dic.TryGetValue(eventName, out var _)) return false;
-
-        Event_Dic[eventName] = null;
-        return Event_Dic.Remove(eventName);
-    }
-
-    public bool RemoveEvent<D>(string eventName, D _delegate) where D : Delegate
-    {
-        if (!Event_Dic.TryGetValue(eventName, out var delegates)) return false;
-        
-        for (int i = 0; i < delegates.Count; i++)
+        if (Event_Dic.TryGetValue(args.Id, out var list))
         {
-            if (delegates[i]._delegate != _delegate) continue;
-            delegates.RemoveAt(i);
-            return true;
+            foreach (var _event in list)
+            {
+                _event._delegate?.Invoke(send, args);
+            }
+          
         }
-      
-        return false;
+        else
+        {
+            Debug.Log($"事件{args.Id}不存在");
+        }
+    }
+
+    public void RemoveEventAll(int id)
+    {
+        Event_Dic.Remove(id, out var _);
+    }
+
+    public void RemoveEvent(int id, GameEventHandler<BaseEventArgs> _delegate) 
+    {
+        if (!Event_Dic.TryGetValue(id, out var list)) return ;
+        
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (list[i]._delegate != _delegate) continue;
+            list.RemoveAt(i);
+            return ;
+        }
     }
 
     public void Clear()

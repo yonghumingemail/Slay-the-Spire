@@ -57,4 +57,5 @@ public class Card_Ironclad_Bash : Card
         AddCardEntry(_inflictDamage);
         AddCardEntry(_vulnerableState);
     }
+    
 }
