@@ -1,8 +1,6 @@
-using System;
-using System.Linq;
-using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
+using GameFramework;
 using UnityEngine;
+
 
 public class InflictDamage : IEntry
 {
@@ -43,11 +41,7 @@ public class InflictDamage : IEntry
         }
         else
         {
-            var buffEvents = buffList_Sender._priorityEventCenter?.GetEvent("OnAttack");
-            foreach (var priorityEvent in buffEvents ?? Enumerable.Empty<PriorityEvent>())
-            {
-                (priorityEvent._delegate as Action<ChangeValueInfo>)?.Invoke(info);
-            }
+           OnAttack_EventArgs.Fire(info,this, buffList_Sender._priorityEventCenter);
         }
 
         if (health == null)
@@ -68,15 +62,8 @@ public class InflictDamage : IEntry
     {
         calculated_damage = damage;
         // Debug.Log($"计算前的伤害：{calculated_damage}");
-        foreach (var action in send?.GetEvent("DamageCalculation_Attack") ?? Enumerable.Empty<PriorityEvent>())
-        {
-            calculated_damage = (action._delegate as Func<int, int>).Invoke(calculated_damage);
-        }
-
-        foreach (var action in receive?.GetEvent("DamageCalculation_BeAttacked") ?? Enumerable.Empty<PriorityEvent>())
-        {
-            calculated_damage = (action._delegate as Func<int, int>).Invoke(calculated_damage);
-        }
+        calculated_damage = DamageCalculation_Attack_EventArgs.Fire(calculated_damage,this, send);
+        calculated_damage = DamageCalculation_BeAttacked_EventArgs.Fire(calculated_damage,this, receive);
         //  Debug.Log($"计算后的伤害：{calculated_damage}");
     }
 }

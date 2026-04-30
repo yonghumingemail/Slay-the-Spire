@@ -5,7 +5,6 @@ using UnityEngine;
 using Z_Tools;
 
 
-
 public class Player : MonoBehaviour, IEventCenterObject<BaseEventArgs>
 {
     public IEventManage<BaseEventArgs> EventManage { get; } = new EventManage(); //用于提供接口对象
@@ -46,8 +45,8 @@ public class Player : MonoBehaviour, IEventCenterObject<BaseEventArgs>
     private async UniTaskVoid Initialize()
     {
         EventCenter_Singleton.Instance.Subscribe(GetObject_EventArgs<Player>.id, Get);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int, UniTask>>("OnRoundEnd", OnRoundEnd,
-            0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnRoundEnd_EventArgs.id, OnRoundEnd, 0);
+
         EventManage.Subscribe(GetObject_EventArgs<PriorityQueueEventCenter>.id, (send, handler) => { GetObject_EventArgs<PriorityQueueEventCenter>.Subscribe(handler, _priorityEventCenter); });
 
         health_V = GetComponentInChildren<IHealth_V>();
@@ -75,21 +74,11 @@ public class Player : MonoBehaviour, IEventCenterObject<BaseEventArgs>
     }
 
 
-    private async UniTask OnRoundEnd(int roundCount)
+    private void OnRoundEnd(object sender, BaseEventArgs baseEventArgs)
     {
-        //通知事件，回合开始
-        var actions = _priorityEventCenter.GetEvent("OnRoundEnd");
-        foreach (var action in actions)
+        if (baseEventArgs is OnRoundEnd_EventArgs args)
         {
-            if (action._delegate is Func<int, UniTask> func)
-            {
-                await func(roundCount);
-            }
-            else
-            {
-                // 处理类型不匹配的情况
-                Debug.LogWarning($"委托类型不匹配: {action._delegate?.GetType()}");
-            }
+            args.value.AddRange(OnRoundEnd_EventArgs.Fire(args.args_int, this, _priorityEventCenter));
         }
     }
 

@@ -1,13 +1,19 @@
-using System;
-
-namespace Z_Tools
+public interface IBaseEventManage<TEventArgs> where TEventArgs : BaseEventArgs
 {
-    public interface IEventManage<TEventArgs> where TEventArgs : BaseEventArgs
-    {
-        public void Subscribe(int id, GameEventHandler<TEventArgs> _delegate);
-        public void UnSubscribe(int id, GameEventHandler<TEventArgs> _delegate);
-        public void UnSubscribeAll(int id);
-        public void Fire(object send, TEventArgs args);
-        public void Clear();
-    }
+    void UnSubscribe(int id, GameEventHandler<TEventArgs> _delegate);
+    void UnSubscribeAll(int id);
+    void Fire(object send, TEventArgs args);
+    void Clear();
+}
+
+public interface IEventManage<TEventArgs> : IBaseEventManage<TEventArgs>
+    where TEventArgs : BaseEventArgs
+{
+    void Subscribe(int id, GameEventHandler<TEventArgs> _delegate);
+}
+
+public interface IPriorityEventManage<TEventArgs> : IBaseEventManage<TEventArgs>
+    where TEventArgs : BaseEventArgs
+{
+    void Subscribe(int id, GameEventHandler<TEventArgs> _delegate, int priority);
 }

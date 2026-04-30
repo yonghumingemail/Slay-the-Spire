@@ -56,7 +56,7 @@ public class VulnerableState : IEntry
 
         foreach (var action in buffListObj._priorityEventCenter.GetEvent("GainBuff"))
         {
-            (action._delegate as Action<BuffObj, int>)?.Invoke(buff, stack);
+            (action._delegate as Action<BuffObj, int>)?.Invoke(buff, buff.stack );
         }
     }
 

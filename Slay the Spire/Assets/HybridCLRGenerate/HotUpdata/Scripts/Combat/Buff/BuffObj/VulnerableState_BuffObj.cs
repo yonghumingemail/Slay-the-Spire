@@ -15,12 +15,15 @@ public class VulnerableState_BuffObj : BuffObj
         tags = new[] { BuffTag_E.buff };
     }
 
-    private void Effect(ChangeValueInfo info)
+    private void Effect(object send, BaseEventArgs baseArgs)
     {
-        info.value = (int)(info.value * power);
+        if (baseArgs is OnBeAttacked_EventArgs args)
+        {
+            args.ChangeValueInfo.value = (int)(args.ChangeValueInfo.value * power);
+        }
     }
 
-    private UniTask OnRoundEnd(int roundCount)
+    private void OnRoundEnd(object send, BaseEventArgs baseArgs)
     {
         stack--;
         if (OnDataUpdate != null)
@@ -32,27 +35,31 @@ public class VulnerableState_BuffObj : BuffObj
             Debug.Log(this + "缺少更新视图的方法");
         }
 
-        return UniTask.CompletedTask;
+        (baseArgs as OnRoundEnd_EventArgs)?.value.Add(UniTask.CompletedTask);
     }
 
-    private int DamageCalculation(int value)
+    private void DamageCalculation(object send, BaseEventArgs baseArgs)
     {
-        return (int)(value * power);
+        if (baseArgs is DamageCalculation_BeAttacked_EventArgs args)
+        {
+            args.damage = (int)(args.damage * power);
+        }
     }
 
     public override void OnAddBuff(PriorityQueueEventCenter eventCent, Action<BuffObj> onDataUpdate)
     {
         base.OnAddBuff(eventCent, onDataUpdate);
-        eventCent.AddEvent<Action<ChangeValueInfo>>("OnBeAttacked", Effect, priority);
-        eventCent.AddEvent<Func<int, int>>("DamageCalculation_BeAttacked", DamageCalculation, priority);
-        eventCent.AddEvent<Func<int, UniTask>>("OnRoundEnd", OnRoundEnd, priority);
+
+        eventCent.Subscribe(OnBeAttacked_EventArgs.id, Effect, priority);
+        eventCent.Subscribe(DamageCalculation_BeAttacked_EventArgs.id, DamageCalculation, priority);
+        eventCent.Subscribe(OnRoundEnd_EventArgs.id, OnRoundEnd, priority);
     }
 
     public override void OnRemoveBuff(PriorityQueueEventCenter eventCent)
     {
         base.OnRemoveBuff(eventCent);
-        eventCent.RemoveEvent<Action<ChangeValueInfo>>("OnBeAttacked", Effect);
-        eventCent.RemoveEvent<Func<int, int>>("DamageCalculation_BeAttacked", DamageCalculation);
-        eventCent.RemoveEvent<Func<int, UniTask>>("OnRoundEnd", OnRoundEnd);
+        eventCent.UnSubscribe(OnBeAttacked_EventArgs.id, Effect);
+        eventCent.UnSubscribe(DamageCalculation_BeAttacked_EventArgs.id, DamageCalculation);
+        eventCent.UnSubscribe(OnRoundEnd_EventArgs.id, OnRoundEnd);
     }
 }

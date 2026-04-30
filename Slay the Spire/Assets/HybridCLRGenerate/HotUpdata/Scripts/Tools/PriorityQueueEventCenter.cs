@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Z_Tools;
 
 public struct PriorityEvent
 {
@@ -7,11 +8,11 @@ public struct PriorityEvent
     public GameEventHandler<BaseEventArgs> _delegate;
 }
 
-public class PriorityQueueEventCenter
+public class PriorityQueueEventCenter:IPriorityEventManage<BaseEventArgs>
 {
     private Dictionary<int, List<PriorityEvent>> Event_Dic = new();
 
-    public void AddEvent(int id, GameEventHandler<BaseEventArgs> _delegate, int priority) 
+    public void Subscribe(int id, GameEventHandler<BaseEventArgs> _delegate, int priority)
     {
         if (!Event_Dic.TryGetValue(id, out var _))
         {
@@ -27,9 +28,24 @@ public class PriorityQueueEventCenter
         //用插排更好
         Event_Dic[id].Sort((a, b) => b.priority.CompareTo(a.priority));
     }
+    public void UnSubscribe(int id, GameEventHandler<BaseEventArgs> _delegate)
+    {
+        if (!Event_Dic.TryGetValue(id, out var list)) return ;
+        
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (list[i]._delegate != _delegate) continue;
+            list.RemoveAt(i);
+            return ;
+        }
+    }
 
+    public void UnSubscribeAll(int id)
+    {
+        Event_Dic.Remove(id, out var _);
+    }
 
-    public void GetEvent(object send, BaseEventArgs args)
+    public void Fire(object send, BaseEventArgs args)
     {
         if (Event_Dic.TryGetValue(args.Id, out var list))
         {
@@ -45,23 +61,6 @@ public class PriorityQueueEventCenter
         }
     }
 
-    public void RemoveEventAll(int id)
-    {
-        Event_Dic.Remove(id, out var _);
-    }
-
-    public void RemoveEvent(int id, GameEventHandler<BaseEventArgs> _delegate) 
-    {
-        if (!Event_Dic.TryGetValue(id, out var list)) return ;
-        
-        for (int i = 0; i < list.Count; i++)
-        {
-            if (list[i]._delegate != _delegate) continue;
-            list.RemoveAt(i);
-            return ;
-        }
-    }
-
     public void Clear()
     {
         Event_Dic.Clear();
@@ -74,4 +73,6 @@ public class PriorityQueueEventCenter
             Debug.Log(VARIABLE);
         }
     }
+
+    
 }
