@@ -28,34 +28,36 @@ public class Card_Ironclad_Bash : Card
     {
         await base.Initialized("Assets/ScriptableObject/CardEvent/Ironclad_Bash.asset");
 
-        _player._priorityEventCenter.AddEvent<Action>("DamageValueChange_Attack", () =>
-        {
-            _inflictDamage.DamageCalculation(_player._priorityEventCenter, null);
-            UpdateDescribe();
-        }, 0);
-
-        priorityEventCenter.AddEvent<Action<Enemy>>("OnMouseEnterEnemy",
-            (enemy) =>
-            {
-                _inflictDamage.DamageCalculation(_player._priorityEventCenter, enemy._priorityEventCenter);
-                _directionalCard.OnMouseEnterSelectableObject(enemy);
-                UpdateDescribe();
-            },
-            0);
-        priorityEventCenter.AddEvent<Action<Enemy>>("OnMouseExitEnemy",
-            (enemy) =>
-            {
-                _inflictDamage.DamageCalculation(_player._priorityEventCenter, null);
-                _directionalCard.OnMouseExitSelectableObject(enemy);
-                UpdateDescribe();
-            }, 0);
+        _player._priorityEventCenter.Subscribe(DamageValueChange_Attack_EventArgs.id,DamageValueChange_Attack,0);
+        priorityEventCenter.Subscribe(OnMouseEnterEnemy_EventArgs.id,OnMouseEnterEnemy,0);
+        priorityEventCenter.Subscribe(OnMouseExitEnemy_EventArgs.id,OnMouseExitEnemy,0);
+        
 
         _directionalCard = new DirectionalCard(this, "Enemy");
 
-        _inflictDamage = new InflictDamage(6);
+        _inflictDamage = new InflictDamage(6,UpdateDescribe);
         _vulnerableState = new VulnerableState(2);
         AddCardEntry(_inflictDamage);
         AddCardEntry(_vulnerableState);
     }
+
+    public void DamageValueChange_Attack(object send,BaseEventArgs args)
+    {
+        _inflictDamage.DamageCalculation(_player._priorityEventCenter, null);
+    }
     
+    public void OnMouseEnterEnemy(object send,BaseEventArgs args)
+    {
+        if (args is not Enemy_EventArgs enemy_args) return;
+        _inflictDamage.DamageCalculation(_player._priorityEventCenter, enemy_args.value._priorityEventCenter);
+        _directionalCard.OnMouseEnterSelectableObject(enemy_args.value);
+
+    }
+    public void OnMouseExitEnemy(object send,BaseEventArgs args)
+    {
+        if (args is not Enemy_EventArgs enemy_args) return;
+        _inflictDamage.DamageCalculation(_player._priorityEventCenter, null);
+        _directionalCard.OnMouseExitSelectableObject(enemy_args.value);
+
+    }
 }

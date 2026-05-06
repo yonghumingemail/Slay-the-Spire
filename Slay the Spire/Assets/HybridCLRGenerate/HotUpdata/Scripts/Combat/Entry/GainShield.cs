@@ -34,10 +34,7 @@ public class GainShield : IEntry
         }
         else
         {
-            foreach (var action in priorityEventCenter?.GetEvent("GainShield"))
-            {
-                (action._delegate as Action<ChangeValueInfo>)?.Invoke(info);
-            }
+            ChangeValueEvent_EventArgs.Fire(info,OnGainShield_EventArgs.id, this, priorityEventCenter);
         }
 
         if (shield == null)

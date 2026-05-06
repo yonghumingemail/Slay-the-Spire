@@ -22,7 +22,7 @@ public class GainPower : IEntry
         }
 
         IEventCenterObject<BaseEventArgs> eventCenter = receiver.GetComponent<IEventCenterObject<BaseEventArgs>>();
-        IBuffList buffListObj = GetObject_EventArgs<IBuffList>.Fire(this,eventCenter.EventManage);
+        IBuffList buffListObj = GetObject_EventArgs<IBuffList>.Fire(this, eventCenter.EventManage);
 
 
         if (buffListObj == null)
@@ -50,17 +50,8 @@ public class GainPower : IEntry
             buffListObj.AddBuff(buff);
         }
 
-        //通知接受者更新伤害信息Get Action
-
-        foreach (var action in buffListObj._priorityEventCenter.GetEvent("DamageValueChange_Attack"))
-        {
-            (action._delegate as Action)?.Invoke();
-        }
-
-        foreach (var action in buffListObj._priorityEventCenter.GetEvent("GainBuff"))
-        {
-            (action._delegate as Action<BuffObj, int>)?.Invoke(buff, stack);
-        }
+        Action_EventArgs.Fire(DamageCalculation_Attack_EventArgs.id, this, buffListObj._priorityEventCenter);
+        Buff_EventArgs.Fire(buff,OnGainBuff_EventArgs.id,stack,this, buffListObj._priorityEventCenter);
     }
 
     public string GetDescription()

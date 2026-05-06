@@ -1,3 +1,4 @@
+using System;
 using GameFramework;
 using UnityEngine;
 
@@ -9,12 +10,13 @@ public class InflictDamage : IEntry
 
     //经过双方buff计算后的伤害
     public int calculated_damage;
+    public Action OnUpdateData;
 
-
-    public InflictDamage(int damage)
+    public InflictDamage(int damage, Action OnUpdateData)
     {
         this.damage = damage;
         calculated_damage = damage;
+        this.OnUpdateData = OnUpdateData;
     }
 
     public void Trigger(GameObject sender, GameObject receiver)
@@ -41,7 +43,7 @@ public class InflictDamage : IEntry
         }
         else
         {
-           OnAttack_EventArgs.Fire(info,this, buffList_Sender._priorityEventCenter);
+            ChangeValueEvent_EventArgs.Fire(info, OnAttack_EventArgs.id, this, buffList_Sender._priorityEventCenter);
         }
 
         if (health == null)
@@ -62,8 +64,11 @@ public class InflictDamage : IEntry
     {
         calculated_damage = damage;
         // Debug.Log($"计算前的伤害：{calculated_damage}");
-        calculated_damage = DamageCalculation_Attack_EventArgs.Fire(calculated_damage,this, send);
-        calculated_damage = DamageCalculation_BeAttacked_EventArgs.Fire(calculated_damage,this, receive);
+        
+        calculated_damage = BaseDamageCalculation_EventArgs.Fire(calculated_damage, DamageCalculation_Attack_EventArgs.id, this, send);
+        calculated_damage = BaseDamageCalculation_EventArgs.Fire(calculated_damage, DamageCalculation_BeAttacked_EventArgs.id, this, receive);
+        
+        OnUpdateData?.Invoke();
         //  Debug.Log($"计算后的伤害：{calculated_damage}");
     }
 }

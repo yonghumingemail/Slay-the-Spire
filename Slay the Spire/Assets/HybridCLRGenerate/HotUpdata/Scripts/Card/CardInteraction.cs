@@ -43,11 +43,11 @@ public class CardInteraction : MonoBehaviour, IPointerEnterHandler,
                 cardComponentInfo.Background.bounds.size.y / 2
         };
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action>("OnCardArrangementComplete", OnCardArrangementComplete, 0);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action>("OnStartCardArrangement", OnStartCardArrangement, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnCardArrangementStart_EventArgs.id,OnStartCardArrangement,0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnCardArrangementEnd_EventArgs.id,OnCardArrangementComplete,0);
     }
 
-    public virtual void OnCardArrangementComplete()
+    public virtual void OnCardArrangementComplete(object sender, BaseEventArgs args)
     {
         isInteractable = true;
 
@@ -56,7 +56,7 @@ public class CardInteraction : MonoBehaviour, IPointerEnterHandler,
         mouseOverPosition.x = position.x;
     }
 
-    public virtual void OnStartCardArrangement()
+    public virtual void OnStartCardArrangement(object sender, BaseEventArgs args)
     {
         isInteractable = false;
     }
@@ -104,8 +104,8 @@ public class CardInteraction : MonoBehaviour, IPointerEnterHandler,
         OnMouseEnterDelegate = null;
         OnMouseExitDelegate = null;
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.RemoveEvent<Action>("OnCardArrangementComplete", OnCardArrangementComplete);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.RemoveEvent<Action>("OnStartCardArrangement", OnStartCardArrangement);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.UnSubscribe(OnCardArrangementStart_EventArgs.id,OnStartCardArrangement);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.UnSubscribe(OnCardArrangementEnd_EventArgs.id,OnCardArrangementComplete);
 
         transform.DOKill();
     }

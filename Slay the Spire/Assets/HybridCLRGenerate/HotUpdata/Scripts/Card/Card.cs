@@ -112,10 +112,7 @@ public abstract class Card : MonoBehaviour
 
         cardAnimator.TransformEffectToRotation(gameObject, cardInteraction.position, cardInteraction.rotation,
             cardInteraction.scale);
-        foreach (var VARIABLE in priorityEventCenter.GetEvent("UnSelectCard"))
-        {
-            (VARIABLE._delegate as Action<Card>)?.Invoke(this);
-        }
+        Card_EventArgs.Fire(this,OnUnSelectCard_EventArgs.id,this,priorityEventCenter);
     }
 
     public virtual void UpdateDescribe()

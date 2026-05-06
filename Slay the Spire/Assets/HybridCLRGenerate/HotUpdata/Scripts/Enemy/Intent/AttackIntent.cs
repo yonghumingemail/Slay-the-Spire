@@ -33,13 +33,14 @@ public class AttackIntent : IIntent
 
         this.value = value;
         this.number = number;
-        _inflictDamage = new InflictDamage(value);
+        _inflictDamage = new InflictDamage(value,null);
 
         _receive = receive;
         _send = send;
 
-        _receive.AddEvent<Action>("DamageValueChange_BeAttacked", DamageValueChange, 0);
-        _send.AddEvent<Action>("DamageValueChange_Attack", DamageValueChange, 0);
+        _receive.Subscribe(DamageCalculation_BeAttacked_EventArgs.id,DamageValueChange,0);
+        _send.Subscribe(DamageValueChange_Attack_EventArgs.id,DamageValueChange,0);
+
     }
 
     public void OnShow(Intent_V intentV)
@@ -70,7 +71,7 @@ public class AttackIntent : IIntent
         return "敌人将要造成" + (number == 1 ? $"{value}点伤害" : $"{value}次X{number}点伤害");
     }
 
-    private void DamageValueChange()
+    private void DamageValueChange(object send,BaseEventArgs args)
     {
         _inflictDamage.DamageCalculation(_send, _receive);
         value = _inflictDamage.calculated_damage;

@@ -17,7 +17,7 @@ public class EventManage : IEventManage<BaseEventArgs>
 
         Event_Dic[id] += _delegate;
     }
-    
+
     public void UnSubscribeAll(int id)
     {
         if (!Event_Dic.Remove(id, out var action))
@@ -25,6 +25,7 @@ public class EventManage : IEventManage<BaseEventArgs>
             Debug.Log($"事件{id}不存在");
         }
     }
+
     public void UnSubscribe(int id, GameEventHandler<BaseEventArgs> _delegate)
     {
         if (Event_Dic.TryGetValue(id, out var action))
@@ -42,11 +43,10 @@ public class EventManage : IEventManage<BaseEventArgs>
         }
     }
 
-  
 
-    public void Fire(object send, BaseEventArgs args)
+    public void Fire(object send, int id, BaseEventArgs args)
     {
-        if (Event_Dic.TryGetValue(args.Id, out var eventHandler))
+        if (Event_Dic.TryGetValue(id, out var eventHandler))
         {
             eventHandler?.Invoke(send, args);
         }
@@ -66,3 +66,4 @@ public class EventManage : IEventManage<BaseEventArgs>
     {
     }
 }
+

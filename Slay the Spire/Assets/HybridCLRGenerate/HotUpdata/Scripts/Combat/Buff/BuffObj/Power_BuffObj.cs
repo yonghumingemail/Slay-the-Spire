@@ -12,27 +12,29 @@ public class Power_BuffObj : BuffObj
         priority = 5;
     }
 
-    private void Effect(ChangeValueInfo info)
+    private void Effect(object send, BaseEventArgs args)
     {
-        info.value -= stack;
+        if (args is not OnHealthChange_EventArgs _args) return;
+        _args.value.value += -stack;
     }
 
-    public int DamageCalculation(int value)
+    public void DamageCalculation(object send, BaseEventArgs args)
     {
-        return value + stack;
+        if (args is not OnHealthChange_EventArgs _args) return;
+        _args.value.value += stack;
     }
 
     public override void OnAddBuff(PriorityQueueEventCenter eventCent, Action<BuffObj> onDataUpdate)
     {
         base.OnAddBuff(eventCent, onDataUpdate);
-        eventCent.AddEvent<Action<ChangeValueInfo>>("OnAttack", Effect, priority);
-        eventCent.AddEvent<Func<int, int>>("DamageCalculation_Attack", DamageCalculation, priority);
+        eventCent.Subscribe(OnAttack_EventArgs.id, Effect, priority);
+        eventCent.Subscribe(DamageCalculation_Attack_EventArgs.id, DamageCalculation, priority);
     }
 
     public override void OnRemoveBuff(PriorityQueueEventCenter eventCent)
     {
         base.OnRemoveBuff(eventCent);
-        eventCent.RemoveEvent<Action<ChangeValueInfo>>("OnAttack", Effect);
-        eventCent.RemoveEvent<Func<int, int>>("DamageCalculation_Attack", DamageCalculation);
+        eventCent.UnSubscribe(OnAttack_EventArgs.id, Effect);
+        eventCent.UnSubscribe(DamageCalculation_Attack_EventArgs.id, DamageCalculation);
     }
 }

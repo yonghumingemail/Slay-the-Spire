@@ -19,9 +19,9 @@ namespace Z_Tools
         }
 
 
-        public void Fire(object send, BaseEventArgs args)
+        public void Fire(object send, int id,BaseEventArgs args)
         {
-            EventManage.Fire(send, args);
+            EventManage.Fire(send, id,args);
         }
 
         

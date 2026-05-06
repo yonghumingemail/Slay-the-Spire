@@ -14,9 +14,10 @@ public class Anger_BuffObj : BuffObj
         gainPower = new GainPower(stack);
     }
 
-    private void Effect(ChangeValueInfo info)
+    private void Effect(object send, BaseEventArgs args)
     {
-        if (!(info.value < 0)) return;
+        if (args is not OnHealthChange_EventArgs _args) return;
+        if (!(_args.value.value < 0)) return;
         _animator.Play("Update");
         gainPower.Trigger(null, _carrier);
     }
@@ -25,12 +26,12 @@ public class Anger_BuffObj : BuffObj
     {
         base.OnAddBuff(eventCent, onDataUpdate);
         _animator = view.GetComponent<Animator>();
-        eventCent.AddEvent<Action<ChangeValueInfo>>("OnHealthChange", Effect, priority);
+        eventCent.Subscribe(OnHealthChange_EventArgs.id, Effect, priority);
     }
 
     public override void OnRemoveBuff(PriorityQueueEventCenter eventCent)
     {
         base.OnRemoveBuff(eventCent);
-        eventCent.RemoveEvent<Action<ChangeValueInfo>>("OnHealthChange", Effect);
+        eventCent.UnSubscribe(OnHealthChange_EventArgs.id, Effect);
     }
 }

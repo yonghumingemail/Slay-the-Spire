@@ -8,9 +8,7 @@ public class SimpleShield : IShield
     private PriorityQueueEventCenter _priorityEventCenter;
     private IShield_V _shield_V;
     private int maxValue;
-
-    public Func<int, UniTask> OnRoundStartAction;
-
+    
     public int ShieldValue
     {
         get => shieldVale;
@@ -23,13 +21,14 @@ public class SimpleShield : IShield
     {
         maxValue = 999;
         _shield_V = shieldSprite2DObj;
-
-        OnRoundStartAction = OnRoundStart;
-
+        
         _priorityEventCenter = priorityEventCenter;
-        _priorityEventCenter.AddEvent("OnRoundStart", OnRoundStartAction, -1);
-        _priorityEventCenter.AddEvent<Action<ChangeValueInfo>>("OnBeAttacked", ShieldTrigger, -1);
-        _priorityEventCenter.AddEvent<Action>("OnDestroy", OnDestroy, -1);
+        
+        _priorityEventCenter.Subscribe(OnRoundStart_EventArgs.id,OnRoundStart,-1);
+        
+        _priorityEventCenter.Subscribe(OnBeAttacked_EventArgs.id,ShieldTrigger,-1);
+        _priorityEventCenter.Subscribe(OnDestroy_EventArgs.id,OnDestroy,-1);
+        
         _shield_V.UpdateView(this);
     }
 
@@ -39,38 +38,38 @@ public class SimpleShield : IShield
         _shield_V.UpdateView(this);
     }
 
-    private void ShieldTrigger(ChangeValueInfo info)
+    private void ShieldTrigger(object send, BaseEventArgs args)
     {
+        if (args is not ChangeValueEvent_EventArgs _args) return;
         // 如果当前没有护盾，或者传入的值大于等于0，则直接返回，不做任何处理。
-        if (info == null || ShieldValue <= 0 || info.value >= 0)
+        if (_args.value == null || ShieldValue <= 0 || _args.value.value >= 0)
         {
             return;
         }
 
         // 计算护盾实际能吸收的伤害量
-        int damageAbsorbed = Mathf.Min(ShieldValue, -info.value);
+        int damageAbsorbed = Mathf.Min(ShieldValue, -_args.value.value);
 
         // 先扣除护盾值
         ShieldValue -= damageAbsorbed;
         // 再减少伤害值
-        info.value += damageAbsorbed;
+        _args.value.value += damageAbsorbed;
 
         // 更新护盾视觉表现
-        AddShieldValue(info);
+        AddShieldValue(_args.value);
+
     }
 
-    private UniTask OnRoundStart(int roundCount)
+    private void OnRoundStart(object send, BaseEventArgs args)
     {
         shieldVale = 0;
         _shield_V.UpdateView(this);
-        return UniTask.CompletedTask;
     }
 
-    private void OnDestroy()
+    private void OnDestroy(object send, BaseEventArgs args)
     {
         _shield_V = null;
         _priorityEventCenter = null;
-        OnRoundStartAction = null;
         //  Debug.Log(this + "OnDestroy执行");
     }
 }

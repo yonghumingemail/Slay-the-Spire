@@ -19,7 +19,7 @@ public class VulnerableState_BuffObj : BuffObj
     {
         if (baseArgs is OnBeAttacked_EventArgs args)
         {
-            args.ChangeValueInfo.value = (int)(args.ChangeValueInfo.value * power);
+            args.value.value = (int)(args.value.value * power);
         }
     }
 

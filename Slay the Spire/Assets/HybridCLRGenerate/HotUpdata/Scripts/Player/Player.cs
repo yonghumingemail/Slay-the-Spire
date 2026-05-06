@@ -45,24 +45,31 @@ public class Player : MonoBehaviour, IEventCenterObject<BaseEventArgs>
     private async UniTaskVoid Initialize()
     {
         EventCenter_Singleton.Instance.Subscribe(GetObject_EventArgs<Player>.id, Get);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnRoundEnd_EventArgs.id, OnRoundEnd, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync(OnRoundEnd_EventArgs.id, OnRoundEnd, 0);
 
-        EventManage.Subscribe(GetObject_EventArgs<PriorityQueueEventCenter>.id, (send, handler) => { GetObject_EventArgs<PriorityQueueEventCenter>.Subscribe(handler, _priorityEventCenter); });
+        EventManage.Subscribe(GetObject_EventArgs<PriorityQueueEventCenter>.id,
+            (send, handler) =>
+            {
+                GetObject_EventArgs<PriorityQueueEventCenter>.Subscribe(handler, _priorityEventCenter);
+            });
 
         health_V = GetComponentInChildren<IHealth_V>();
         health_V.InitializeView(gameObject);
         _health = new SimpleHealth(100, 100, health_V, _priorityEventCenter);
-        EventManage.Subscribe(GetObject_EventArgs<IHealth>.id, (send, handler) => { GetObject_EventArgs<IHealth>.Subscribe(handler, _health); });
+        EventManage.Subscribe(GetObject_EventArgs<IHealth>.id,
+            (send, handler) => { GetObject_EventArgs<IHealth>.Subscribe(handler, _health); });
 
         shield_V = GetComponentInChildren<IShield_V>();
         shield_V.InitializeView(gameObject, health_V);
         _shield = new SimpleShield(shield_V, _priorityEventCenter);
-        EventManage.Subscribe(GetObject_EventArgs<IShield>.id, (send, handler) => { GetObject_EventArgs<IShield>.Subscribe(handler, _shield); });
+        EventManage.Subscribe(GetObject_EventArgs<IShield>.id,
+            (send, handler) => { GetObject_EventArgs<IShield>.Subscribe(handler, _shield); });
 
         buffList_V = GetComponentInChildren<IBuffList_V>();
         await buffList_V.Initialized();
         _buffList = new SimpleBuffList(buffList_V, _priorityEventCenter);
-        EventManage.Subscribe(GetObject_EventArgs<IBuffList>.id, (send, handler) => { GetObject_EventArgs<IBuffList>.Subscribe(handler, _buffList); });
+        EventManage.Subscribe(GetObject_EventArgs<IBuffList>.id,
+            (send, handler) => { GetObject_EventArgs<IBuffList>.Subscribe(handler, _buffList); });
 
         animator = GetComponent<Animator>();
         //监听玩家死亡，将token设置为取消
@@ -74,21 +81,20 @@ public class Player : MonoBehaviour, IEventCenterObject<BaseEventArgs>
     }
 
 
-    private void OnRoundEnd(object sender, BaseEventArgs baseEventArgs)
+    private async UniTask OnRoundEnd(object sender, BaseEventArgs baseEventArgs)
     {
         if (baseEventArgs is OnRoundEnd_EventArgs args)
         {
-            args.value.AddRange(OnRoundEnd_EventArgs.Fire(args.args_int, this, _priorityEventCenter));
+            await UniTask.WhenAll(OnRound_EventArgs.Fire(args.args_int, OnRoundEnd_EventArgs.id, this,
+                _priorityEventCenter));
         }
     }
+
 
     private void OnDestroy()
     {
         EventManage.Clear();
-        foreach (var VARIABLE in _priorityEventCenter.GetEvent("OnDestroy"))
-        {
-            (VARIABLE._delegate as Action)?.Invoke();
-        }
+        Action_EventArgs.Fire(OnDestroy_EventArgs.id, this, _priorityEventCenter);
 
         _priorityEventCenter.Clear();
     }

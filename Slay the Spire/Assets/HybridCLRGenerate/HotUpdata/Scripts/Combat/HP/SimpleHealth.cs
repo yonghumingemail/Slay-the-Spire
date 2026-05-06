@@ -33,21 +33,13 @@ public class SimpleHealth : IHealth
 
     public void AddHealth(ChangeValueInfo info)
     {
-        
-        foreach (var VARIABLE in _priorityEventCenter.GetEvent("OnBeAttacked"))
-        {
-            (VARIABLE._delegate as Action<ChangeValueInfo>)?.Invoke(info);
-        }
+        ChangeValueEvent_EventArgs.Fire(info,OnBeAttacked_EventArgs.id,this,_priorityEventCenter);
 
-        HealthValue = (int)Mathf.Clamp(HealthValue + info.value, 0, MaxHealth);
+        HealthValue = Mathf.Clamp(HealthValue + info.value, 0, MaxHealth);
         _healthV.UpdateView(this);
 
-        foreach (var VARIABLE in _priorityEventCenter.GetEvent("OnHealthChange"))
-        {
-            (VARIABLE._delegate as Action<ChangeValueInfo>)?.Invoke(info);
-        }
-
-
+        ChangeValueEvent_EventArgs.Fire(info,OnHealthChange_EventArgs.id,this,_priorityEventCenter);
+        
         // Debug.Log(HealthValue);
     }
 }

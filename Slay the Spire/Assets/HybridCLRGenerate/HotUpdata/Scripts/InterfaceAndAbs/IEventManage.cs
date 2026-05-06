@@ -2,7 +2,7 @@ public interface IBaseEventManage<TEventArgs> where TEventArgs : BaseEventArgs
 {
     void UnSubscribe(int id, GameEventHandler<TEventArgs> _delegate);
     void UnSubscribeAll(int id);
-    void Fire(object send, TEventArgs args);
+    void Fire(object send, int id,TEventArgs args);
     void Clear();
 }
 

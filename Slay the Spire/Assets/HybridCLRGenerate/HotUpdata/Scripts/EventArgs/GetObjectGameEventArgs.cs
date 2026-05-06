@@ -17,7 +17,7 @@ public class GetObject_EventArgs<T> : GameEventArgs
     public static T Fire(object sender,IEventManage<BaseEventArgs> eventManage)
     {
         var args = ReferencePool.Acquire<GetObject_EventArgs<T>>();
-        eventManage.Fire(sender, args);
+        eventManage.Fire(sender,args.Id, args);
         var returnValue = args.value;
         ReferencePool.Release(args);
         return returnValue;

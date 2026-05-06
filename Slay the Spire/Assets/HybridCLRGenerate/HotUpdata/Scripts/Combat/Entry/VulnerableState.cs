@@ -49,15 +49,9 @@ public class VulnerableState : IEntry
             buffListObj.AddBuff(buff);
         }
 
-        foreach (var action in buffListObj._priorityEventCenter.GetEvent("DamageValueChange_BeAttacked"))
-        {
-            (action._delegate as Action)?.Invoke();
-        }
+        Action_EventArgs.Fire(DamageCalculation_BeAttacked_EventArgs.id, this, buffListObj._priorityEventCenter);
+        Buff_EventArgs.Fire(buff,OnGainBuff_EventArgs.id,stack,this, buffListObj._priorityEventCenter);
 
-        foreach (var action in buffListObj._priorityEventCenter.GetEvent("GainBuff"))
-        {
-            (action._delegate as Action<BuffObj, int>)?.Invoke(buff, buff.stack );
-        }
     }
 
     public string GetDescription()

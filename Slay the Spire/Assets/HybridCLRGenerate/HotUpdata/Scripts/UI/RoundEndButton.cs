@@ -35,19 +35,9 @@ public class RoundEndButton : MonoBehaviour
             return;
         }
         _text.SetText("敌方回合");
-        var eventList = EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("OnRoundEnd");
-        foreach (var VARIABLE in eventList)
-        {
-            if (VARIABLE._delegate is Func<int,UniTask> func)
-            {
-                await func.Invoke(_combatManage.RoundCount);
-            }
-            else
-            {
-                // 处理类型不匹配的情况
-                Debug.LogWarning($"委托类型不匹配: {VARIABLE._delegate?.GetType()}");
-            }
-        }
+        OnRound_EventArgs.Fire(_combatManage.RoundCount, OnRoundEnd_EventArgs.id, this,
+            EventCenter_Singleton.Instance._priorityQueueEventCenter);
+       
         _text.SetText("结束回合");
         _combatManage.OnRoundStart().Forget();
     }

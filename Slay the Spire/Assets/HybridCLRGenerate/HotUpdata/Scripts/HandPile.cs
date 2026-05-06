@@ -28,16 +28,13 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
         cardArrangement = new CardArrangement(maxHandSize);
         spline = transform.Find("Spline").GetComponent<SplineContainer>();
         DirectionalArrowLine = transform.Find("DirectionalArrowLine").GetComponent<DirectionalArrowLine>();
-        
-        
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int, UniTask>>("OnRoundStart",
-            OnRoundStart, 0);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Func<int, UniTask>>("OnRoundEnd", OnRoundEnd,
-            0);
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action<Enemy>>("OnMouseEnterEnemy",
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnRoundStart_EventArgs.id, OnRoundStart, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnRoundEnd_EventArgs.id, OnRoundEnd, 0);
+
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnMouseEnterEnemy_EventArgs.id,
             OnMouseEnterEnemy, 0);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.AddEvent<Action<Enemy>>("OnMouseExitEnemy",
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnMouseExitEnemy_EventArgs.id,
             OnMouseExitEnemy, 0);
     }
 
@@ -54,22 +51,16 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
         }
     }
 
-    private void OnMouseEnterEnemy(Enemy selectableObject)
+    private void OnMouseEnterEnemy(object sender, BaseEventArgs args)
     {
-        if (!SelectedCard) return;
-        foreach (var priorityEvent in SelectedCard.priorityEventCenter.GetEvent("OnMouseEnterEnemy"))
-        {
-            (priorityEvent._delegate as Action<Enemy>)?.Invoke(selectableObject);
-        }
+        if (!SelectedCard || !(args is Enemy_EventArgs _args)) return;
+        Enemy_EventArgs.Fire(_args.value, OnMouseEnterEnemy_EventArgs.id, this, SelectedCard.priorityEventCenter);
     }
 
-    private void OnMouseExitEnemy(Enemy selectableObject)
+    private void OnMouseExitEnemy(object sender, BaseEventArgs args)
     {
-        if (!SelectedCard) return;
-        foreach (var priorityEvent in SelectedCard.priorityEventCenter.GetEvent("OnMouseExitEnemy"))
-        {
-            (priorityEvent._delegate as Action<Enemy>)?.Invoke(selectableObject);
-        }
+        if (!SelectedCard || !(args is Enemy_EventArgs _args)) return;
+        Enemy_EventArgs.Fire(_args.value, OnMouseExitEnemy_EventArgs.id, this, SelectedCard.priorityEventCenter);
     }
 
     public void SetSelectedCard(Card card)
@@ -87,26 +78,20 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
 
         if (isSelected)
         {
-            foreach (var VARIABLE in EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("OnSelectCard"))
-            {
-                (VARIABLE._delegate as Action<Card>)?.Invoke(SelectedCard);
-            }
+            Card_EventArgs.Fire(SelectedCard, OnSelectCard_EventArgs.id, this,
+                EventCenter_Singleton.Instance._priorityQueueEventCenter);
         }
         else
         {
-            foreach (var VARIABLE in
-                     EventCenter_Singleton.Instance._priorityQueueEventCenter.GetEvent("OnUnSelectCard"))
-            {
-                (VARIABLE._delegate as Action)?.Invoke();
-            }
+            Card_EventArgs.Fire(SelectedCard, OnUnSelectCard_EventArgs.id, this,
+                EventCenter_Singleton.Instance._priorityQueueEventCenter);
         }
     }
 
 
     public async UniTaskVoid Test11()
     {
-        
-        drawPile =GetObject_EventArgs<DrawPile>.Fire(this,EventCenter_Singleton.Instance);
+        drawPile = GetObject_EventArgs<DrawPile>.Fire(this, EventCenter_Singleton.Instance);
 
         GameObject prefab =
             await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/Card/Card.prefab");
@@ -130,7 +115,7 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
         }
     }
 
-    private async UniTask OnRoundEnd(int roundCount)
+    private async void OnRoundEnd(object sender, BaseEventArgs args)
     {
         // 创建副本，避免循环中列表变化的影响
         var cardsToProcess = cardInstances.ToArray();
@@ -147,7 +132,7 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
 
     public float speed2;
 
-    public async UniTask OnRoundStart(int roundCount)
+    public async void OnRoundStart(object sender, BaseEventArgs args)
     {
         // print("抽牌："+Time.time);
         await DrawCard(drawCardsCount + drawCardsOffer);
