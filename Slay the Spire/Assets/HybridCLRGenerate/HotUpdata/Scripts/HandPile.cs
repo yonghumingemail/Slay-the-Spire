@@ -29,8 +29,8 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
         spline = transform.Find("Spline").GetComponent<SplineContainer>();
         DirectionalArrowLine = transform.Find("DirectionalArrowLine").GetComponent<DirectionalArrowLine>();
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnRoundStart_EventArgs.id, OnRoundStart, 0);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnRoundEnd_EventArgs.id, OnRoundEnd, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync(OnRoundStart_EventArgs.id, OnRoundStart, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync(OnRoundEnd_EventArgs.id, OnRoundEnd, 0);
 
         EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnMouseEnterEnemy_EventArgs.id,
             OnMouseEnterEnemy, 0);
@@ -115,7 +115,7 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
         }
     }
 
-    private async void OnRoundEnd(object sender, BaseEventArgs args)
+    private async UniTask OnRoundEnd(object sender, BaseEventArgs args)
     {
         // 创建副本，避免循环中列表变化的影响
         var cardsToProcess = cardInstances.ToArray();
@@ -132,7 +132,7 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
 
     public float speed2;
 
-    public async void OnRoundStart(object sender, BaseEventArgs args)
+    public async UniTask OnRoundStart(object sender, BaseEventArgs args)
     {
         // print("抽牌："+Time.time);
         await DrawCard(drawCardsCount + drawCardsOffer);

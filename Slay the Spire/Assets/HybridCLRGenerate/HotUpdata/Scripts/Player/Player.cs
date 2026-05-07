@@ -9,7 +9,7 @@ public class Player : MonoBehaviour, IEventCenterObject<BaseEventArgs>
 {
     public IEventManage<BaseEventArgs> EventManage { get; } = new EventManage(); //用于提供接口对象
 
-    public PriorityQueueEventCenter _priorityEventCenter { get; private set; } =
+    public PriorityQueueEventCenter _priorityEventCenter =
         new PriorityQueueEventCenter(); //用于记录buff事件
 
     public CancellationTokenSource TokenSource { get; } = new CancellationTokenSource();
@@ -45,7 +45,7 @@ public class Player : MonoBehaviour, IEventCenterObject<BaseEventArgs>
     private async UniTaskVoid Initialize()
     {
         EventCenter_Singleton.Instance.Subscribe(GetObject_EventArgs<Player>.id, Get);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync(OnRoundEnd_EventArgs.id, OnRoundEnd, 0);
+       // EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync(OnRoundEnd_EventArgs.id, OnRoundEnd, 0);
 
         EventManage.Subscribe(GetObject_EventArgs<PriorityQueueEventCenter>.id,
             (send, handler) =>
@@ -85,8 +85,8 @@ public class Player : MonoBehaviour, IEventCenterObject<BaseEventArgs>
     {
         if (baseEventArgs is OnRoundEnd_EventArgs args)
         {
-            await UniTask.WhenAll(OnRound_EventArgs.Fire(args.args_int, OnRoundEnd_EventArgs.id, this,
-                _priorityEventCenter));
+            await OnRound_EventArgs.Fire(args.args_int, OnRoundEnd_EventArgs.id, this,
+                _priorityEventCenter);
         }
     }
 

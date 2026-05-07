@@ -28,7 +28,7 @@ public class BaseDamageCalculation_EventArgs : GameEventArgs
         }
 
         Debug.Log($"sender:{sender}调用Fire函数的事件参数为空");
-        return 0;
+        return damageValue;
     }
 
     public override void Clear()
@@ -88,11 +88,13 @@ public class OnBeAttacked_EventArgs : ChangeValueEvent_EventArgs
     public override int Id => id;
     public static int id = typeof(OnBeAttacked_EventArgs).GetHashCode();
 }
+
 public class OnGainShield_EventArgs : ChangeValueEvent_EventArgs
 {
     public override int Id => id;
     public static int id = typeof(OnGainShield_EventArgs).GetHashCode();
 }
+
 public class OnHealthChange_EventArgs : ChangeValueEvent_EventArgs
 {
     public override int Id => id;
@@ -100,35 +102,30 @@ public class OnHealthChange_EventArgs : ChangeValueEvent_EventArgs
 }
 
 
-
 public class OnRound_EventArgs : GameEventArgs
 {
     public override int Id { get; }
 
     public int args_int;
-    public List<UniTask> value;
-
-    public static List<UniTask> Fire(int args_int, int id, object sender,
-        IPriorityEventManage<BaseEventArgs> eventManage)
+    
+    public static async UniTask Fire(int args_int, int id, object sender,
+        IPriorityEventManageAsync<BaseEventArgs> eventManage)
     {
         if (eventManage == null)
         {
             Debug.Log($"sender:{sender}调用Fire函数的事件参数为空");
-            return null;
+            return;
         }
 
         var args = ReferencePool.Acquire<OnRound_EventArgs>();
         args.args_int = args_int;
-        eventManage.Fire(sender, id, args);
-        var returnValue = args.value;
+        await eventManage.FireAsync(sender, id, args);
         ReferencePool.Release(args);
-        return returnValue;
     }
 
     public override void Clear()
     {
         args_int = 0;
-        value = null;
     }
 }
 
@@ -178,16 +175,20 @@ public class DamageValueChange_Attack_EventArgs : Action_EventArgs
     public override int Id => id;
     public static int id = typeof(DamageValueChange_Attack_EventArgs).GetHashCode();
 }
+
 public class DamageValueChange_BeAttacked_EventArgs : Action_EventArgs
 {
     public override int Id => id;
-    public static int id = typeof(DamageValueChange_Attack_EventArgs).GetHashCode();
+    public static int id = typeof(DamageValueChange_BeAttacked_EventArgs).GetHashCode();
 }
+
 public class OnCardArrangementStart_EventArgs : Action_EventArgs
 {
     public override int Id => id;
     public static int id = typeof(OnCardArrangementStart_EventArgs).GetHashCode();
-}public class OnCardArrangementEnd_EventArgs : Action_EventArgs
+}
+
+public class OnCardArrangementEnd_EventArgs : Action_EventArgs
 {
     public override int Id => id;
     public static int id = typeof(OnCardArrangementEnd_EventArgs).GetHashCode();
@@ -261,6 +262,7 @@ public class OnUnSelectCard_EventArgs : Card_EventArgs
     public override int Id => id;
     public static int id = typeof(OnUnSelectCard_EventArgs).GetHashCode();
 }
+
 public class OnSelectCard_EventArgs : Card_EventArgs
 {
     public override int Id => id;
@@ -268,13 +270,13 @@ public class OnSelectCard_EventArgs : Card_EventArgs
 }
 
 
-
 public class Buff_EventArgs : GameEventArgs
 {
     public override int Id { get; }
     public BuffObj value;
     public int stack;
-    public static void Fire(BuffObj value,int stack ,int id, object sender,
+
+    public static void Fire(BuffObj value, int stack, int id, object sender,
         IPriorityEventManage<BaseEventArgs> eventManage)
     {
         if (eventManage == null)

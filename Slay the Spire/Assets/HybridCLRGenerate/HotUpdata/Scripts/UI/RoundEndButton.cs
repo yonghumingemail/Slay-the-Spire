@@ -35,10 +35,12 @@ public class RoundEndButton : MonoBehaviour
             return;
         }
         _text.SetText("敌方回合");
-        OnRound_EventArgs.Fire(_combatManage.RoundCount, OnRoundEnd_EventArgs.id, this,
+        _button.interactable = false;
+       await OnRound_EventArgs.Fire(_combatManage.RoundCount, OnRoundEnd_EventArgs.id, this,
             EventCenter_Singleton.Instance._priorityQueueEventCenter);
        
         _text.SetText("结束回合");
+        _button.interactable = true;
         _combatManage.OnRoundStart().Forget();
     }
 }

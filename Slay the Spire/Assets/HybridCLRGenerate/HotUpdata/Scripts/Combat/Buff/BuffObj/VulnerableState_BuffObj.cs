@@ -17,13 +17,13 @@ public class VulnerableState_BuffObj : BuffObj
 
     private void Effect(object send, BaseEventArgs baseArgs)
     {
-        if (baseArgs is OnBeAttacked_EventArgs args)
+        if (baseArgs is ChangeValueEvent_EventArgs args)
         {
             args.value.value = (int)(args.value.value * power);
         }
     }
 
-    private void OnRoundEnd(object send, BaseEventArgs baseArgs)
+    private UniTask OnRoundEnd(object send, BaseEventArgs baseArgs)
     {
         stack--;
         if (OnDataUpdate != null)
@@ -34,13 +34,12 @@ public class VulnerableState_BuffObj : BuffObj
         {
             Debug.Log(this + "缺少更新视图的方法");
         }
-
-        (baseArgs as OnRoundEnd_EventArgs)?.value.Add(UniTask.CompletedTask);
+        return UniTask.CompletedTask;
     }
 
     private void DamageCalculation(object send, BaseEventArgs baseArgs)
     {
-        if (baseArgs is DamageCalculation_BeAttacked_EventArgs args)
+        if (baseArgs is BaseDamageCalculation_EventArgs args)
         {
             args.damage = (int)(args.damage * power);
         }
@@ -52,7 +51,7 @@ public class VulnerableState_BuffObj : BuffObj
 
         eventCent.Subscribe(OnBeAttacked_EventArgs.id, Effect, priority);
         eventCent.Subscribe(DamageCalculation_BeAttacked_EventArgs.id, DamageCalculation, priority);
-        eventCent.Subscribe(OnRoundEnd_EventArgs.id, OnRoundEnd, priority);
+        eventCent.SubscribeAsync(OnRoundEnd_EventArgs.id, OnRoundEnd, priority);
     }
 
     public override void OnRemoveBuff(PriorityQueueEventCenter eventCent)
@@ -60,6 +59,6 @@ public class VulnerableState_BuffObj : BuffObj
         base.OnRemoveBuff(eventCent);
         eventCent.UnSubscribe(OnBeAttacked_EventArgs.id, Effect);
         eventCent.UnSubscribe(DamageCalculation_BeAttacked_EventArgs.id, DamageCalculation);
-        eventCent.UnSubscribe(OnRoundEnd_EventArgs.id, OnRoundEnd);
+        eventCent.UnSubscribeAsync(OnRoundEnd_EventArgs.id, OnRoundEnd);
     }
 }

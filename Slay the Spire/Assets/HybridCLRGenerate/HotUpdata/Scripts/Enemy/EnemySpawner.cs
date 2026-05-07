@@ -17,8 +17,8 @@ public class EnemySpawner : MonoBehaviour
         
         EventCenter_Singleton.Instance.Subscribe(GetObject_EventArgs<EnemySpawner>.id, Get);
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnRoundStart_EventArgs.id, OnRoundStart, 5);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnRoundEnd_EventArgs.id, OnRoundEnd, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync(OnRoundStart_EventArgs.id, OnRoundStart, 5);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync(OnRoundEnd_EventArgs.id, OnRoundEnd, 0);
 
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -38,18 +38,17 @@ public class EnemySpawner : MonoBehaviour
     /// <summary>
     /// 点击回合结束后，顺序通知所有怪物回合开始
     /// </summary>
-    private async void OnRoundEnd(object sender, BaseEventArgs args)
+    private async UniTask OnRoundEnd(object sender, BaseEventArgs args)
     {
         if (args is not OnRound_EventArgs _args) return;
         foreach (var VARIABLE in enemyList)
         {
-            // await 
-            VARIABLE.OnRoundStart(_args.args_int);
+          await  VARIABLE.OnRoundStart(_args.args_int);
         }
 
     }
 
-    private async void OnRoundStart(object sender, BaseEventArgs args)
+    private async UniTask OnRoundStart(object sender, BaseEventArgs args)
     {
         if (args is not OnRound_EventArgs _args) return;
         

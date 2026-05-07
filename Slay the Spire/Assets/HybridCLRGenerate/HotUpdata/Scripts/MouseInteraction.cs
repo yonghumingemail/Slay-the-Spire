@@ -15,31 +15,31 @@ public class MouseInteraction : MonoBehaviour,
     public Action<PointerEventData> OnMouseExitDelegate { get; set; }
     public bool isDebug;
 
-    public void OnPointerEnter(PointerEventData eventData)
+    public virtual void OnPointerEnter(PointerEventData eventData)
     {
         if (isDebug) print("OnPointerEnter");
         OnMouseEnterDelegate?.Invoke(eventData);
     }
 
-    public void OnPointerExit(PointerEventData eventData)
+    public virtual void OnPointerExit(PointerEventData eventData)
     {
         if (isDebug)   print("OnPointerExit");
         OnMouseExitDelegate?.Invoke(eventData);
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    public virtual void OnPointerDown(PointerEventData eventData)
     {
         if (isDebug) print("OnPointerDown");
         OnMouseDownDelegate?.Invoke(eventData);
     }
 
-    public void OnPointerUp(PointerEventData eventData)
+    public virtual void OnPointerUp(PointerEventData eventData)
     {
         if (isDebug)   print("OnPointerUp");
         OnMouseUpDelegate?.Invoke(eventData);
     }
 
-    private void OnDestroy()
+    protected virtual void OnDestroy()
     {
         OnMouseEnterDelegate = null;
         OnMouseExitDelegate = null;

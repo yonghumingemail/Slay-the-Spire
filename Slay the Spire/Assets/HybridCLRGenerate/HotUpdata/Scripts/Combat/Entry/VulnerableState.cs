@@ -22,7 +22,7 @@ public class VulnerableState : IEntry
         
         IEventCenterObject<BaseEventArgs> eventCenter_receiver = receiver.GetComponent<IEventCenterObject<BaseEventArgs>>();
         IBuffList buffListObj = GetObject_EventArgs<IBuffList>.Fire(this,eventCenter_receiver.EventManage);
-
+        
 
         if (buffListObj == null)
         {
@@ -49,8 +49,8 @@ public class VulnerableState : IEntry
             buffListObj.AddBuff(buff);
         }
 
-        Action_EventArgs.Fire(DamageCalculation_BeAttacked_EventArgs.id, this, buffListObj._priorityEventCenter);
-        Buff_EventArgs.Fire(buff,OnGainBuff_EventArgs.id,stack,this, buffListObj._priorityEventCenter);
+        Action_EventArgs.Fire(DamageValueChange_BeAttacked_EventArgs.id, this, buffListObj._priorityEventCenter);
+        Buff_EventArgs.Fire(buff,stack,OnGainBuff_EventArgs.id,this, buffListObj._priorityEventCenter);
 
     }
 

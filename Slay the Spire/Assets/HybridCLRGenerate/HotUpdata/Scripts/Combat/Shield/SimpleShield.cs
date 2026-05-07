@@ -24,8 +24,7 @@ public class SimpleShield : IShield
         
         _priorityEventCenter = priorityEventCenter;
         
-        _priorityEventCenter.Subscribe(OnRoundStart_EventArgs.id,OnRoundStart,-1);
-        
+        _priorityEventCenter.SubscribeAsync(OnRoundStart_EventArgs.id,OnRoundStart,-1);
         _priorityEventCenter.Subscribe(OnBeAttacked_EventArgs.id,ShieldTrigger,-1);
         _priorityEventCenter.Subscribe(OnDestroy_EventArgs.id,OnDestroy,-1);
         
@@ -60,10 +59,11 @@ public class SimpleShield : IShield
 
     }
 
-    private void OnRoundStart(object send, BaseEventArgs args)
+    private UniTask OnRoundStart(object send, BaseEventArgs args)
     {
         shieldVale = 0;
         _shield_V.UpdateView(this);
+        return UniTask.CompletedTask;
     }
 
     private void OnDestroy(object send, BaseEventArgs args)

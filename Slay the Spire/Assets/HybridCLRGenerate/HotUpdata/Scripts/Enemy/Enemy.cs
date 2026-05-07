@@ -14,7 +14,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public IEventManage<BaseEventArgs> EventManage { get; } = new EventManage(); //用于提供接口对象
     public CancellationTokenSource TokenSource { get; } = new CancellationTokenSource();
 
-    public PriorityQueueEventCenter _priorityEventCenter { get; protected set; } =
+    public PriorityQueueEventCenter _priorityEventCenter =
         new PriorityQueueEventCenter(); //用于记录和触发buff事件
 
     [SerializeField] protected SimpleHealth _health;
@@ -48,7 +48,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     protected virtual async UniTask Initialize()
     {
-        _player = GetObject_EventArgs<Player>.Fire(this,EventCenter_Singleton.Instance);
+        _player = GetObject_EventArgs<Player>.Fire(this, EventCenter_Singleton.Instance);
 
         spriteRenderer = transform.Find("UI").gameObject.GetComponent<SpriteRenderer>();
         intentC = GetComponentInChildren<Intent_C>();
@@ -84,10 +84,11 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     /// 在敌人回合结束时的回调,不需要外部调用，执行完意图后执行
     /// </summary>
     /// <param name="roundCount"></param>
-    protected virtual async void OnRoundEnd(int roundCount)
+    protected virtual async UniTask OnRoundEnd(int roundCount)
     {
         //通知事件，回合结束
-        OnRound_EventArgs.Fire(roundCount, OnRoundEnd_EventArgs.id, this, _priorityEventCenter);
+        await OnRound_EventArgs.Fire(roundCount, OnRoundEnd_EventArgs.id, this, _priorityEventCenter);
+        
     }
 
 
@@ -95,17 +96,16 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     /// 在敌人回合开始时的回调,需要由外部调用
     /// </summary>
     /// <param name="roundCount"></param>
-
-    public virtual async void OnRoundStart(int roundCount)
+    public virtual async UniTask OnRoundStart(int roundCount)
     {
         //通知事件，回合开始
-        OnRound_EventArgs.Fire(roundCount, OnRoundStart_EventArgs.id, this, _priorityEventCenter);
+        await OnRound_EventArgs.Fire(roundCount, OnRoundStart_EventArgs.id, this, _priorityEventCenter);
 
         await currentAction.Execute.Invoke();
         actionList.Add(currentAction);
         currentAction = GetNextAction();
         intentC.HideIntent();
-         OnRoundEnd(roundCount);
+        await OnRoundEnd(roundCount);
     }
 
     public virtual UniTask OnPlayerRoundStart(int roundCount)
@@ -117,7 +117,6 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
-
         Enemy_EventArgs.Fire(this, OnMouseEnterEnemy_EventArgs.id, this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
     }
 

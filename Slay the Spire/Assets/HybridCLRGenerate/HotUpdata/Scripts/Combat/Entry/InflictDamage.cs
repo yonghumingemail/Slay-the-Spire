@@ -63,12 +63,13 @@ public class InflictDamage : IEntry
     public void DamageCalculation(PriorityQueueEventCenter send, PriorityQueueEventCenter receive)
     {
         calculated_damage = damage;
-        // Debug.Log($"计算前的伤害：{calculated_damage}");
-        
+
+        //  Debug.Log($"计算前的伤害：{calculated_damage}");
+
         calculated_damage = BaseDamageCalculation_EventArgs.Fire(calculated_damage, DamageCalculation_Attack_EventArgs.id, this, send);
         calculated_damage = BaseDamageCalculation_EventArgs.Fire(calculated_damage, DamageCalculation_BeAttacked_EventArgs.id, this, receive);
-        
+
         OnUpdateData?.Invoke();
-        //  Debug.Log($"计算后的伤害：{calculated_damage}");
+        // Debug.Log($"计算后的伤害：{calculated_damage}");
     }
 }
