@@ -1,30 +1,32 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class MapView : MonoBehaviour
+public class MapView : UIFormLogic
 {
     private MouseInteraction maskInteraction;
 
     private void Awake()
     {
-        maskInteraction=transform.Find("Mask").GetComponent<MouseInteraction>();
-        maskInteraction.OnMouseDownDelegate += MouseDown;
+        maskInteraction = transform.Find("Mask").GetComponent<MouseInteraction>();
+        maskInteraction.OnMouseDownDelegate += data => { gameObject.SetActive(false); };
+        // var graphic = gameObject.GetComponent<Graphic>();
+        // graphic.raycastTarget = false;
     }
 
-    void Start()
+    protected internal override void OnInit(object userData)
     {
-        
+        base.OnInit(userData);
+        if (userData is Button button)
+        {
+            button.onClick.AddListener(OnUIButtonClick);
+        }
     }
 
-
-    void Update()
+    private void OnUIButtonClick()
     {
-        
-    }
-
-    private void MouseDown(PointerEventData data)
-    {
-        gameObject.SetActive(false);
+        transform.SetAsLastSibling();
+        gameObject.SetActive(true);
     }
 }
