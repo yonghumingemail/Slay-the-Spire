@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Pool;
 using Z_Tools;
 
 /// <summary>
@@ -9,17 +10,24 @@ using Z_Tools;
 /// </summary>
 public class UIManager : SingletonBaseMono<UIManager>
 {
-    // 存放所有深度层级对应的 UI 父节点（UIGroup）
+    // 存放所有深度层级对应的 UIGroup
     private readonly Dictionary<int, GameObject> uiGroup = new();
+
+    private readonly Dictionary<GameObject, UIFormLogic> _uiFormLogics = new();
+
     // 用于排序的深度列表（缓存，避免每次排序时重复分配内存）
     private readonly List<int> sortedDepths = new();
+
     // 用于实例化新 UIGroup 的预制体
     private GameObject uiGroupPrefab;
+
     // 标记预制体是否加载完成、已存在的子 UIGroup 是否已扫描完毕
     private bool isInitialized;
 
-    private void Awake()
+
+    protected override void Awake()
     {
+        base.Awake();
         // 启动异步初始化，异常时打印日志，不阻塞主流程
         Initialize().Forget(Debug.LogException);
     }
@@ -31,8 +39,7 @@ public class UIManager : SingletonBaseMono<UIManager>
     private async UniTask Initialize()
     {
         // 从 Addressables 异步加载 UIGroup 预制体
-        uiGroupPrefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>(
-            "Assets/Art/Prefab/UI/UIGroup.prefab");
+        uiGroupPrefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/UIGroup.prefab");
 
         // 遍历所有已有子节点，将它们作为预设的 UIGroup 注册到字典中
         for (int i = 0; i < transform.childCount; i++)
@@ -47,46 +54,37 @@ public class UIManager : SingletonBaseMono<UIManager>
         isInitialized = true;
     }
 
-    public void SetActive(bool active,GameObject gameObject)
-    {
-        
-    }
-    
+
     /// <summary>
     /// 向指定深度添加一个 UI 对象。
     /// 如果该深度已有 UIGroup，则将 obj 设置为它的子物体；
     /// 否则实例化一个新的 UIGroup，并将 obj 挂载到其下，之后重新排序所有层级。
     /// </summary>
-    /// <param name="deep">深度值（可正可负），决定 UI 的显示层级</param>
-    /// <param name="obj">要添加的 UI 游戏对象</param>
-    public void AddUIInterface(int deep, GameObject obj)
+    public void AddUIInterface(int deep, GameObject obj, object data)
     {
-        if (obj == null)
-        {
-            Debug.LogError("Trying to add null UI object.");
-            return;
-        }
+        var uiFormLogic = obj.GetComponent<UIFormLogic>();
 
         // 如果该深度已经有对应的 UIGroup 节点
         if (uiGroup.TryGetValue(deep, out var group))
         {
-            // 直接设置为该 Group 的子物体，保持局部坐标
-            obj.transform.SetParent(group.transform, worldPositionStays: false);
+            obj.transform.SetParent(group.transform);
+            _uiFormLogics.TryAdd(obj, uiFormLogic);
         }
         else
         {
-            // 未找到对应 Group，实例化一个新的 UIGroup
-            var newGroup = Instantiate(uiGroupPrefab, transform);
-            // 命名以便调试
+            var newGroup = Instantiate(uiGroupPrefab);
             newGroup.name = $"UIGroup_Depth_{deep}";
-            obj.transform.SetParent(newGroup.transform, worldPositionStays: false);
-            // 将新 Group 注册到字典中
+
             uiGroup.Add(deep, newGroup);
-            // 因为插入了新的层级，需要重新排序所有 UIGroup 的兄弟索引
+            _uiFormLogics.TryAdd(obj, uiFormLogic);
+
             Sort();
         }
+        uiFormLogic.OnInit(data);
     }
 
+    
+    
     /// <summary>
     /// 从指定深度移除一个 UI 对象。
     /// 如果移除后该深度的 UIGroup 下再无子物体，则会销毁该 UIGroup 并重新排序。
@@ -136,7 +134,5 @@ public class UIManager : SingletonBaseMono<UIManager>
     /// </summary>
     private void OnDestroy()
     {
-        // 释放对 UIGroup 预制体的引用计数
-        AddressablesMgr.Instance.Release("Assets/Art/Prefab/UI/UIGroup.prefab");
     }
 }

@@ -10,23 +10,19 @@ public class MapView : UIFormLogic
     private void Awake()
     {
         maskInteraction = transform.Find("Mask").GetComponent<MouseInteraction>();
-        maskInteraction.OnMouseDownDelegate += data => { gameObject.SetActive(false); };
-        // var graphic = gameObject.GetComponent<Graphic>();
-        // graphic.raycastTarget = false;
+        maskInteraction.OnMouseDownDelegate += data => { InternalSetVisible(false); };
     }
+    
 
     protected internal override void OnInit(object userData)
     {
         base.OnInit(userData);
+        InternalSetVisible(false);
         if (userData is Button button)
         {
-            button.onClick.AddListener(OnUIButtonClick);
+            button.onClick.AddListener(() => { InternalSetVisible(true);});
         }
     }
-
-    private void OnUIButtonClick()
-    {
-        transform.SetAsLastSibling();
-        gameObject.SetActive(true);
-    }
+    
+   
 }
