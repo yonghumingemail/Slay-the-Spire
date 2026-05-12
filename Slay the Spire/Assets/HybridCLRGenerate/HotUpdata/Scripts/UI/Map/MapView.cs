@@ -1,7 +1,4 @@
-using System;
-using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
+
 
 public class MapView : UIFormLogic
 {
@@ -9,20 +6,9 @@ public class MapView : UIFormLogic
 
     private void Awake()
     {
-        maskInteraction = transform.Find("Mask").GetComponent<MouseInteraction>();
-        maskInteraction.OnMouseDownDelegate += data => { InternalSetVisible(false); };
+        maskInteraction = transform.GetComponentInChildren<MouseInteraction>();
+        maskInteraction.OnMouseDownDelegate += data => {  Visible = false; };
     }
-    
 
-    protected internal override void OnInit(object userData)
-    {
-        base.OnInit(userData);
-        InternalSetVisible(false);
-        if (userData is Button button)
-        {
-            button.onClick.AddListener(() => { InternalSetVisible(true);});
-        }
-    }
-    
-   
+
 }

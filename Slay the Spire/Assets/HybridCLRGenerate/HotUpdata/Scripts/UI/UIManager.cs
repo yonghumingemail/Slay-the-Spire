@@ -39,7 +39,8 @@ public class UIManager : SingletonBaseMono<UIManager>
     private async UniTask Initialize()
     {
         // 从 Addressables 异步加载 UIGroup 预制体
-        uiGroupPrefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/UIGroup.prefab");
+        uiGroupPrefab =
+            await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/UIGroup.prefab");
 
         // 遍历所有已有子节点，将它们作为预设的 UIGroup 注册到字典中
         for (int i = 0; i < transform.childCount; i++)
@@ -60,31 +61,58 @@ public class UIManager : SingletonBaseMono<UIManager>
     /// 如果该深度已有 UIGroup，则将 obj 设置为它的子物体；
     /// 否则实例化一个新的 UIGroup，并将 obj 挂载到其下，之后重新排序所有层级。
     /// </summary>
-    public void AddUIInterface(int deep, GameObject obj, object data)
+    public GameObject AddUIInterface(int deep, GameObject objPrefab, object data=null)
     {
-        var uiFormLogic = obj.GetComponent<UIFormLogic>();
+        GameObject obj;
+        UIFormLogic uiFormLogic;
 
         // 如果该深度已经有对应的 UIGroup 节点
         if (uiGroup.TryGetValue(deep, out var group))
         {
-            obj.transform.SetParent(group.transform);
+            obj = Instantiate(objPrefab, group.transform);
+            uiFormLogic = obj.GetComponent<UIFormLogic>();
             _uiFormLogics.TryAdd(obj, uiFormLogic);
         }
         else
         {
-            var newGroup = Instantiate(uiGroupPrefab);
+            var newGroup = Instantiate(uiGroupPrefab,transform);
             newGroup.name = $"UIGroup_Depth_{deep}";
+
+            obj = Instantiate(objPrefab, newGroup.transform);
+            uiFormLogic = obj.GetComponent<UIFormLogic>();
 
             uiGroup.Add(deep, newGroup);
             _uiFormLogics.TryAdd(obj, uiFormLogic);
 
             Sort();
         }
+
         uiFormLogic.OnInit(data);
+        return obj;
     }
 
-    
-    
+    public void SetUIActive(bool isActive, GameObject obj, object data = null)
+    {
+        if (_uiFormLogics.TryGetValue(obj, out var uiFormLogic))
+        {
+            if (isActive)
+            {
+                uiFormLogic.OnOpen(data);
+            }
+            else
+            {
+                uiFormLogic.OnClose(data);
+            }
+            uiFormLogic.Visible = isActive;
+        }
+        else
+        {
+            Debug.Log("No UI Form Logic Found");
+        }
+    }
+
+  
+
     /// <summary>
     /// 从指定深度移除一个 UI 对象。
     /// 如果移除后该深度的 UIGroup 下再无子物体，则会销毁该 UIGroup 并重新排序。

@@ -14,7 +14,7 @@ public abstract class UIFormLogic : MonoBehaviour
     private int m_OriginalLayer = 0;
 
     protected CanvasGroup m_Group = null;
-    
+
     /// <summary>
     /// 获取或设置界面名称。
     /// </summary>
@@ -64,10 +64,14 @@ public abstract class UIFormLogic : MonoBehaviour
     /// <param name="userData">用户自定义数据。</param>
     protected internal virtual void OnInit(object userData)
     {
-        InternalSetVisible(false);
         m_CachedTransform = transform;
         m_OriginalLayer = gameObject.layer;
-        m_Group=transform.GetComponent<CanvasGroup>();
+        m_Group = transform.GetComponent<CanvasGroup>();
+        if (m_Group == null)
+        {
+            m_Group = gameObject.AddComponent<CanvasGroup>();
+        }
+        InternalSetVisible(false);
     }
 
     /// <summary>
@@ -90,9 +94,8 @@ public abstract class UIFormLogic : MonoBehaviour
     /// <summary>
     /// 界面关闭。
     /// </summary>
-    /// <param name="isShutdown">是否是关闭界面管理器时触发。</param>
-    /// <param name="userData">用户自定义数据。</param>
-    protected internal virtual void OnClose(bool isShutdown, object userData)
+
+    protected internal virtual void OnClose( object userData)
     {
         Visible = false;
         m_Available = false;
@@ -160,16 +163,8 @@ public abstract class UIFormLogic : MonoBehaviour
     /// <param name="visible">界面的可见性。</param>
     protected virtual void InternalSetVisible(bool visible)
     {
-        if (visible)
-        {
-            OnOpen(null);
-            transform.SetAsLastSibling();
-        }
-        
         m_Group.alpha = visible ? 1 : 0;
         m_Group.interactable = visible;
         m_Group.blocksRaycasts = visible;
- 
-        
     }
 }
