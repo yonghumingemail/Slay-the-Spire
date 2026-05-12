@@ -12,9 +12,10 @@ public abstract class UIFormLogic : MonoBehaviour
 
     private Transform m_CachedTransform = null;
     private int m_OriginalLayer = 0;
-
+    
     protected CanvasGroup m_Group = null;
 
+    public UIGroup uiGroup;
     /// <summary>
     /// 获取或设置界面名称。
     /// </summary>

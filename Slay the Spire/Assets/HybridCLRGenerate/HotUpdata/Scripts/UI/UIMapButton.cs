@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UIMapButton : MonoBehaviour
 {
-    private GameObject mapObj;
+    private GameObject viewObj;
     private Button _button;
 
     private void Awake()
@@ -22,10 +22,10 @@ public class UIMapButton : MonoBehaviour
     private async UniTaskVoid Initialize()
     {
         var mapObjPrefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/Map.prefab");
-        mapObj = UIManager.Instance.AddUIInterface(0, mapObjPrefab);
+        viewObj = UIManager.Instance.AddUIInterface(0, mapObjPrefab);
         _button.onClick.AddListener(() =>
             {
-                  UIManager.Instance.SetUIActive(true,mapObj);
+                  UIManager.Instance.SetUIActive(true,viewObj);
             }
         );
     }

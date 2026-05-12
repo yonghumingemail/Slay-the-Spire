@@ -7,7 +7,7 @@ public class MapView : UIFormLogic
     private void Awake()
     {
         maskInteraction = transform.GetComponentInChildren<MouseInteraction>();
-        maskInteraction.OnMouseDownDelegate += data => {  Visible = false; };
+        maskInteraction.OnMouseDownDelegate += data => {  OnClose(null); };
     }
 
 
