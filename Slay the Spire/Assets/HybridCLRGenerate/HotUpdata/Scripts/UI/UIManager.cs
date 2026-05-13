@@ -10,12 +10,10 @@ using Z_Tools;
 public class UIManager : SingletonBaseMono<UIManager>
 {
     private readonly Dictionary<GameObject, UIFormLogic> _uiFormLogics = new();
+    private readonly Dictionary<int, UIGroup> _uiGroups = new();
+    private readonly List<UIGroup> _groupList = new(5);
 
-    // 用于排序的深度列表（缓存，避免每次排序时重复分配内存）
-    private readonly List<UIGroup> groupList = new();
-
-    // 用于实例化新 UIGroup 的预制体
-    private GameObject uiGroupPrefab;
+    private GameObject _uiGroupPrefab;
 
     // 标记预制体是否加载完成、已存在的子 UIGroup 是否已扫描完毕
     private bool isInitialized;
@@ -35,7 +33,7 @@ public class UIManager : SingletonBaseMono<UIManager>
     private async UniTask Initialize()
     {
         // 从 Addressables 异步加载 UIGroup 预制体
-        uiGroupPrefab =
+        _uiGroupPrefab =
             await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/UIGroup.prefab");
 
         // 遍历所有已有子节点，将它们作为预设的 UIGroup 注册到字典中
@@ -43,14 +41,15 @@ public class UIManager : SingletonBaseMono<UIManager>
         {
             // 计算深度：例如第一个子节点索引0 → 深度 -999
             int deep = i - 999;
-            var child = transform.GetChild(i).GetComponent<UIGroup>();
-            child.gameObject.name = $"UIGroup_Depth_{deep}";
-
+            if (!transform.GetChild(i).TryGetComponent<UIGroup>(out var group)) continue;
+            group.gameObject.name = $"UIGroup_Depth_{deep}";
+            group.deep = deep;
+            _uiGroups.Add(deep, group);
         }
 
+        Sort();
         isInitialized = true;
     }
-
 
     /// <summary>
     /// 向指定深度添加一个 UI 对象。
@@ -61,16 +60,9 @@ public class UIManager : SingletonBaseMono<UIManager>
     {
         GameObject obj;
         UIFormLogic uiFormLogic;
-        UIGroup group=null;
-        
-        foreach (var value in groupList)
-        {
-            if (value.deep != deep)continue;
-            group = value;
-        }
-        
+
         // 如果该深度已经有对应的 UIGroup 节点
-        if (group)
+        if (_uiGroups.TryGetValue(deep, out var group))
         {
             obj = Instantiate(objPrefab, group.transform);
             uiFormLogic = obj.GetComponent<UIFormLogic>();
@@ -78,9 +70,10 @@ public class UIManager : SingletonBaseMono<UIManager>
         }
         else
         {
-            group = Instantiate(uiGroupPrefab, transform).GetComponent<UIGroup>();
-            group.gameObject.name = $"UIGroup_Depth_{deep}";
-            groupList.Add(group);
+            group = Instantiate(_uiGroupPrefab, transform).GetComponent<UIGroup>();
+            group.OnInit(deep, $"UIGroup_Depth_{deep}");
+
+            _uiGroups.Add(deep, group);
 
             obj = Instantiate(objPrefab, group.transform);
             uiFormLogic = obj.GetComponent<UIFormLogic>();
@@ -101,21 +94,22 @@ public class UIManager : SingletonBaseMono<UIManager>
         {
             if (isActive)
             {
-                if (uiFormLogic.uiGroup.deep < groupList[^1].deep)
+                if (uiFormLogic.uiGroup.deep < _groupList[^1].deep)
                 {
-                    uiFormLogic.uiGroup.transform.SetAsLastSibling();
+                    uiFormLogic.uiGroup.deep += _groupList[^1].deep;
+                    Sort();
                 }
+
                 uiFormLogic.OnOpen(data);
             }
             else
             {
-                if (uiFormLogic.uiGroup.deep >= groupList[^1].deep)
+                if (_groupList.Count > 2 && uiFormLogic.uiGroup._defaultDeep < _groupList[^2]._defaultDeep)
                 {
-                    for (int i = 0; i < groupList.Count; i++)
-                    {
-                        uiFormLogic.uiGroup.transform.SetSiblingIndex(i);
-                    }
+                    uiFormLogic.uiGroup.deep = uiFormLogic.uiGroup._defaultDeep;
+                    Sort();
                 }
+
                 uiFormLogic.OnClose(data);
             }
         }
@@ -132,25 +126,27 @@ public class UIManager : SingletonBaseMono<UIManager>
     /// </summary>
     /// <param name="deep">对象所在的深度</param>
     /// <param name="obj">要移除的 UI 游戏对象</param>
-    // public void RemoveUIInterface(int deep, GameObject obj)
-    // {
-    //     if (!uiGroup.TryGetValue(deep, out var group)) return;
-    //
-    //     // 仅当 obj 确实挂在该 Group 下时才移除父级关系
-    //     if (obj != null && obj.transform.parent == group.transform)
-    //     {
-    //         obj.transform.SetParent(null);
-    //     }
-    //
-    //     // 如果该 Group 下已经没有子物体，则销毁该 Group 并从字典中移除
-    //     if (group.transform.childCount == 0)
-    //     {
-    //         Destroy(group);
-    //         uiGroup.Remove(deep);
-    //         // 层级数量变化，需要重新排序
-    //         Sort();
-    //     }
-    // }
+    public void RemoveUIInterface(int deep, GameObject obj)
+    {
+        if (!_uiGroups.TryGetValue(deep, out var group)) return;
+
+        // 仅当 obj 确实挂在该 Group 下时才移除父级关系
+        if (obj != null)
+        {
+            _uiFormLogics.Remove(obj);
+            obj.transform.SetParent(null);
+            Destroy(obj);
+        }
+
+        // 如果该 Group 下已经没有子物体，则销毁该 Group 并从字典中移除
+        if (group.transform.childCount == 0)
+        {
+            Destroy(group);
+            _uiGroups.Remove(deep);
+            // 层级数量变化，需要重新排序
+            Sort();
+        }
+    }
 
     /// <summary>
     /// 根据深度值对所有 UIGroup 节点进行排序（兄弟索引越小，渲染越靠后，通常越在底层）。
@@ -158,14 +154,12 @@ public class UIManager : SingletonBaseMono<UIManager>
     /// </summary>
     private void Sort()
     {
-        // 重用缓存列表，避免 GC 分配
-        groupList.Clear();
-        groupList.Sort();
-
-        // 按排序后的顺序依次设置所有 Group 的兄弟索引
-        for (int i = 0; i < groupList.Count; i++)
+        _groupList.Clear();
+        _groupList.AddRange(_uiGroups.Values);
+        _groupList.Sort();
+        for (int i = 0; i < _groupList.Count; i++)
         {
-            groupList[i].transform.SetSiblingIndex(i);
+            _groupList[i].transform.SetSiblingIndex(i);
         }
     }
 
@@ -174,5 +168,6 @@ public class UIManager : SingletonBaseMono<UIManager>
     /// </summary>
     private void OnDestroy()
     {
+        AddressablesMgr.Instance.Release("Assets/Art/Prefab/UI/UIGroup.prefab");
     }
 }
