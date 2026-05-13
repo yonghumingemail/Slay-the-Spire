@@ -11,17 +11,18 @@ public class UIMapButton : MonoBehaviour
     private void Awake()
     {
         _button = transform.GetComponent<Button>();
-       
+        Initialize().Forget();
     }
 
     private void Start()
     {
-        Initialize().Forget();
+       
     }
 
     private async UniTaskVoid Initialize()
     {
         var mapObjPrefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/Map.prefab");
+        await UIManager.Instance.onComplete.Task;
         viewObj = UIManager.Instance.AddUIInterface(0, mapObjPrefab);
         _button.onClick.AddListener(() =>
             {

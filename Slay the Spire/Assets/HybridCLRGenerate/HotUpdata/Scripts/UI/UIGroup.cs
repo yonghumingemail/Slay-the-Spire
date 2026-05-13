@@ -15,7 +15,6 @@ public class UIGroup : MonoBehaviour, IComparable<UIGroup>
    }
    public int CompareTo(UIGroup other)
    {
-      if (other == null) return 1;
-      return this.deep.CompareTo(other.deep);
+      return !other ? 1 : deep.CompareTo(other.deep);
    }
 }

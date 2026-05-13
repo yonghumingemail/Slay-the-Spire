@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -16,9 +17,8 @@ public class UIManager : SingletonBaseMono<UIManager>
     private GameObject _uiGroupPrefab;
 
     // 标记预制体是否加载完成、已存在的子 UIGroup 是否已扫描完毕
-    private bool isInitialized;
-
-
+    public UniTaskCompletionSource onComplete = new UniTaskCompletionSource();
+    
     protected override void Awake()
     {
         base.Awake();
@@ -45,10 +45,11 @@ public class UIManager : SingletonBaseMono<UIManager>
             group.gameObject.name = $"UIGroup_Depth_{deep}";
             group.deep = deep;
             _uiGroups.Add(deep, group);
+            _groupList.Add(group);
         }
 
         Sort();
-        isInitialized = true;
+        onComplete.TrySetResult();
     }
 
     /// <summary>
@@ -58,6 +59,7 @@ public class UIManager : SingletonBaseMono<UIManager>
     /// </summary>
     public GameObject AddUIInterface(int deep, GameObject objPrefab, object data = null)
     {
+        
         GameObject obj;
         UIFormLogic uiFormLogic;
 
@@ -74,7 +76,8 @@ public class UIManager : SingletonBaseMono<UIManager>
             group.OnInit(deep, $"UIGroup_Depth_{deep}");
 
             _uiGroups.Add(deep, group);
-
+            _groupList.Add(group);
+            
             obj = Instantiate(objPrefab, group.transform);
             uiFormLogic = obj.GetComponent<UIFormLogic>();
 
@@ -96,7 +99,7 @@ public class UIManager : SingletonBaseMono<UIManager>
             {
                 if (uiFormLogic.uiGroup.deep < _groupList[^1].deep)
                 {
-                    uiFormLogic.uiGroup.deep += _groupList[^1].deep;
+                    uiFormLogic.uiGroup.deep = _groupList[^1].deep + 1;
                     Sort();
                 }
 
@@ -104,7 +107,7 @@ public class UIManager : SingletonBaseMono<UIManager>
             }
             else
             {
-                if (_groupList.Count > 2 && uiFormLogic.uiGroup._defaultDeep < _groupList[^2]._defaultDeep)
+                if (_groupList.Count > 1 && uiFormLogic.uiGroup._defaultDeep < _groupList[^1]._defaultDeep)
                 {
                     uiFormLogic.uiGroup.deep = uiFormLogic.uiGroup._defaultDeep;
                     Sort();
@@ -134,7 +137,6 @@ public class UIManager : SingletonBaseMono<UIManager>
         if (obj != null)
         {
             _uiFormLogics.Remove(obj);
-            obj.transform.SetParent(null);
             Destroy(obj);
         }
 
@@ -143,7 +145,7 @@ public class UIManager : SingletonBaseMono<UIManager>
         {
             Destroy(group);
             _uiGroups.Remove(deep);
-            // 层级数量变化，需要重新排序
+            _groupList.Remove(group);
             Sort();
         }
     }
@@ -154,8 +156,6 @@ public class UIManager : SingletonBaseMono<UIManager>
     /// </summary>
     private void Sort()
     {
-        _groupList.Clear();
-        _groupList.AddRange(_uiGroups.Values);
         _groupList.Sort();
         for (int i = 0; i < _groupList.Count; i++)
         {

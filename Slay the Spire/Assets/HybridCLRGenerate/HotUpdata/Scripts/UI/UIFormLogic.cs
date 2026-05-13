@@ -36,7 +36,7 @@ public abstract class UIFormLogic : MonoBehaviour
     public bool Visible
     {
         get => m_Available && m_Visible;
-        set
+       private set
         {
             if (!m_Available)
             {
@@ -88,6 +88,7 @@ public abstract class UIFormLogic : MonoBehaviour
     /// <param name="userData">用户自定义数据。</param>
     protected internal virtual void OnOpen(object userData)
     {
+        transform.SetAsFirstSibling();
         m_Available = true;
         Visible = true;
     }
