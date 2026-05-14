@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.U2D;
 
 namespace CardCrawlGame.Map
 {
@@ -283,7 +285,17 @@ namespace CardCrawlGame.Map
         }
     }
 
-    public class AbstractRoom
+    public abstract class AbstractRoom
     {
+        public Sprite nodeSprite { get; protected set; }
+        public Sprite nodeOutlineSprite { get; protected set; }
+        protected abstract string roomSpriteName { get; set; } 
+        protected abstract string roomSpriteOutlineName { get; set; }
+
+        public virtual void Init(SpriteAtlas atlas)
+        {
+            nodeSprite = atlas.GetSprite(roomSpriteName);
+            nodeOutlineSprite = atlas.GetSprite(roomSpriteOutlineName);
+        }
     }
 }

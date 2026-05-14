@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using CardCrawlGame.Map;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.U2D;
 using UnityEngine.UI;
 
 public class MapPathView : MonoBehaviour
@@ -9,9 +10,10 @@ public class MapPathView : MonoBehaviour
     private MapGenerator mapGenerator;
 
     private GameObject lineSpritePrefab;
-    private GameObject roomPrefab;
+    private GameObject roomViewPrefab;
     private GameObject Lines;
     private GameObject MapRoomNodes;
+    private SpriteAtlas _atlas;
 
     public float nodeSpacingX; // 节点间距
     public float nodeSpacingY; // 节点间距
@@ -25,15 +27,29 @@ public class MapPathView : MonoBehaviour
 
     // 运行时数据
     private MapRoomNode[,] _map;
-    private Dictionary<MapRoomNode, RectTransform> _nodeToObj = new();
+    private Dictionary<MapRoomNode, MapRoomNodeView> _nodeToObj = new();
     private System.Random _random;
-
+    private RoomTypeAssigner roomTypeAssigner = new();
 
     private void Awake()
     {
         mapGenerator = new MapGenerator();
         _random = new System.Random(seed);
         _map = mapGenerator.Generate(mapHeight, mapWidth, pathCount, _random);
+
+        // 创建幕的概率配置（例如第一幕 Exordium 的数据）
+        ActRoomChances actChances = new ActRoomChances
+        {
+            shopRoomChance = 0.05f,
+            restRoomChance = 0.12f,
+            treasureRoomChance = 0f,
+            eventRoomChance = 0.22f,
+            eliteRoomChance = 0.08f,
+        };
+
+        DungeonRoomAllocator allocator = new DungeonRoomAllocator(actChances, _random);
+        allocator.AllocateRooms(_map, roomTypeAssigner);
+
         Lines = transform.Find("Lines").gameObject;
         MapRoomNodes = transform.Find("MapRoomNodes").gameObject;
         Initialized().Forget();
@@ -42,13 +58,14 @@ public class MapPathView : MonoBehaviour
     public async UniTaskVoid Initialized()
     {
         lineSpritePrefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/Line.prefab");
-        roomPrefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/MapRoomNode.prefab");
+        roomViewPrefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/MapRoomNode.prefab");
+        _atlas = await AddressablesMgr.Instance.LoadAssetAsync<SpriteAtlas>("Assets/Art/Image/SpriteAtlas/MapUI.spriteatlasv2");
 
-        Image nodeUI = roomPrefab.GetComponentInChildren<Image>();
+        Image nodeUI = roomViewPrefab.GetComponentInChildren<Image>();
         nodeSpacingX += nodeUI.rectTransform.sizeDelta.x * nodeUI.rectTransform.localScale.x;
         nodeSpacingY += nodeUI.rectTransform.sizeDelta.y * nodeUI.rectTransform.localScale.y;
         transform.localPosition += new Vector3(-(nodeSpacingX * (mapWidth - 1) / 2), -(nodeSpacingY * (mapHeight - 1) / 2), transform.localPosition.z);
-        
+
         CreateMap();
     }
 
@@ -78,13 +95,17 @@ public class MapPathView : MonoBehaviour
             for (int j = 0; j < cols; j++)
             {
                 if (_map[i, j] == null) continue;
-                GameObject temp = Instantiate(roomPrefab.gameObject, MapRoomNodes.transform);
+                var roomViewObj = Instantiate(roomViewPrefab.gameObject, MapRoomNodes.transform);
                 Vector2 pos = Vector2.zero;
                 pos.x = j * nodeSpacingX;
                 pos.y = i * nodeSpacingY;
                 pos += GetRandomCircleOffset(offsetCircleRadius);
-                temp.transform.localPosition = pos;
-                _nodeToObj.Add(_map[i, j], temp.transform as RectTransform);
+                roomViewObj.transform.localPosition = pos;
+
+                _map[i, j].Room.Init(_atlas);
+                var mapRoomView = roomViewObj.GetComponent<MapRoomNodeView>();
+                mapRoomView.UpdateView(_map[i, j].Room.nodeSprite, _map[i, j].Room.nodeOutlineSprite);
+                _nodeToObj.Add(_map[i, j], mapRoomView);
             }
         }
 
@@ -97,8 +118,8 @@ public class MapPathView : MonoBehaviour
             {
                 if (edge.DstY >= rows) continue; // Boss虚拟边
 
-                RectTransform srcRect = _nodeToObj[_map[edge.SrcY, edge.SrcX]];
-                RectTransform dstRect = _nodeToObj[_map[edge.DstY, edge.DstX]];
+                RectTransform srcRect = _nodeToObj[_map[edge.SrcY, edge.SrcX]].rectTransform;
+                RectTransform dstRect = _nodeToObj[_map[edge.DstY, edge.DstX]].rectTransform;
 
                 // 将两个节点的世界坐标转为 Lines 的本地坐标
                 Vector2 srcLocal = linesRect.InverseTransformPoint(srcRect.position);
