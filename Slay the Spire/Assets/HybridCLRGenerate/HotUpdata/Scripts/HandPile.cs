@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Splines;
@@ -53,14 +54,14 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
 
     private void OnMouseEnterEnemy(object sender, BaseEventArgs args)
     {
-        if (!SelectedCard || !(args is Enemy_EventArgs _args)) return;
-        Enemy_EventArgs.Fire(_args.value, OnMouseEnterEnemy_EventArgs.id, this, SelectedCard.priorityEventCenter);
+        if (!SelectedCard || !(args is Action_T _args)) return;
+        Action_T.Fire(_args.value, OnMouseEnterEnemy_EventArgs.id, this, SelectedCard.priorityEventCenter);
     }
 
     private void OnMouseExitEnemy(object sender, BaseEventArgs args)
     {
-        if (!SelectedCard || !(args is Enemy_EventArgs _args)) return;
-        Enemy_EventArgs.Fire(_args.value, OnMouseExitEnemy_EventArgs.id, this, SelectedCard.priorityEventCenter);
+        if (!SelectedCard || !(args is Action_T _args)) return;
+        Action_T.Fire(_args.value, OnMouseExitEnemy_EventArgs.id, this, SelectedCard.priorityEventCenter);
     }
 
     public void SetSelectedCard(Card card)
@@ -76,16 +77,10 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
             }
         }
 
-        if (isSelected)
-        {
-            Card_EventArgs.Fire(SelectedCard, OnSelectCard_EventArgs.id, this,
-                EventCenter_Singleton.Instance._priorityQueueEventCenter);
-        }
-        else
-        {
-            Card_EventArgs.Fire(SelectedCard, OnUnSelectCard_EventArgs.id, this,
-                EventCenter_Singleton.Instance._priorityQueueEventCenter);
-        }
+        Action_T.Fire(SelectedCard, 
+            isSelected ? OnSelectCard_EventArgs.id : OnUnSelectCard_EventArgs.id,
+            this,
+            EventCenter_Singleton.Instance._priorityQueueEventCenter);
     }
 
 

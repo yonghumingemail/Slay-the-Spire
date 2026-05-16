@@ -32,7 +32,7 @@ namespace CardCrawlGame.Map
 
         [Header("卡片相关概率")]
         public float colorlessRareChance = 0.3f;   // 无色卡牌中稀有卡的出现概率
-        public float cardUpgradedChance = 0f;      // 战斗中获得的卡牌被升级的概率（受 ascension 等级影响）
+        public float cardUpgradedChance = 0.4f;      // 战斗中获得的卡牌被升级的概率（受 ascension 等级影响）
     }
 
     /// <summary>
@@ -43,8 +43,6 @@ namespace CardCrawlGame.Map
     /// 2. 生成待分配的 AbstractRoom 对象列表。
     /// 3. 固定首行、末行、第8行等特殊行的房间类型（覆盖随机分配）。
     /// 4. 调用 RoomTypeAssigner.DistributeRoomsAcrossMap 完成最终随机分配。
-    /// 
-    /// 该类的设计参考了《杀戮尖塔》Java 版 AbstractDungeon.generateMap() 和 generateRoomTypes() 逻辑。
     /// </summary>
     public class DungeonRoomAllocator
     {

@@ -1,4 +1,5 @@
 using System;
+using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 
 public class Power_BuffObj : BuffObj
@@ -14,14 +15,28 @@ public class Power_BuffObj : BuffObj
 
     private void Effect(object send, BaseEventArgs args)
     {
-        if (args is not OnHealthChange_EventArgs _args) return;
-        _args.value.value += -stack;
+        var _args = Action_T.Check<ChangeValueInfo>(args);
+        if (_args != null)
+        {
+            _args.value += -stack;
+        }
+        else
+        {
+           Debug.Log($"{send}send对象所给参数类型不匹配"); 
+        }
     }
 
-    public void DamageCalculation(object send, BaseEventArgs args)
+    private void DamageCalculation(object send, BaseEventArgs args)
     {
-        if (args is not OnHealthChange_EventArgs _args) return;
-        _args.value.value += stack;
+        var _args = Action_T.Check<ChangeValueInfo>(args);
+        if (_args != null)
+        {
+            _args.value += stack;
+        }
+        else
+        {
+            Debug.Log($"{send}send对象所给参数类型不匹配"); 
+        }
     }
 
     public override void OnAddBuff(PriorityQueueEventCenter eventCent, Action<BuffObj> onDataUpdate)

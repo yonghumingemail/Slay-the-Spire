@@ -10,15 +10,15 @@ using Z_Tools;
 /// </summary>
 public class UIManager : SingletonBaseMono<UIManager>
 {
-    private readonly Dictionary<GameObject, UIFormLogic> _uiFormLogics = new();
+    private readonly Dictionary<int, UIFormLogic> _uiFormLogics = new();
     private readonly Dictionary<int, UIGroup> _uiGroups = new();
     private readonly List<UIGroup> _groupList = new(5);
 
     private GameObject _uiGroupPrefab;
 
     // 标记预制体是否加载完成、已存在的子 UIGroup 是否已扫描完毕
-    public UniTaskCompletionSource onComplete = new UniTaskCompletionSource();
-    
+    public readonly UniTaskCompletionSource onComplete = new();
+
     protected override void Awake()
     {
         base.Awake();
@@ -57,9 +57,8 @@ public class UIManager : SingletonBaseMono<UIManager>
     /// 如果该深度已有 UIGroup，则将 obj 设置为它的子物体；
     /// 否则实例化一个新的 UIGroup，并将 obj 挂载到其下，之后重新排序所有层级。
     /// </summary>
-    public GameObject AddUIInterface(int deep, GameObject objPrefab, object data = null)
+    public void AddUIInterface(int deep, int id, GameObject objPrefab, object data = null)
     {
-        
         GameObject obj;
         UIFormLogic uiFormLogic;
 
@@ -67,8 +66,6 @@ public class UIManager : SingletonBaseMono<UIManager>
         if (_uiGroups.TryGetValue(deep, out var group))
         {
             obj = Instantiate(objPrefab, group.transform);
-            uiFormLogic = obj.GetComponent<UIFormLogic>();
-            _uiFormLogics.TryAdd(obj, uiFormLogic);
         }
         else
         {
@@ -77,23 +74,20 @@ public class UIManager : SingletonBaseMono<UIManager>
 
             _uiGroups.Add(deep, group);
             _groupList.Add(group);
-            
+
             obj = Instantiate(objPrefab, group.transform);
-            uiFormLogic = obj.GetComponent<UIFormLogic>();
-
-            _uiFormLogics.TryAdd(obj, uiFormLogic);
-
-            Sort();
         }
 
+        uiFormLogic = obj.GetComponent<UIFormLogic>();
+        _uiFormLogics.TryAdd(id, uiFormLogic);
         uiFormLogic.uiGroup = group;
         uiFormLogic.OnInit(data);
-        return obj;
+        Sort();
     }
 
-    public void SetUIActive(bool isActive, GameObject obj, object data = null)
+    public void SetUIActive(bool isActive, int id, object data = null)
     {
-        if (_uiFormLogics.TryGetValue(obj, out var uiFormLogic))
+        if (_uiFormLogics.TryGetValue(id, out var uiFormLogic))
         {
             if (isActive)
             {
@@ -129,25 +123,19 @@ public class UIManager : SingletonBaseMono<UIManager>
     /// </summary>
     /// <param name="deep">对象所在的深度</param>
     /// <param name="obj">要移除的 UI 游戏对象</param>
-    public void RemoveUIInterface(int deep, GameObject obj)
+    public void RemoveUIInterface(int deep, int obj)
     {
         if (!_uiGroups.TryGetValue(deep, out var group)) return;
-
-        // 仅当 obj 确实挂在该 Group 下时才移除父级关系
-        if (obj != null)
-        {
-            _uiFormLogics.Remove(obj);
-            Destroy(obj);
-        }
-
+        
+        Destroy(_uiFormLogics[obj].gameObject);
+        _uiFormLogics.Remove(obj);
+        
         // 如果该 Group 下已经没有子物体，则销毁该 Group 并从字典中移除
-        if (group.transform.childCount == 0)
-        {
-            Destroy(group);
-            _uiGroups.Remove(deep);
-            _groupList.Remove(group);
-            Sort();
-        }
+        if (group.transform.childCount != 0) return;
+        Destroy(group);
+        _uiGroups.Remove(deep);
+        _groupList.Remove(group);
+        Sort();
     }
 
     /// <summary>

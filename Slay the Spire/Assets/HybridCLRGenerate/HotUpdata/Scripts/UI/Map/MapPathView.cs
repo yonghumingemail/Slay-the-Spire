@@ -18,7 +18,7 @@ public class MapPathView : MonoBehaviour
     public float nodeSpacingX; // 节点间距
     public float nodeSpacingY; // 节点间距
 
-    public float offsetCircleRadius = 1f; // 偏移圆半径
+    public float offsetCircleRadius; // 偏移圆半径
 
     [Header("地图参数")] public int mapHeight = 16;
     public int mapWidth = 7;
@@ -29,15 +29,13 @@ public class MapPathView : MonoBehaviour
     private MapRoomNode[,] _map;
     private Dictionary<MapRoomNode, MapRoomNodeView> _nodeToObj = new();
     private System.Random _random;
-    private RoomTypeAssigner roomTypeAssigner = new();
+    public RoomTypeAssigner roomTypeAssigner = new();
 
     private void Awake()
     {
         mapGenerator = new MapGenerator();
         _random = new System.Random(seed);
         _map = mapGenerator.Generate(mapHeight, mapWidth, pathCount, _random);
-
-        // 创建幕的概率配置（例如第一幕 Exordium 的数据）
         ActRoomChances actChances = new ActRoomChances
         {
             shopRoomChance = 0.05f,
@@ -102,9 +100,12 @@ public class MapPathView : MonoBehaviour
                 pos += GetRandomCircleOffset(offsetCircleRadius);
                 roomViewObj.transform.localPosition = pos;
 
-                _map[i, j].Room.Init(_atlas);
+                var mapRoomInfo = _map[i, j].Room;
+                mapRoomInfo.Init(_atlas);
                 var mapRoomView = roomViewObj.GetComponent<MapRoomNodeView>();
-                mapRoomView.UpdateView(_map[i, j].Room.nodeSprite, _map[i, j].Room.nodeOutlineSprite);
+                mapRoomView.UpdateView(mapRoomInfo.nodeSprite, mapRoomInfo.nodeOutlineSprite);
+                mapRoomView.onPointerClick += mapRoomInfo.OnPointClicked;
+                
                 _nodeToObj.Add(_map[i, j], mapRoomView);
             }
         }

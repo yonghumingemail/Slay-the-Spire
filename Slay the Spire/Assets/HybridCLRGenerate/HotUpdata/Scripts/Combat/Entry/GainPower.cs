@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -50,8 +51,9 @@ public class GainPower : IEntry
             buffListObj.AddBuff(buff);
         }
 
-        Action_EventArgs.Fire(DamageValueChange_Attack_EventArgs.id, this, buffListObj._priorityEventCenter);
-        Buff_EventArgs.Fire(buff,stack,OnGainBuff_EventArgs.id,this, buffListObj._priorityEventCenter);
+        buffListObj._priorityEventCenter.Fire(this, DamageValueChange_Attack_EventArgs.id, null);
+
+        Buff_EventArgs.Fire(buff, stack, OnGainBuff_EventArgs.id, this, buffListObj._priorityEventCenter);
     }
 
     public string GetDescription()

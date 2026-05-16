@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
+using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 using UnityEngine.Splines;
 using Z_Tools;
@@ -19,8 +20,7 @@ public class CardArrangement
 
     public void UpdateCardPositions(SplineContainer splineContainer, List<Card> cards, Action callBack)
     {
-        Action_EventArgs.Fire(OnCardArrangementStart_EventArgs.id,this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
-
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.Fire(this,OnCardArrangementStart_EventArgs.id,null);
         // 检查卡牌列表是否为空，为空则直接返回避免后续计算
         if (cards.Count == 0)
             return;
@@ -88,7 +88,7 @@ public class CardArrangement
 
         _sequence.onComplete += () =>
         {
-            Action_EventArgs.Fire(OnCardArrangementEnd_EventArgs.id,this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
+            EventCenter_Singleton.Instance._priorityQueueEventCenter.Fire(this,OnCardArrangementEnd_EventArgs.id,null);
             callBack?.Invoke();
         };
     }

@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 
 public class VulnerableState_BuffObj : BuffObj
@@ -15,12 +16,11 @@ public class VulnerableState_BuffObj : BuffObj
         tags = new[] { BuffTag_E.buff };
     }
 
-    private void Effect(object send, BaseEventArgs baseArgs)
+    private void Effect(object send, BaseEventArgs args)
     {
-        if (baseArgs is ChangeValueEvent_EventArgs args)
-        {
-            args.value.value = (int)(args.value.value * power);
-        }
+        var _args = Action_T.Check<ChangeValueInfo>(args);
+        _args.value = (int)(_args.value * power);
+        
     }
 
     private UniTask OnRoundEnd(object send, BaseEventArgs baseArgs)
@@ -39,9 +39,9 @@ public class VulnerableState_BuffObj : BuffObj
 
     private void DamageCalculation(object send, BaseEventArgs baseArgs)
     {
-        if (baseArgs is BaseDamageCalculation_EventArgs args)
+        if (baseArgs is Action_Int args)
         {
-            args.damage = (int)(args.damage * power);
+            args.value_Int = (int)(args.value_Int * power);
         }
     }
 

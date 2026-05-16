@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -49,7 +50,7 @@ public class VulnerableState : IEntry
             buffListObj.AddBuff(buff);
         }
 
-        Action_EventArgs.Fire(DamageValueChange_BeAttacked_EventArgs.id, this, buffListObj._priorityEventCenter);
+        buffListObj._priorityEventCenter.Fire(this,DamageValueChange_BeAttacked_EventArgs.id,null);
         Buff_EventArgs.Fire(buff,stack,OnGainBuff_EventArgs.id,this, buffListObj._priorityEventCenter);
 
     }

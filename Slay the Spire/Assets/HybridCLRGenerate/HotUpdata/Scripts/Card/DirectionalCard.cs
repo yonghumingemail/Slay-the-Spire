@@ -64,12 +64,12 @@ public class DirectionalCard
     public void OnMouseEnterSelectableObject(ISelectableObject selectableObject)
     {
         SelectableObject = selectableObject;
-        selectableObject.OnSelect();
+        selectableObject?.OnSelect();
     }
 
     public void OnMouseExitSelectableObject(ISelectableObject selectableObject)
     {
         SelectableObject = selectableObject;
-        SelectableObject.OnUnSelect();
+        SelectableObject?.OnUnSelect();
     }
 }

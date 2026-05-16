@@ -4,6 +4,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using GameFramework;
+using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Z_Tools;
@@ -112,7 +113,7 @@ public abstract class Card : MonoBehaviour
 
         cardAnimator.TransformEffectToRotation(gameObject, cardInteraction.position, cardInteraction.rotation,
             cardInteraction.scale);
-        Card_EventArgs.Fire(this,OnUnSelectCard_EventArgs.id,this,priorityEventCenter);
+        Action_T.Fire(this,OnUnSelectCard_EventArgs.id,this,priorityEventCenter);
     }
 
     public virtual void UpdateDescribe()

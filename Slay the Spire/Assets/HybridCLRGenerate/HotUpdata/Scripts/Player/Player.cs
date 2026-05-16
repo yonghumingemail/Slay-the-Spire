@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 using Z_Tools;
 
@@ -85,7 +86,7 @@ public class Player : MonoBehaviour, IEventCenterObject<BaseEventArgs>
     {
         if (baseEventArgs is OnRoundEnd_EventArgs args)
         {
-            await OnRound_EventArgs.Fire(args.args_int, OnRoundEnd_EventArgs.id, this,
+            await Action_Int_Async.Fire(args.args_int, OnRoundEnd_EventArgs.id, this,
                 _priorityEventCenter);
         }
     }
@@ -94,8 +95,7 @@ public class Player : MonoBehaviour, IEventCenterObject<BaseEventArgs>
     private void OnDestroy()
     {
         EventManage.Clear();
-        Action_EventArgs.Fire(OnDestroy_EventArgs.id, this, _priorityEventCenter);
-
+        _priorityEventCenter.Fire(this,OnDestroy_EventArgs.id,null);
         _priorityEventCenter.Clear();
     }
 }

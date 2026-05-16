@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 using Z_Tools;
 
@@ -57,7 +58,7 @@ public class CombatManage : MonoBehaviour
     public async UniTask OnRoundStart()
     {
         roundCount++;
-        await OnRound_EventArgs.Fire(roundCount, OnRoundStart_EventArgs.id, this,
+        await Action_Int_Async.Fire(roundCount, OnRoundStart_EventArgs.id, this,
             EventCenter_Singleton.Instance._priorityQueueEventCenter);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 
 public class Anger_BuffObj : BuffObj
@@ -16,22 +17,30 @@ public class Anger_BuffObj : BuffObj
 
     private void Effect(object send, BaseEventArgs args)
     {
-        if (args is not OnHealthChange_EventArgs _args) return;
-        if (!(_args.value.value < 0)) return;
-        _animator.Play("Update");
-        gainPower.Trigger(null, _carrier);
+        var _args = Action_T.Check<ChangeValueInfo>(args);
+        if (_args != null)
+        {
+            if (!(_args.value < 0)) return;
+            _animator.Play("Update");
+            gainPower.Trigger(null, _carrier);
+        }
+        else
+        {
+            Debug.Log($"{send}send对象所给参数类型不匹配"); 
+        }
+        
     }
 
     public override void OnAddBuff(PriorityQueueEventCenter eventCent, Action<BuffObj> onDataUpdate)
     {
         base.OnAddBuff(eventCent, onDataUpdate);
         _animator = view.GetComponent<Animator>();
-        eventCent.Subscribe(OnHealthChange_EventArgs.id, Effect, priority);
+        eventCent.Subscribe(OnHealthActionChangeEventArgs.id, Effect, priority);
     }
 
     public override void OnRemoveBuff(PriorityQueueEventCenter eventCent)
     {
         base.OnRemoveBuff(eventCent);
-        eventCent.UnSubscribe(OnHealthChange_EventArgs.id, Effect);
+        eventCent.UnSubscribe(OnHealthActionChangeEventArgs.id, Effect);
     }
 }

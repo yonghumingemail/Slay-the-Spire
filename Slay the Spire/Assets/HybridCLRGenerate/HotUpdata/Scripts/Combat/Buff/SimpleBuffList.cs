@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 
 // 可序列化属性，允许此类实例被序列化存储

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Random = System.Random;
 
 namespace CardCrawlGame.Map
@@ -17,6 +18,10 @@ namespace CardCrawlGame.Map
     {
         protected override string roomSpriteName { get; set; } = "monster";
         protected override string roomSpriteOutlineName { get; set; } = "monsterOutline";
+        public override void OnPointClicked(PointerEventData data)
+        {
+            
+        }
     }
 
     /// <summary>
@@ -26,6 +31,10 @@ namespace CardCrawlGame.Map
     {
         protected override string roomSpriteName { get; set; } = "elite";
         protected override string roomSpriteOutlineName { get; set; } = "eliteOutline";
+        public override void OnPointClicked(PointerEventData data)
+        {
+            
+        }
     }
 
     /// <summary>
@@ -35,6 +44,10 @@ namespace CardCrawlGame.Map
     {
         protected override string roomSpriteName { get; set; }
         protected override string roomSpriteOutlineName { get; set; }
+        public override void OnPointClicked(PointerEventData data)
+        {
+            
+        }
     }
 
     /// <summary>
@@ -44,6 +57,10 @@ namespace CardCrawlGame.Map
     {
         protected override string roomSpriteName { get; set; } = "event";
         protected override string roomSpriteOutlineName { get; set; } = "eventOutline";
+        public override void OnPointClicked(PointerEventData data)
+        {
+            
+        }
     }
 
     /// <summary>
@@ -53,6 +70,10 @@ namespace CardCrawlGame.Map
     {
         protected override string roomSpriteName { get; set; } = "rest";
         protected override string roomSpriteOutlineName { get; set; } = "restOutline";
+        public override void OnPointClicked(PointerEventData data)
+        {
+            
+        }
     }
 
     /// <summary>
@@ -62,6 +83,10 @@ namespace CardCrawlGame.Map
     {
         protected override string roomSpriteName { get; set; } = "shop";
         protected override string roomSpriteOutlineName { get; set; } = "shopOutline";
+        public override void OnPointClicked(PointerEventData data)
+        {
+            
+        }
     }
 
     /// <summary>
@@ -71,6 +96,10 @@ namespace CardCrawlGame.Map
     {
         protected override string roomSpriteName { get; set; } = "chest";
         protected override string roomSpriteOutlineName { get; set; } = "chestOutline";
+        public override void OnPointClicked(PointerEventData data)
+        {
+            
+        }
     }
 
     // ==============================

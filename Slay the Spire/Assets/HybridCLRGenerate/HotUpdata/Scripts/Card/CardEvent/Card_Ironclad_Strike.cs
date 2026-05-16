@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 
 public class Card_Ironclad_Strike : Card
 {
@@ -40,16 +41,16 @@ public class Card_Ironclad_Strike : Card
     
     public void OnMouseEnterEnemy(object send,BaseEventArgs args)
     {
-        if (args is not Enemy_EventArgs enemy_args) return;
-        _inflictDamage.DamageCalculation(_player._priorityEventCenter, enemy_args.value._priorityEventCenter);
-        _directionalCard.OnMouseEnterSelectableObject(enemy_args.value);
+        var enemy = Action_T.Check<Enemy>(args);
+        _inflictDamage.DamageCalculation(_player._priorityEventCenter, enemy._priorityEventCenter);
+        _directionalCard.OnMouseEnterSelectableObject(enemy);
 
     }
     public void OnMouseExitEnemy(object send,BaseEventArgs args)
     {
-        if (args is not Enemy_EventArgs enemy_args) return;
+        var enemy = Action_T.Check<Enemy>(args);
         _inflictDamage.DamageCalculation(_player._priorityEventCenter, null);
-        _directionalCard.OnMouseExitSelectableObject(enemy_args.value);
+        _directionalCard.OnMouseExitSelectableObject(enemy);
 
     }
 }

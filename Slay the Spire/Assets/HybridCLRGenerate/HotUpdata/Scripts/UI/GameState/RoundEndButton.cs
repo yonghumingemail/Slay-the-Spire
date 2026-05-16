@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -36,7 +37,7 @@ public class RoundEndButton : MonoBehaviour
         }
         _text.SetText("敌方回合");
         _button.interactable = false;
-       await OnRound_EventArgs.Fire(_combatManage.RoundCount, OnRoundEnd_EventArgs.id, this,
+       await Action_Int_Async.Fire(_combatManage.RoundCount, OnRoundEnd_EventArgs.id, this,
             EventCenter_Singleton.Instance._priorityQueueEventCenter);
        
         _text.SetText("结束回合");

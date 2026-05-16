@@ -1,5 +1,6 @@
 using System;
 using GameFramework;
+using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 
 
@@ -43,7 +44,7 @@ public class InflictDamage : IEntry
         }
         else
         {
-            ChangeValueEvent_EventArgs.Fire(info, OnAttack_EventArgs.id, this, buffList_Sender._priorityEventCenter);
+            Action_T.Fire(info,OnAttack_EventArgs.id,this,buffList_Sender._priorityEventCenter);
         }
 
         if (health == null)
@@ -66,8 +67,8 @@ public class InflictDamage : IEntry
 
         //  Debug.Log($"计算前的伤害：{calculated_damage}");
 
-        calculated_damage = BaseDamageCalculation_EventArgs.Fire(calculated_damage, DamageCalculation_Attack_EventArgs.id, this, send);
-        calculated_damage = BaseDamageCalculation_EventArgs.Fire(calculated_damage, DamageCalculation_BeAttacked_EventArgs.id, this, receive);
+        calculated_damage = Action_Int.Fire(calculated_damage, DamageCalculation_Attack_EventArgs.id, this, send);
+        calculated_damage = Action_Int.Fire(calculated_damage, DamageCalculation_BeAttacked_EventArgs.id, this, receive);
 
         OnUpdateData?.Invoke();
         // Debug.Log($"计算后的伤害：{calculated_damage}");

@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 
 public class GainShield : IEntry
@@ -34,7 +35,7 @@ public class GainShield : IEntry
         }
         else
         {
-            ChangeValueEvent_EventArgs.Fire(info,OnGainShield_EventArgs.id, this, priorityEventCenter);
+            Action_T.Fire(info,OnGainShield_EventArgs.id,this,priorityEventCenter);
         }
 
         if (shield == null)

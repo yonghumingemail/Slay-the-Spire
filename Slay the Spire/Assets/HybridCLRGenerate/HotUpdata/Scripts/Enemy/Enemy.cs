@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.U2D;
@@ -87,7 +88,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     protected virtual async UniTask OnRoundEnd(int roundCount)
     {
         //通知事件，回合结束
-        await OnRound_EventArgs.Fire(roundCount, OnRoundEnd_EventArgs.id, this, _priorityEventCenter);
+        await Action_Int_Async.Fire(roundCount, OnRoundEnd_EventArgs.id, this, _priorityEventCenter);
         
     }
 
@@ -99,7 +100,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public virtual async UniTask OnRoundStart(int roundCount)
     {
         //通知事件，回合开始
-        await OnRound_EventArgs.Fire(roundCount, OnRoundStart_EventArgs.id, this, _priorityEventCenter);
+        await Action_Int_Async.Fire(roundCount, OnRoundStart_EventArgs.id, this, _priorityEventCenter);
 
         await currentAction.Execute.Invoke();
         actionList.Add(currentAction);
@@ -117,12 +118,12 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
-        Enemy_EventArgs.Fire(this, OnMouseEnterEnemy_EventArgs.id, this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
+        Action_T.Fire(this, OnMouseEnterEnemy_EventArgs.id, this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
     }
 
     public virtual void OnPointerExit(PointerEventData eventData)
     {
-        Enemy_EventArgs.Fire(this, OnMouseExitEnemy_EventArgs.id, this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
+        Action_T.Fire(this, OnMouseExitEnemy_EventArgs.id, this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
     }
 
     public virtual void OnSelect()
@@ -137,8 +138,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     private void OnDestroy()
     {
-        Action_EventArgs.Fire(OnDestroy_EventArgs.id, this, _priorityEventCenter);
-
+        _priorityEventCenter.Fire(this,OnDestroy_EventArgs.id,null);
         _priorityEventCenter.Clear();
     }
 }

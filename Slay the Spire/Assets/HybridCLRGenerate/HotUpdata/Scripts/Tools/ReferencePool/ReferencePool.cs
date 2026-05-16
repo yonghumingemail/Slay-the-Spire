@@ -30,13 +30,7 @@ namespace GameFramework
         /// <summary>
         /// 获取引用池的数量。
         /// </summary>
-        public static int Count
-        {
-            get
-            {
-                return s_ReferenceCollections.Count;
-            }
-        }
+        public static int Count => s_ReferenceCollections.Count;
 
         /// <summary>
         /// 获取所有引用池的信息。

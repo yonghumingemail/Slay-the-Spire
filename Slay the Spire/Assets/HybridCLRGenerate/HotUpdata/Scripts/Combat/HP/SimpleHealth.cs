@@ -1,4 +1,5 @@
 using System;
+using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 
 [Serializable]
@@ -33,12 +34,12 @@ public class SimpleHealth : IHealth
 
     public void AddHealth(ChangeValueInfo info)
     {
-        ChangeValueEvent_EventArgs.Fire(info,OnBeAttacked_EventArgs.id,this,_priorityEventCenter);
+        Action_T.Fire(info,OnBeAttacked_EventArgs.id,this,_priorityEventCenter);
 
         HealthValue = Mathf.Clamp(HealthValue + info.value, 0, MaxHealth);
         _healthV.UpdateView(this);
-
-        ChangeValueEvent_EventArgs.Fire(info,OnHealthChange_EventArgs.id,this,_priorityEventCenter);
+        
+        Action_T.Fire(info,OnHealthActionChangeEventArgs.id,this,_priorityEventCenter);
         
         // Debug.Log(HealthValue);
     }

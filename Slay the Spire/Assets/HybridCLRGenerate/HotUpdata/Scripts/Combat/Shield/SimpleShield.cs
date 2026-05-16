@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 
 [Serializable]
@@ -39,23 +40,23 @@ public class SimpleShield : IShield
 
     private void ShieldTrigger(object send, BaseEventArgs args)
     {
-        if (args is not ChangeValueEvent_EventArgs _args) return;
+        var _args = Action_T.Check<ChangeValueInfo>(args);
         // 如果当前没有护盾，或者传入的值大于等于0，则直接返回，不做任何处理。
-        if (_args.value == null || ShieldValue <= 0 || _args.value.value >= 0)
+        if (_args==null  || ShieldValue <= 0 || _args.value >= 0)
         {
             return;
         }
 
         // 计算护盾实际能吸收的伤害量
-        int damageAbsorbed = Mathf.Min(ShieldValue, -_args.value.value);
+        int damageAbsorbed = Mathf.Min(ShieldValue, -_args.value);
 
         // 先扣除护盾值
         ShieldValue -= damageAbsorbed;
         // 再减少伤害值
-        _args.value.value += damageAbsorbed;
+        _args.value += damageAbsorbed;
 
         // 更新护盾视觉表现
-        AddShieldValue(_args.value);
+        AddShieldValue(_args);
 
     }
 

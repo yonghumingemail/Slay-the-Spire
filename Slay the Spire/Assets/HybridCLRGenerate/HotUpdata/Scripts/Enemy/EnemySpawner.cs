@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 using Z_Tools;
 
@@ -40,7 +41,7 @@ public class EnemySpawner : MonoBehaviour
     /// </summary>
     private async UniTask OnRoundEnd(object sender, BaseEventArgs args)
     {
-        if (args is not OnRound_EventArgs _args) return;
+        if (args is not Action_Int_Async _args) return;
         foreach (var VARIABLE in enemyList)
         {
           await  VARIABLE.OnRoundStart(_args.args_int);
@@ -50,7 +51,7 @@ public class EnemySpawner : MonoBehaviour
 
     private async UniTask OnRoundStart(object sender, BaseEventArgs args)
     {
-        if (args is not OnRound_EventArgs _args) return;
+        if (args is not Action_Int_Async _args) return;
         
         //通知所有敌人玩家回合开始（显示意图）
         foreach (var VARIABLE in enemyList)
