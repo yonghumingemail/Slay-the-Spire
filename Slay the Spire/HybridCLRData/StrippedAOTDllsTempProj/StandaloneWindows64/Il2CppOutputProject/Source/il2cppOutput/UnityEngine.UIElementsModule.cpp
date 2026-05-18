@@ -12629,7 +12629,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR BindingResult_t8B7B654A3357F5E8F5B0E4CB4AB907
 		(L_7)->SetAt(static_cast<il2cpp_array_size_t>(0), (Type_t*)L_8);
 		NullCheck(L_5);
 		MethodInfo_t* L_9;
-		L_9 = VirtualFuncInvoker1< MethodInfo_t*, TypeU5BU5D_t97234E1129B564EB38B8D85CAC2AD8B5B9522FFB* >::Invoke(49, L_5, L_7);
+		L_9 = VirtualFuncInvoker1< MethodInfo_t*, TypeU5BU5D_t97234E1129B564EB38B8D85CAC2AD8B5B9522FFB* >::Invoke(54, L_5, L_7);
 		V_2 = L_9;
 		MethodInfo_t* L_10 = V_2;
 		DataBinding_t4AEDF779EB49F9E11B45F99385482936B2FC34DA* L_11 = ___1_binding;

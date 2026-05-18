@@ -54,9 +54,10 @@ extern void TextMeshProAsyncExtensions_OnSubmitAsync_mA7C5175807D713EAC7D9762E0B
 extern void TextMeshProAsyncExtensions_OnSubmitAsync_mCB1E8E85D98E9268C3DB50E89E83F706BCD5817F (void);
 extern void TextMeshProAsyncExtensions_OnSubmitAsAsyncEnumerable_mD8EFB2760025D70842C9451675F6ADFFD04C799F (void);
 extern void TextMeshProAsyncExtensions_OnSubmitAsAsyncEnumerable_mBA982E911A0BD97E996628C949116C7C3E9AAE07 (void);
+extern void U3CBindToCoreU3Ed__2__ctor_m2C6D599D1243A66D73CD2BEF75D95ECF9ABFAC6A (void);
 extern void U3CBindToCoreU3Ed__2_MoveNext_m119E3D49E7322ACCE2EC1ED1E461768FDBD0425E (void);
 extern void U3CBindToCoreU3Ed__2_SetStateMachine_m5692002FE313522B3B72DF72C72F717FCBC4372E (void);
-static Il2CppMethodPointer s_methodPointers[55] = 
+static Il2CppMethodPointer s_methodPointers[57] = 
 {
 	UnitySourceGeneratedAssemblyMonoScriptTypes_v1_Get_m0BBFFA4315F31C3E743AF63B6261CC873EB27AFF,
 	UnitySourceGeneratedAssemblyMonoScriptTypes_v1__ctor_m389544C6C97B49B067A38530A4C72CF0225B5A41,
@@ -109,83 +110,80 @@ static Il2CppMethodPointer s_methodPointers[55] =
 	TextMeshProAsyncExtensions_OnSubmitAsync_mCB1E8E85D98E9268C3DB50E89E83F706BCD5817F,
 	TextMeshProAsyncExtensions_OnSubmitAsAsyncEnumerable_mD8EFB2760025D70842C9451675F6ADFFD04C799F,
 	TextMeshProAsyncExtensions_OnSubmitAsAsyncEnumerable_mBA982E911A0BD97E996628C949116C7C3E9AAE07,
+	U3CBindToCoreU3Ed__2__ctor_m2C6D599D1243A66D73CD2BEF75D95ECF9ABFAC6A,
 	U3CBindToCoreU3Ed__2_MoveNext_m119E3D49E7322ACCE2EC1ED1E461768FDBD0425E,
 	U3CBindToCoreU3Ed__2_SetStateMachine_m5692002FE313522B3B72DF72C72F717FCBC4372E,
 	NULL,
 	NULL,
+	NULL,
 };
-extern void U3CBindToCoreU3Ed__2_MoveNext_m119E3D49E7322ACCE2EC1ED1E461768FDBD0425E_AdjustorThunk (void);
-extern void U3CBindToCoreU3Ed__2_SetStateMachine_m5692002FE313522B3B72DF72C72F717FCBC4372E_AdjustorThunk (void);
-static Il2CppTokenAdjustorThunkPair s_adjustorThunks[2] = 
+static const int32_t s_InvokerIndices[57] = 
 {
-	{ 0x06000034, U3CBindToCoreU3Ed__2_MoveNext_m119E3D49E7322ACCE2EC1ED1E461768FDBD0425E_AdjustorThunk },
-	{ 0x06000035, U3CBindToCoreU3Ed__2_SetStateMachine_m5692002FE313522B3B72DF72C72F717FCBC4372E_AdjustorThunk },
-};
-static const int32_t s_InvokerIndices[55] = 
-{
-	28349,
-	17463,
-	22203,
-	20622,
-	20455,
+	31595,
+	19415,
+	24552,
+	22837,
+	22665,
 	-1,
 	-1,
 	-1,
 	-1,
-	26594,
-	23475,
-	25985,
-	22521,
-	26594,
-	23475,
-	26594,
-	23475,
-	25985,
-	22521,
-	26594,
-	23475,
-	26594,
-	23475,
-	25961,
-	22508,
-	26594,
-	23475,
-	26594,
-	23475,
-	25961,
-	22508,
-	26594,
-	23475,
-	26594,
-	23475,
-	25985,
-	22521,
-	26594,
-	23475,
-	26594,
-	23475,
-	25985,
-	22521,
-	26594,
-	23475,
-	26594,
-	23475,
-	25985,
-	22521,
-	26594,
-	23475,
-	17463,
-	13483,
+	29493,
+	25997,
+	28871,
+	24875,
+	29493,
+	25997,
+	29493,
+	25997,
+	28871,
+	24875,
+	29493,
+	25997,
+	29493,
+	25997,
+	28844,
+	24862,
+	29493,
+	25997,
+	29493,
+	25997,
+	28844,
+	24862,
+	29493,
+	25997,
+	29493,
+	25997,
+	28871,
+	24875,
+	29493,
+	25997,
+	29493,
+	25997,
+	28871,
+	24875,
+	29493,
+	25997,
+	29493,
+	25997,
+	28871,
+	24875,
+	29493,
+	25997,
+	19415,
+	19415,
+	14746,
+	-1,
 	-1,
 	-1,
 };
 static const Il2CppTokenRangePair s_rgctxIndices[5] = 
 {
-	{ 0x02000006, { 11, 11 } },
+	{ 0x02000006, { 12, 11 } },
 	{ 0x06000006, { 0, 2 } },
 	{ 0x06000007, { 2, 2 } },
 	{ 0x06000008, { 4, 3 } },
-	{ 0x06000009, { 7, 4 } },
+	{ 0x06000009, { 7, 5 } },
 };
 extern const uint32_t g_rgctx_IUniTaskAsyncEnumerable_1_tE2AD1BF9F8384A996EAAC269602B7B3886B3B4AA;
 extern const uint32_t g_rgctx_TextMeshProAsyncExtensions_BindToCore_TisT_tA6CA3154E8D11F212290BF1195DA2593C027EBD0_m67463D0DCEFAFF03F6078FCB3BC004AD2B0D7CCA;
@@ -195,6 +193,7 @@ extern const uint32_t g_rgctx_AsyncReactiveProperty_1_tB70CC194BB94E7BAAE7B4375C
 extern const uint32_t g_rgctx_TextMeshProAsyncExtensions_BindToCore_TisT_tAA376127BA8945B0EAABDCB9CB6FF88E78B1D730_mBE30EBF9BFBD46EF7F5A74AD8B1B96883EA1268D;
 extern const uint32_t g_rgctx_IUniTaskAsyncEnumerable_1_tCA33FD6A5806DC87ED7852BEA60376B55BFEC756;
 extern const uint32_t g_rgctx_U3CBindToCoreU3Ed__6_1_tE728E90394339B64C9FB2B5D60905CA5C8A9C43F;
+extern const uint32_t g_rgctx_U3CBindToCoreU3Ed__6_1__ctor_m066AD0AE9E62B763E0E08151D36E7234BC42ACF6;
 extern const uint32_t g_rgctx_IUniTaskAsyncEnumerable_1_t78EEAD891325A89E73E39D4ABE246A3F99FDBFA3;
 extern const uint32_t g_rgctx_AsyncUniTaskVoidMethodBuilder_Start_TisU3CBindToCoreU3Ed__6_1_tE728E90394339B64C9FB2B5D60905CA5C8A9C43F_m5E60D9F24878C1F1F4A3FDC82C2CDDEE04844F32;
 extern const uint32_t g_rgctx_U3CBindToCoreU3Ed__6_1U26_t1AE765F2C2D601F8B3D5694AF4105855F1DCC1C9;
@@ -209,7 +208,7 @@ extern const uint32_t g_rgctx_IUniTaskAsyncEnumerator_1_get_Current_m96E81B07C6C
 extern const uint32_t g_rgctx_T_t68B1FEBC1CA0A46BCA452278A480F61C28BA9EB8;
 extern const Il2CppRGCTXConstrainedData g_rgctx_T_t68B1FEBC1CA0A46BCA452278A480F61C28BA9EB8_Object_ToString_mF8AC1EB9D85AB52EC8FD8B8BDD131E855E69673F;
 extern const uint32_t g_rgctx_AsyncUniTaskVoidMethodBuilder_AwaitUnsafeOnCompleted_TisAwaiter_tFACD37B3B2ACD03C61DB949FD0E4FAB189A1D956_TisU3CBindToCoreU3Ed__6_1_t300DAAF28631B33EFFC870F6C687C51356B90047_m586CE140D4710F18CC1630CC03B9E09A788159DB;
-static const Il2CppRGCTXDefinition s_rgctxValues[22] = 
+static const Il2CppRGCTXDefinition s_rgctxValues[23] = 
 {
 	{ (Il2CppRGCTXDataType)2, (const void *)&g_rgctx_IUniTaskAsyncEnumerable_1_tE2AD1BF9F8384A996EAAC269602B7B3886B3B4AA },
 	{ (Il2CppRGCTXDataType)3, (const void *)&g_rgctx_TextMeshProAsyncExtensions_BindToCore_TisT_tA6CA3154E8D11F212290BF1195DA2593C027EBD0_m67463D0DCEFAFF03F6078FCB3BC004AD2B0D7CCA },
@@ -219,6 +218,7 @@ static const Il2CppRGCTXDefinition s_rgctxValues[22] =
 	{ (Il2CppRGCTXDataType)3, (const void *)&g_rgctx_TextMeshProAsyncExtensions_BindToCore_TisT_tAA376127BA8945B0EAABDCB9CB6FF88E78B1D730_mBE30EBF9BFBD46EF7F5A74AD8B1B96883EA1268D },
 	{ (Il2CppRGCTXDataType)2, (const void *)&g_rgctx_IUniTaskAsyncEnumerable_1_tCA33FD6A5806DC87ED7852BEA60376B55BFEC756 },
 	{ (Il2CppRGCTXDataType)2, (const void *)&g_rgctx_U3CBindToCoreU3Ed__6_1_tE728E90394339B64C9FB2B5D60905CA5C8A9C43F },
+	{ (Il2CppRGCTXDataType)3, (const void *)&g_rgctx_U3CBindToCoreU3Ed__6_1__ctor_m066AD0AE9E62B763E0E08151D36E7234BC42ACF6 },
 	{ (Il2CppRGCTXDataType)2, (const void *)&g_rgctx_IUniTaskAsyncEnumerable_1_t78EEAD891325A89E73E39D4ABE246A3F99FDBFA3 },
 	{ (Il2CppRGCTXDataType)3, (const void *)&g_rgctx_AsyncUniTaskVoidMethodBuilder_Start_TisU3CBindToCoreU3Ed__6_1_tE728E90394339B64C9FB2B5D60905CA5C8A9C43F_m5E60D9F24878C1F1F4A3FDC82C2CDDEE04844F32 },
 	{ (Il2CppRGCTXDataType)2, (const void *)&g_rgctx_U3CBindToCoreU3Ed__6_1U26_t1AE765F2C2D601F8B3D5694AF4105855F1DCC1C9 },
@@ -238,16 +238,16 @@ IL2CPP_EXTERN_C const Il2CppCodeGenModule g_UniTask_TextMeshPro_CodeGenModule;
 const Il2CppCodeGenModule g_UniTask_TextMeshPro_CodeGenModule = 
 {
 	"UniTask.TextMeshPro.dll",
-	55,
+	57,
 	s_methodPointers,
-	2,
-	s_adjustorThunks,
+	0,
+	NULL,
 	s_InvokerIndices,
 	0,
 	NULL,
 	5,
 	s_rgctxIndices,
-	22,
+	23,
 	s_rgctxValues,
 	NULL,
 	NULL,

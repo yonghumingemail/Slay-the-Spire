@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 07cdf7cb463a74442b06117616179c58
   m_currentHash:
     serializedVersion: 2
-    Hash: 1d1a1ea00b9583697d20efe217598d30
+    Hash: bd833e7d1c6b98ec6d544cd65eacb3af
   m_DisableWriteTypeTree: 0
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
@@ -108,6 +108,7 @@ MonoBehaviour:
     - GamePlayScene_theEnding
     - GamePlayScene_theForest
     - test
+    - MataDataDllText
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 63f0f7265a33a2b449e03cd25787c476, type: 2}

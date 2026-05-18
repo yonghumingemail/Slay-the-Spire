@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: Art
   m_GUID: 07cdf7cb463a74442b06117616179c58
   m_SerializeEntries:
+  - m_GUID: 131a6b21c8605f84396be9f6751fb6e3
+    m_Address: Assets/Scenes
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 33b4154e36dae7548866dd2c5af972e5
     m_Address: Assets/ScriptableObject
     m_ReadOnly: 0
@@ -24,6 +29,12 @@ MonoBehaviour:
     m_Address: Assets/Art/Prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8f38bff17528d8f4f9e0629014532ce8
+    m_Address: Assets/HybridCLRGenerate/HotUpdata/MataDataDll
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MataDataDllText
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e949eb7246157e14ab264bedbab53fb6
     m_Address: Assets/Art/Image/SpriteAtlas

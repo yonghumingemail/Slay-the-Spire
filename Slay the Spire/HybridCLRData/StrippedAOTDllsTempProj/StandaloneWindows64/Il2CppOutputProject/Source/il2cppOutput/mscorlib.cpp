@@ -9498,13 +9498,13 @@ IL_01ab:
 		CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* L_87 = ___0_culture;
 		NullCheck(L_87);
 		int32_t L_88;
-		L_88 = VirtualFuncInvoker0< int32_t >::Invoke(6, L_87);
+		L_88 = VirtualFuncInvoker0< int32_t >::Invoke(7, L_87);
 		int32_t L_89 = L_88;
 		RuntimeObject* L_90 = Box(il2cpp_defaults.int32_class, &L_89);
 		CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* L_91 = ___0_culture;
 		NullCheck(L_91);
 		String_t* L_92;
-		L_92 = VirtualFuncInvoker0< String_t* >::Invoke(7, L_91);
+		L_92 = VirtualFuncInvoker0< String_t* >::Invoke(8, L_91);
 		int32_t L_93 = V_5;
 		int32_t L_94 = L_93;
 		RuntimeObject* L_95 = Box(il2cpp_defaults.int32_class, &L_94);
@@ -11832,12 +11832,12 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SimpleCollator__ctor_m457B2E914BEC0BB426
 		CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* L_0 = ___0_culture;
 		NullCheck(L_0);
 		int32_t L_1;
-		L_1 = VirtualFuncInvoker0< int32_t >::Invoke(6, L_0);
+		L_1 = VirtualFuncInvoker0< int32_t >::Invoke(7, L_0);
 		__this->___lcid = L_1;
 		CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* L_2 = ___0_culture;
 		NullCheck(L_2);
 		TextInfo_tD3BAFCFD77418851E7D5CB8D2588F47019E414B4* L_3;
-		L_3 = VirtualFuncInvoker0< TextInfo_tD3BAFCFD77418851E7D5CB8D2588F47019E414B4* >::Invoke(10, L_2);
+		L_3 = VirtualFuncInvoker0< TextInfo_tD3BAFCFD77418851E7D5CB8D2588F47019E414B4* >::Invoke(13, L_2);
 		__this->___textInfo = L_3;
 		Il2CppCodeGenWriteBarrier((void**)(&__this->___textInfo), (void*)L_3);
 		CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* L_4 = ___0_culture;
@@ -11858,7 +11858,7 @@ IL_0049:
 		CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* L_11 = V_1;
 		NullCheck(L_11);
 		int32_t L_12;
-		L_12 = VirtualFuncInvoker0< int32_t >::Invoke(6, L_11);
+		L_12 = VirtualFuncInvoker0< int32_t >::Invoke(7, L_11);
 		il2cpp_codegen_runtime_class_init_inline(MSCompatUnicodeTable_t26E4B9B0E049DBAFAB2189A2DFCEAD9A5893F29E_il2cpp_TypeInfo_var);
 		TailoringInfo_t90C886DE804805F1156719A9F63CB07E3BA7A84A* L_13;
 		L_13 = MSCompatUnicodeTable_GetTailoringInfo_mB25850226E6CEABF5AC34B2A168E33FF9BB5D930(L_12, NULL);
@@ -11873,7 +11873,7 @@ IL_0049:
 		CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* L_15 = V_1;
 		NullCheck(L_15);
 		CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* L_16;
-		L_16 = VirtualFuncInvoker0< CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* >::Invoke(9, L_15);
+		L_16 = VirtualFuncInvoker0< CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* >::Invoke(12, L_15);
 		V_1 = L_16;
 	}
 
@@ -11882,7 +11882,7 @@ IL_005f:
 		CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* L_17 = V_1;
 		NullCheck(L_17);
 		int32_t L_18;
-		L_18 = VirtualFuncInvoker0< int32_t >::Invoke(6, L_17);
+		L_18 = VirtualFuncInvoker0< int32_t >::Invoke(7, L_17);
 		if ((!(((uint32_t)L_18) == ((uint32_t)((int32_t)127)))))
 		{
 			goto IL_0049;
@@ -12108,7 +12108,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SimpleCollator_SetCJKTable_mCCCB23CC548A
 		L_1 = SimpleCollator_GetNeutralCulture_mC1A6DE98ABAC1AE2E7FA2E55CD53628E2BD344D0(L_0, NULL);
 		NullCheck(L_1);
 		String_t* L_2;
-		L_2 = VirtualFuncInvoker0< String_t* >::Invoke(7, L_1);
+		L_2 = VirtualFuncInvoker0< String_t* >::Invoke(8, L_1);
 		CodePointIndexer_tDB29485BEDB55D414DA8F327ACDC24A37B5300EF** L_3 = ___1_cjkIndexer;
 		uint8_t** L_4 = ___2_catTable;
 		uint8_t** L_5 = ___3_lv1Table;
@@ -12133,7 +12133,7 @@ IL_0004:
 		CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* L_1 = V_0;
 		NullCheck(L_1);
 		CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* L_2;
-		L_2 = VirtualFuncInvoker0< CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* >::Invoke(9, L_1);
+		L_2 = VirtualFuncInvoker0< CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* >::Invoke(12, L_1);
 		V_0 = L_2;
 	}
 
@@ -12142,7 +12142,7 @@ IL_000b:
 		CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* L_3 = V_0;
 		NullCheck(L_3);
 		CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* L_4;
-		L_4 = VirtualFuncInvoker0< CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* >::Invoke(9, L_3);
+		L_4 = VirtualFuncInvoker0< CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* >::Invoke(12, L_3);
 		if (!L_4)
 		{
 			goto IL_0022;
@@ -12152,10 +12152,10 @@ IL_000b:
 		CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* L_5 = V_0;
 		NullCheck(L_5);
 		CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* L_6;
-		L_6 = VirtualFuncInvoker0< CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* >::Invoke(9, L_5);
+		L_6 = VirtualFuncInvoker0< CultureInfo_t9BA817D41AD55AC8BD07480DD8AC22F8FFA378E0* >::Invoke(12, L_5);
 		NullCheck(L_6);
 		int32_t L_7;
-		L_7 = VirtualFuncInvoker0< int32_t >::Invoke(6, L_6);
+		L_7 = VirtualFuncInvoker0< int32_t >::Invoke(7, L_6);
 		if ((!(((uint32_t)L_7) == ((uint32_t)((int32_t)127)))))
 		{
 			goto IL_0004;
@@ -27909,7 +27909,7 @@ IL_0019:
 		int32_t L_9 = ___1_length;
 		Span_1_tEDDF15FCF9EC6DEBA0F696BAACDDBAB9D92C252D L_10;
 		memset((&L_10), 0, sizeof(L_10));
-		Span_1__ctor_mC9BE2938B716B46BB6B9070B94DBE5CE814BC0E2_inline((&L_10), L_8, L_9, il2cpp_rgctx_method(InitializedTypeInfo(method->klass)->rgctx_data, 16));
+		Span_1__ctor_mC9BE2938B716B46BB6B9070B94DBE5CE814BC0E2_inline((&L_10), L_8, L_9, il2cpp_rgctx_method(InitializedTypeInfo(method->klass)->rgctx_data, 19));
 		return L_10;
 	}
 }
