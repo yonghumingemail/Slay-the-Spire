@@ -73,7 +73,8 @@ namespace CardCrawlGame.Map
                 throw new ArgumentException("Map dimensions too small");
 
             MapRoomNode[,] map = CreateNodes(height, width);
-            map = CreatePaths(map, width, pathDensity, rng);
+            CreatePaths(map, width, pathDensity, rng);
+            FilterRedundantEdges(map);
             return map;
         }
 
@@ -83,7 +84,7 @@ namespace CardCrawlGame.Map
             return new MapRoomNode[height, width];
         }
 
-        private MapRoomNode[,] CreatePaths(MapRoomNode[,] map, int width, int pathDensity, System.Random rng)
+        private void CreatePaths(MapRoomNode[,] map, int width, int pathDensity, System.Random rng)
         {
             int firstStartingNode = -1;
 
@@ -104,8 +105,6 @@ namespace CardCrawlGame.Map
                 var startEdge = new MapEdge(startX, -1, startX, 0);
                 BuildPath(map, startEdge, rng);
             }
-
-            return map;
         }
 
         private void BuildPath(MapRoomNode[,] nodes, MapEdge startEdge, System.Random rng)
@@ -126,7 +125,7 @@ namespace CardCrawlGame.Map
                 if (nextY >= rows)
                 {
                     MapRoomNode node = GetOrCreateNode(nodes, currX, currY);
-                    var bossEdge = new MapEdge(currX, currY, cols/2, rows); // Boss 行
+                    var bossEdge = new MapEdge(currX, currY, cols / 2, rows); // Boss 行
                     node.AddEdge(bossEdge);
                     return; // 路径结束
                 }
@@ -134,7 +133,7 @@ namespace CardCrawlGame.Map
                 // 确定当前节点可能移动的方向
                 int minDelta = currX == 0 ? 0 : -1;
                 int maxDelta = currX == cols - 1 ? 0 : 1;
-                
+
                 // 选择下一个 X，并确保不越界、不产生过近环路
                 int nextX = ChooseNextX(currX, currY, nextY, minDelta, maxDelta, nodes, rng);
                 nextX = Math.Clamp(nextX, 0, cols - 1);
@@ -153,9 +152,43 @@ namespace CardCrawlGame.Map
         }
 
         /// <summary>
+        /// 过滤冗余边：删除重复连线
+        /// </summary>
+        private void FilterRedundantEdges(MapRoomNode[,] map)
+        {
+            var existing = new List<MapEdge>();
+            var deleteList = new List<MapEdge>();
+
+            for (int i = 0; i < map.GetLength(1); i++)
+            {
+                if (map[0, i]==null) continue;
+
+                foreach (var edge in map[0, i].Edges)
+                {
+                    foreach (var prev in existing)
+                    {
+                        if (edge.DstX == prev.DstX && edge.DstY == prev.DstY)
+                            deleteList.Add(edge);
+                    }
+
+                    existing.Add(edge);
+                }
+
+                foreach (var e in deleteList)
+                    map[0, i].Edges.Remove(e);
+                if (!map[0, i].HasEdges())
+                {
+                    map[0, i] = null;
+                }
+
+                deleteList.Clear();
+            }
+        }
+
+        /// <summary>
         /// 选择一个合法的下一列，避开已有的会导致短环路的节点
         /// </summary>
-        private int ChooseNextX(int currX, int currY, int nextY, 
+        private int ChooseNextX(int currX, int currY, int nextY,
             int minDelta, int maxDelta,
             MapRoomNode[,] nodes, System.Random rng)
         {
@@ -176,7 +209,7 @@ namespace CardCrawlGame.Map
                     MapRoomNode currNode = GetOrCreateNode(nodes, currX, currY);
                     wouldLoop = HasNearAncestor(existing, currNode, 3);
                 }
-                
+
                 // 理想情况：空节点 且 不产生环路
                 if (isEmpty && !wouldLoop)
                     break;
@@ -251,6 +284,7 @@ namespace CardCrawlGame.Map
                         queue.Enqueue((parent, depth + 1));
                 }
             }
+
             return false;
         }
 
@@ -276,8 +310,7 @@ namespace CardCrawlGame.Map
         {
             if (x < 0 || y < 0) return null;
             if (y >= nodes.GetLength(0)) return null;
-            if (x >= nodes.GetLength(1)) return null;
-            return nodes[y, x];
+            return x >= nodes.GetLength(1) ? null : nodes[y, x];
         }
 
         private int RandRange(System.Random rng, int min, int max)
@@ -285,6 +318,4 @@ namespace CardCrawlGame.Map
             return rng.Next(max - min + 1) + min;
         }
     }
-
-   
 }

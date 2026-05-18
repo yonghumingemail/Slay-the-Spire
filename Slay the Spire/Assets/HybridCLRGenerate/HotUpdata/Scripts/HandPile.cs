@@ -37,6 +37,7 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
             OnMouseEnterEnemy, 0);
         EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnMouseExitEnemy_EventArgs.id,
             OnMouseExitEnemy, 0);
+
     }
 
     private void Start()
@@ -129,8 +130,8 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
 
     public async UniTask OnRoundStart(object sender, BaseEventArgs args)
     {
-        // print("抽牌："+Time.time);
         await DrawCard(drawCardsCount + drawCardsOffer);
+        print("抽牌："+Time.time);
     }
 
     private async UniTask DrawCard(int count)

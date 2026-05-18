@@ -20,7 +20,7 @@ namespace CardCrawlGame.Map
         protected override string roomSpriteOutlineName { get; set; } = "monsterOutline";
         public override void OnPointClicked(PointerEventData data)
         {
-            
+           
         }
     }
 
@@ -347,7 +347,7 @@ namespace CardCrawlGame.Map
                     var node = map[y, x];
                     if (node != null && node.HasEdges() && node.Room == null)
                     {
-                        Debug.Log($"Node ({node.X},{node.Y}) was null. Changed to a MonsterRoom.");
+                       // Debug.Log($"Node ({node.X},{node.Y}) was null. Changed to a MonsterRoom.");
                         node.Room = new MonsterRoom();
                     }
                 }

@@ -5,16 +5,15 @@ using UnityEngine.UI;
 
 public class ClassID<T>
 {
-    public static int ID { get; }=typeof(T).GetHashCode();
-    
+    public static int ID { get; } = typeof(T).GetHashCode();
 }
-public class UIMapID:ClassID<UIManager>
+
+public abstract class UIMapID : ClassID<UIManager>
 {
-  
 }
+
 public class UIMapButton : MonoBehaviour
 {
-    private GameObject viewObj;
     private Button _button;
 
     private void Awake()
@@ -23,21 +22,12 @@ public class UIMapButton : MonoBehaviour
         Initialize().Forget();
     }
 
-    private void Start()
-    {
-       
-    }
-
     private async UniTaskVoid Initialize()
     {
         var mapObjPrefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/Map.prefab");
         await UIManager.Instance.onComplete.Task;
-        UIManager.Instance.AddUIInterface(0, UIMapID.ID,mapObjPrefab);
-        _button.onClick.AddListener(() =>
-            {
-                  UIManager.Instance.SetUIActive(true,UIMapID.ID);
-            }
-        );
+        UIManager.Instance.AddUIForm(0, UIMapID.ID, mapObjPrefab, gameObject);
+        _button.onClick.AddListener(() => { UIManager.Instance.OpenUIForm(UIMapID.ID, true); } );
     }
 
     private void OnDestroy()

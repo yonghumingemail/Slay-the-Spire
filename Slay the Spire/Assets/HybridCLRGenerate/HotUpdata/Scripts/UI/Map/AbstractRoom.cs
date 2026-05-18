@@ -9,7 +9,10 @@ public abstract class AbstractRoom
     protected abstract string roomSpriteName { get; set; } 
     protected abstract string roomSpriteOutlineName { get; set; }
 
-    public abstract void OnPointClicked(PointerEventData data);
+    public virtual void OnPointClicked(PointerEventData data)
+    {
+        UIManager.Instance.CloseUIForm(UIMapID.ID,false);
+    }
     public virtual void Init(SpriteAtlas atlas)
     {
         nodeSprite = atlas.GetSprite(roomSpriteName);
