@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Cysharp.Threading.Tasks;
 using HybridCLR;
@@ -18,8 +19,10 @@ public class Main : MonoBehaviour
 
             // 2. 补充 AOT 元数据（在加载 HotUpdate.dll 之前）
             var handle = Addressables.LoadAssetsAsync<TextAsset>(
-                new List<string> { "MetadataDllText" }, // 确认标签名无误
-                null
+                new List<string> { "MataDataDllText" }, 
+                null, 
+                Addressables.MergeMode.Union, 
+                false
             );
             await handle.Task;
             if (handle.Status == AsyncOperationStatus.Succeeded)
@@ -38,10 +41,15 @@ public class Main : MonoBehaviour
             }
             Addressables.Release(handle);
 
+            
             // 3. 加载热更程序集
-            Assembly hotUpdateAss = Assembly.Load(await File.ReadAllBytesAsync($"{Application.streamingAssetsPath}/HotUpdate.dll.bytes"));
-            Debug.Log("热更程序集加载完成");
-
+            // Editor环境下，HotUpdate.dll.bytes已经被自动加载，不需要加载，重复加载反而会出问题。
+#if !UNITY_EDITOR
+        Assembly hotUpdateAss = Assembly.Load(File.ReadAllBytes($"{Application.streamingAssetsPath}/HotUpdate.dll.bytes"));
+#else
+            // Editor下无需加载，直接查找获得HotUpdate程序集
+            Assembly hotUpdateAss = System.AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "HotUpdate");
+#endif
             // 4. 加载热更场景
             await Addressables.LoadSceneAsync("Assets/Scenes/Test.unity"); // 请使用你实际配置的场景地址
         }
