@@ -1,8 +1,5 @@
 using System;
-using System.Linq;
-using Cysharp.Threading.Tasks;
 using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
-using JetBrains.Annotations;
 using UnityEngine;
 
 public class GainPower : IEntry

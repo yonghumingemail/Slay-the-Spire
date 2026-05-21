@@ -7,6 +7,8 @@
 
 
 
+extern void EmbeddedAttribute__ctor_m6D304AD5293B8A76BD9CCDC8984253182FD5476D (void);
+extern void RefSafetyRulesAttribute__ctor_mCEDCFCA0E2A72F2FF6F27D117E92FF8AE5157D13 (void);
 extern void SpriteMask_get_frontSortingLayerID_mCDFA70861C17DE5BC7FC178DF5FFD1E7BEE12B3E (void);
 extern void SpriteMask_set_frontSortingLayerID_m023C6504B9363E89DC2528FA83D82208192E8198 (void);
 extern void SpriteMask_get_frontSortingOrder_m9F4B657A7E0C3BDC5344C8FD3EAC4B3A04D43979 (void);
@@ -48,8 +50,10 @@ extern void SpriteMask_get_maskSource_Injected_m2913169DA494FF257A839F2B5C6C43EC
 extern void SpriteMask_set_maskSource_Injected_m81C7DDD54607B3216A7094DA5EAAE8843B4968AA (void);
 extern void SpriteMask_get_cachedSupportedRenderer_Injected_mCDD80B739A1F061F14633775C7E23ABA8F659D08 (void);
 extern void SpriteMask_GetSpriteBounds_Injected_m296A7FF4D63CEDD57F7EBE65CE4C6B32FDA75975 (void);
-static Il2CppMethodPointer s_methodPointers[41] = 
+static Il2CppMethodPointer s_methodPointers[43] = 
 {
+	EmbeddedAttribute__ctor_m6D304AD5293B8A76BD9CCDC8984253182FD5476D,
+	RefSafetyRulesAttribute__ctor_mCEDCFCA0E2A72F2FF6F27D117E92FF8AE5157D13,
 	SpriteMask_get_frontSortingLayerID_mCDFA70861C17DE5BC7FC178DF5FFD1E7BEE12B3E,
 	SpriteMask_set_frontSortingLayerID_m023C6504B9363E89DC2528FA83D82208192E8198,
 	SpriteMask_get_frontSortingOrder_m9F4B657A7E0C3BDC5344C8FD3EAC4B3A04D43979,
@@ -92,55 +96,57 @@ static Il2CppMethodPointer s_methodPointers[41] =
 	SpriteMask_get_cachedSupportedRenderer_Injected_mCDD80B739A1F061F14633775C7E23ABA8F659D08,
 	SpriteMask_GetSpriteBounds_Injected_m296A7FF4D63CEDD57F7EBE65CE4C6B32FDA75975,
 };
-static const int32_t s_InvokerIndices[41] = 
+static const int32_t s_InvokerIndices[43] = 
 {
-	19154,
-	14688,
-	19154,
-	14688,
-	19154,
-	14688,
-	19154,
-	14688,
-	19315,
-	14840,
-	19214,
-	14746,
-	19022,
-	14562,
-	19154,
-	14688,
-	19154,
-	14688,
-	19214,
-	19018,
-	19415,
-	29350,
-	26682,
-	29350,
-	26682,
-	29350,
-	26682,
-	29350,
-	26682,
-	29611,
-	26685,
-	29402,
-	26683,
-	29179,
-	26680,
-	29350,
-	26682,
-	29350,
-	26682,
-	29402,
-	26679,
+	20629,
+	15641,
+	20335,
+	15641,
+	20335,
+	15641,
+	20335,
+	15641,
+	20335,
+	15641,
+	20518,
+	15813,
+	20398,
+	15703,
+	20193,
+	15502,
+	20335,
+	15641,
+	20335,
+	15641,
+	20398,
+	20189,
+	20629,
+	31321,
+	28420,
+	31321,
+	28420,
+	31321,
+	28420,
+	31321,
+	28420,
+	31631,
+	28423,
+	31378,
+	28421,
+	31131,
+	28417,
+	31321,
+	28420,
+	31321,
+	28420,
+	31378,
+	28416,
 };
 IL2CPP_EXTERN_C const Il2CppCodeGenModule g_UnityEngine_SpriteMaskModule_CodeGenModule;
 const Il2CppCodeGenModule g_UnityEngine_SpriteMaskModule_CodeGenModule = 
 {
 	"UnityEngine.SpriteMaskModule.dll",
-	41,
+	43,
 	s_methodPointers,
 	0,
 	NULL,

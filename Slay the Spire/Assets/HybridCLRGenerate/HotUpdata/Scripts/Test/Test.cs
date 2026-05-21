@@ -1,26 +1,61 @@
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.U2D;
 using UnityEngine.UI;
 
 public class Test : MonoBehaviour
 {
-
     public TMP_InputField inputField;
     public Button button;
-    private List<object> results = new List<object>();
+    public Sprite sprite;
+
+    public Dictionary<Type, List<object>> dict = new();
+
     private void Start()
     {
-        Debug.Log("Test script started");
-        button.onClick.AddListener(()=>{TestAsync().Forget();});
     }
 
-    private async UniTask TestAsync()
+    
+    public void AddInterfaceObject<T>(T obj) where T : class
     {
-        Debug.Log($"开始加载：{inputField.text}");
-        results.Add(await Addressables.LoadAssetAsync<object>(inputField.text));
-        Debug.Log($"加载完成：{inputField.text},资源类型:{results[^1].GetType()}");
+        if (dict.TryGetValue(typeof(T), out var list))
+        {
+            list.Add(obj);
+        }
+        else
+        {
+            dict.Add(typeof(T),new List<object>(){obj});
+        }
+    }
+
+    public T GetInterfaceObject<T>() where T : class
+    {
+        if (dict.TryGetValue(typeof(T), out var list))
+        {
+            return list[0] as T;
+        }
+
+        return null;
+    }
+
+    public List<object> GetInterfaceObjects<T>() where T : class
+    {
+        return dict.GetValueOrDefault(typeof(T));
+    }
+
+    public void RemoveInterfaceObject<T>(T obj) where T : class
+    {
+        if (dict.TryGetValue(typeof(T), out var list))
+        {
+            list.Remove(obj);
+        }
+        else
+        {
+            Debug.Log("字典中不存在该类型接口对象");
+        }
     }
 }

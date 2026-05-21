@@ -7,6 +7,8 @@
 
 
 
+extern void EmbeddedAttribute__ctor_mBB01735E786E7770A1B2ECAA65D1219B6D039DA5 (void);
+extern void RefSafetyRulesAttribute__ctor_mDE3C6508311180AE4C38C21D763A5040F722BBD5 (void);
 extern void Terrain_get_terrainData_m3B6C1D89471A4E1C60FC19C168DB37A011B924FD (void);
 extern void Terrain_get_allowAutoConnect_m4E9CB87D130BB118517C5504C8FB4A5CC3AA91D7 (void);
 extern void Terrain_get_groupingID_mE52E78018126A5D00F837081287BE076E7709C24 (void);
@@ -50,10 +52,12 @@ extern void TerrainUtility_AutoConnect_m3E435D139BE402DC495248EDD1FF2C1E9377A897
 extern void U3CU3Ec__DisplayClass2_0__ctor_m4C022C4675BA4CFC7E7AAA5692979CDE6CD8E611 (void);
 extern void U3CU3Ec__DisplayClass2_1__ctor_mA329ED5B221AE8787EAEA1124A2A95675FDD1695 (void);
 extern void U3CU3Ec__DisplayClass2_1_U3CCollectTerrainsU3Eb__0_m57E871EB2399E5FB7DF78B3C9EBFBF152116AC2C (void);
-extern void SpeedTreeWindManager_UpdateWindAndWriteBufferWindParams_m23A5F63BB153D53BFFC964F460A96FBCED2E2365 (void);
+extern void SpeedTreeWindManager_UpdateWindAndWriteBufferWindParams_m797D216456C652B207A2A09B87B885C5731ACD82 (void);
 extern void SpeedTreeWindManager_UpdateWindAndWriteBufferWindParams_Injected_mD0F1307B49EF30CE91F21648F9D72849EA26A693 (void);
-static Il2CppMethodPointer s_methodPointers[45] = 
+static Il2CppMethodPointer s_methodPointers[47] = 
 {
+	EmbeddedAttribute__ctor_mBB01735E786E7770A1B2ECAA65D1219B6D039DA5,
+	RefSafetyRulesAttribute__ctor_mDE3C6508311180AE4C38C21D763A5040F722BBD5,
 	Terrain_get_terrainData_m3B6C1D89471A4E1C60FC19C168DB37A011B924FD,
 	Terrain_get_allowAutoConnect_m4E9CB87D130BB118517C5504C8FB4A5CC3AA91D7,
 	Terrain_get_groupingID_mE52E78018126A5D00F837081287BE076E7709C24,
@@ -97,67 +101,69 @@ static Il2CppMethodPointer s_methodPointers[45] =
 	U3CU3Ec__DisplayClass2_0__ctor_m4C022C4675BA4CFC7E7AAA5692979CDE6CD8E611,
 	U3CU3Ec__DisplayClass2_1__ctor_mA329ED5B221AE8787EAEA1124A2A95675FDD1695,
 	U3CU3Ec__DisplayClass2_1_U3CCollectTerrainsU3Eb__0_m57E871EB2399E5FB7DF78B3C9EBFBF152116AC2C,
-	SpeedTreeWindManager_UpdateWindAndWriteBufferWindParams_m23A5F63BB153D53BFFC964F460A96FBCED2E2365,
+	SpeedTreeWindManager_UpdateWindAndWriteBufferWindParams_m797D216456C652B207A2A09B87B885C5731ACD82,
 	SpeedTreeWindManager_UpdateWindAndWriteBufferWindParams_Injected_mD0F1307B49EF30CE91F21648F9D72849EA26A693,
 };
 extern void TerrainTileCoord__ctor_m6B6744655B9C3BA9B1A92076F07002B4B4EB899A_AdjustorThunk (void);
 static Il2CppTokenAdjustorThunkPair s_adjustorThunks[1] = 
 {
-	{ 0x06000019, TerrainTileCoord__ctor_m6B6744655B9C3BA9B1A92076F07002B4B4EB899A_AdjustorThunk },
+	{ 0x0600001B, TerrainTileCoord__ctor_m6B6744655B9C3BA9B1A92076F07002B4B4EB899A_AdjustorThunk },
 };
-static const int32_t s_InvokerIndices[45] = 
+static const int32_t s_InvokerIndices[47] = 
 {
-	19214,
-	19022,
-	19154,
-	2476,
-	31473,
-	19415,
-	29402,
-	29179,
-	29350,
-	21552,
-	24563,
-	22856,
-	7525,
-	3720,
-	7525,
-	2478,
-	29348,
-	19404,
-	19315,
-	19214,
-	31561,
-	26679,
-	29611,
-	29490,
-	7052,
-	5926,
-	23756,
-	22618,
-	19214,
-	19415,
-	3588,
-	2684,
-	7052,
-	19154,
-	19415,
-	10867,
-	31418,
-	31561,
-	29479,
-	31561,
-	19415,
-	19415,
-	10867,
-	24308,
-	24313,
+	20629,
+	15641,
+	20398,
+	20193,
+	20335,
+	2631,
+	33448,
+	20629,
+	31378,
+	31131,
+	31321,
+	22904,
+	26148,
+	24296,
+	8043,
+	3934,
+	8043,
+	2633,
+	31319,
+	20618,
+	20518,
+	20398,
+	33553,
+	28416,
+	31631,
+	31480,
+	7529,
+	6309,
+	25257,
+	24037,
+	20398,
+	20629,
+	3792,
+	2844,
+	7529,
+	20335,
+	20629,
+	11474,
+	33388,
+	33553,
+	31468,
+	33553,
+	20629,
+	20629,
+	11474,
+	25870,
+	25875,
 };
 IL2CPP_EXTERN_C const Il2CppCodeGenModule g_UnityEngine_TerrainModule_CodeGenModule;
 const Il2CppCodeGenModule g_UnityEngine_TerrainModule_CodeGenModule = 
 {
 	"UnityEngine.TerrainModule.dll",
-	45,
+	47,
 	s_methodPointers,
 	1,
 	s_adjustorThunks,

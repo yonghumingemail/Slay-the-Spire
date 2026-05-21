@@ -18,6 +18,10 @@
         "dependencies": []
       },
       {
+        "name": "AdaptivePerformance",
+        "dependencies": []
+      },
+      {
         "name": "AndroidJNI",
         "dependencies": []
       },
@@ -78,6 +82,10 @@
         "dependencies": []
       },
       {
+        "name": "Hierarchy",
+        "dependencies": []
+      },
+      {
         "name": "HierarchyCore",
         "dependencies": []
       },
@@ -87,6 +95,10 @@
       },
       {
         "name": "IMGUI",
+        "dependencies": []
+      },
+      {
+        "name": "Identifiers",
         "dependencies": []
       },
       {
@@ -103,6 +115,10 @@
       },
       {
         "name": "InputLegacy",
+        "dependencies": []
+      },
+      {
+        "name": "Insights",
         "dependencies": []
       },
       {
@@ -142,11 +158,23 @@
         "dependencies": []
       },
       {
+        "name": "PhysicsBackendPhysX",
+        "dependencies": []
+      },
+      {
         "name": "Properties",
         "dependencies": []
       },
       {
+        "name": "RenderAs2D",
+        "dependencies": []
+      },
+      {
         "name": "ScreenCapture",
+        "dependencies": []
+      },
+      {
+        "name": "Scripting",
         "dependencies": []
       },
       {
@@ -230,11 +258,11 @@
         "dependencies": []
       },
       {
-        "name": "UnityCurl",
+        "name": "UnityConsent",
         "dependencies": []
       },
       {
-        "name": "UnityTestProtocol",
+        "name": "UnityCurl",
         "dependencies": []
       },
       {
@@ -263,6 +291,10 @@
       },
       {
         "name": "VR",
+        "dependencies": []
+      },
+      {
+        "name": "VectorGraphics",
         "dependencies": []
       },
       {

@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using CardCrawlGame.Map;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class MapPathView : MonoBehaviour
 {
@@ -14,12 +16,11 @@ public class MapPathView : MonoBehaviour
     private GameObject Lines;
     private GameObject MapRoomNodes;
     private SpriteAtlas _atlas;
-
+    
     public float nodeSpacingX; // 节点间距
     public float nodeSpacingY; // 节点间距
-
     public float offsetCircleRadius; // 偏移圆半径
-
+    
     [Header("地图参数")] public int mapHeight = 16;
     public int mapWidth = 7;
     public int pathCount = 6;
@@ -55,9 +56,9 @@ public class MapPathView : MonoBehaviour
 
     public async UniTaskVoid Initialized()
     {
-        lineSpritePrefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/Line.prefab");
-        roomViewPrefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/MapRoomNode.prefab");
-        _atlas = await AddressablesMgr.Instance.LoadAssetAsync<SpriteAtlas>("Assets/Art/Image/SpriteAtlas/MapUI.spriteatlasv2");
+        lineSpritePrefab = await LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/Line.prefab");
+        roomViewPrefab = await LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/MapRoomNode.prefab");
+        _atlas = await LoadAssetAsync<SpriteAtlas>("Assets/Art/Image/SpriteAtlas/MapUI.spriteatlasv2");
 
         Image nodeUI = roomViewPrefab.GetComponentInChildren<Image>();
         nodeSpacingX += nodeUI.rectTransform.sizeDelta.x * nodeUI.rectTransform.localScale.x;
@@ -67,6 +68,19 @@ public class MapPathView : MonoBehaviour
         CreateMap();
     }
 
+    private List<string> PathList{get;}=new();
+    private UniTask<T> LoadAssetAsync<T>(string path) where T : class
+    {
+        PathList.Add(path);
+        return AddressablesMgr.Instance.LoadAssetAsync<T>(path);
+    }
+    private void Release()
+    {
+        foreach (var path in PathList)
+        {
+            AddressablesMgr.Instance.Release(path);
+        }
+    }
 
     /// <summary>
     /// 获取圆内随机偏移（均匀分布，不扎堆圆心）
@@ -102,10 +116,11 @@ public class MapPathView : MonoBehaviour
 
                 var mapRoomInfo = _map[i, j].Room;
                 mapRoomInfo.Init(_atlas);
+
                 var mapRoomView = roomViewObj.GetComponent<MapRoomNodeView>();
                 mapRoomView.UpdateView(mapRoomInfo.nodeSprite, mapRoomInfo.nodeOutlineSprite);
                 mapRoomView.onPointerClick += mapRoomInfo.OnPointClicked;
-                
+
                 _nodeToObj.Add(_map[i, j], mapRoomView);
             }
         }
@@ -143,5 +158,10 @@ public class MapPathView : MonoBehaviour
                 lineRect.sizeDelta = new Vector2(length / line.rectTransform.localScale.x, currentSize.y);
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        Release();
     }
 }

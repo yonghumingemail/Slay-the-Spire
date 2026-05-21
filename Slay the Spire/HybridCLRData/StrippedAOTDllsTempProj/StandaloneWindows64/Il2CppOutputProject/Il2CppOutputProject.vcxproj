@@ -162,6 +162,14 @@
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\GenericMethods__50.cpp">
     </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\GenericMethods__51.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\GenericMethods__52.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\GenericMethods__53.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\GenericMethods__54.cpp">
+    </ClCompile>
     <ClCompile Include="Source\il2cppOutput\GenericMethods__6.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\GenericMethods__7.cpp">
@@ -430,7 +438,21 @@
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Generics__214.cpp">
     </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Generics__215.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Generics__216.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Generics__217.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Generics__218.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Generics__219.cpp">
+    </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Generics__22.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Generics__220.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Generics__221.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Generics__23.cpp">
     </ClCompile>
@@ -614,6 +636,8 @@
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Il2CppCCalculateTypeValues1.cpp">
     </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Il2CppCCalculateTypeValues2.cpp">
+    </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Il2CppCCFieldValuesTable.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Il2CppCCTypeValuesTable.cpp">
@@ -760,6 +784,8 @@
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Unity.InputSystem__9.cpp">
     </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Unity.InternalAPIEngineBridge.004.cpp">
+    </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Unity.Mathematics.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Unity.Mathematics__1.cpp">
@@ -799,6 +825,8 @@
     <ClCompile Include="Source\il2cppOutput\Unity.RenderPipelines.Core.Runtime__1.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Unity.RenderPipelines.Core.Runtime__10.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Unity.RenderPipelines.Core.Runtime__11.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Unity.RenderPipelines.Core.Runtime__2.cpp">
     </ClCompile>
@@ -842,11 +870,11 @@
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Unity.RenderPipelines.Universal.Runtime__8.cpp">
     </ClCompile>
-    <ClCompile Include="Source\il2cppOutput\Unity.RenderPipelines.Universal.Runtime__9.cpp">
-    </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Unity.ResourceManager.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Unity.ResourceManager__1.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Unity.Scripting.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Unity.Splines.cpp">
     </ClCompile>
@@ -871,6 +899,8 @@
     <ClCompile Include="Source\il2cppOutput\Unity.TextMeshPro__8.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.AccessibilityModule.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\UnityEngine.AdaptivePerformanceModule.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.AIModule.cpp">
     </ClCompile>
@@ -908,8 +938,6 @@
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.IMGUIModule.cpp">
     </ClCompile>
-    <ClCompile Include="Source\il2cppOutput\UnityEngine.IMGUIModule__1.cpp">
-    </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.InputForUIModule.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.InputLegacyModule.cpp">
@@ -918,13 +946,19 @@
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.JSONSerializeModule.cpp">
     </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\UnityEngine.MultiplayerModule.cpp">
+    </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.ParticleSystemModule.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.Physics2DModule.cpp">
     </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\UnityEngine.Physics2DModule__1.cpp">
+    </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.PhysicsModule.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.PropertiesModule.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\UnityEngine.ScriptingModule.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.SharedInternalsModule.cpp">
     </ClCompile>
@@ -1005,6 +1039,8 @@
     <ClCompile Include="Source\il2cppOutput\UnityEngine.UnityAnalyticsCommonModule.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.UnityAnalyticsModule.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\UnityEngine.UnityConsentModule.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.UnityWebRequestAssetBundleModule.cpp">
     </ClCompile>
@@ -1088,6 +1124,8 @@
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Unity.InputSystem_CodeGen.c">
     </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Unity.InternalAPIEngineBridge.004_CodeGen.c">
+    </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Unity.Mathematics_CodeGen.c">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Unity.MemoryProfiler_CodeGen.c">
@@ -1106,11 +1144,15 @@
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Unity.ResourceManager_CodeGen.c">
     </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Unity.Scripting_CodeGen.c">
+    </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Unity.Splines_CodeGen.c">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Unity.TextMeshPro_CodeGen.c">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.AccessibilityModule_CodeGen.c">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\UnityEngine.AdaptivePerformanceModule_CodeGen.c">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.AIModule_CodeGen.c">
     </ClCompile>
@@ -1140,6 +1182,8 @@
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.JSONSerializeModule_CodeGen.c">
     </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\UnityEngine.MultiplayerModule_CodeGen.c">
+    </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.ParticleSystemModule_CodeGen.c">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.Physics2DModule_CodeGen.c">
@@ -1147,6 +1191,8 @@
     <ClCompile Include="Source\il2cppOutput\UnityEngine.PhysicsModule_CodeGen.c">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.PropertiesModule_CodeGen.c">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\UnityEngine.ScriptingModule_CodeGen.c">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.SharedInternalsModule_CodeGen.c">
     </ClCompile>
@@ -1175,6 +1221,8 @@
     <ClCompile Include="Source\il2cppOutput\UnityEngine.UnityAnalyticsCommonModule_CodeGen.c">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.UnityAnalyticsModule_CodeGen.c">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\UnityEngine.UnityConsentModule_CodeGen.c">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\UnityEngine.UnityWebRequestAssetBundleModule_CodeGen.c">
     </ClCompile>

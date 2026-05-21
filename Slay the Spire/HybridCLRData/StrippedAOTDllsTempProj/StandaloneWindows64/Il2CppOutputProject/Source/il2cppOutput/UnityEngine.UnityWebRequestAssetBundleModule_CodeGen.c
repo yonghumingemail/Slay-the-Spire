@@ -7,6 +7,8 @@
 
 
 
+extern void EmbeddedAttribute__ctor_m489E31D350A3CE7C54B158F36A86F6BB83B1054F (void);
+extern void RefSafetyRulesAttribute__ctor_m16EE9FBFE8DD054AE91276FA57B2019FBADAD785 (void);
 extern void UnityWebRequestAssetBundle_GetAssetBundle_mA08565578A5E7A07140D4C6327FD9B51E14D99F9 (void);
 extern void UnityWebRequestAssetBundle_GetAssetBundle_m9045968CDEE1AEF16CA76EFA17061D9D4C21FE30 (void);
 extern void UnityWebRequestAssetBundle_GetAssetBundle_m1701951B58D909D4FE4C62B86F4BF86C101DAB6B (void);
@@ -31,8 +33,10 @@ extern void DownloadHandlerAssetBundle_get_autoLoadAssetBundle_Injected_m174AF0A
 extern void DownloadHandlerAssetBundle_set_autoLoadAssetBundle_Injected_mBDEE2F590F1EF2D3FE0E8BFF9112BAC1B0E58F45 (void);
 extern void DownloadHandlerAssetBundle_get_isDownloadComplete_Injected_m00D3733B428ABEF90DE2B156FDBC242F7DBC36EE (void);
 extern void BindingsMarshaller_ConvertToNative_m66DFFF1E86DCA6AF5E1BA34DB5AF24F65B8E903C (void);
-static Il2CppMethodPointer s_methodPointers[24] = 
+static Il2CppMethodPointer s_methodPointers[26] = 
 {
+	EmbeddedAttribute__ctor_m489E31D350A3CE7C54B158F36A86F6BB83B1054F,
+	RefSafetyRulesAttribute__ctor_m16EE9FBFE8DD054AE91276FA57B2019FBADAD785,
 	UnityWebRequestAssetBundle_GetAssetBundle_mA08565578A5E7A07140D4C6327FD9B51E14D99F9,
 	UnityWebRequestAssetBundle_GetAssetBundle_m9045968CDEE1AEF16CA76EFA17061D9D4C21FE30,
 	UnityWebRequestAssetBundle_GetAssetBundle_m1701951B58D909D4FE4C62B86F4BF86C101DAB6B,
@@ -58,38 +62,40 @@ static Il2CppMethodPointer s_methodPointers[24] =
 	DownloadHandlerAssetBundle_get_isDownloadComplete_Injected_m00D3733B428ABEF90DE2B156FDBC242F7DBC36EE,
 	BindingsMarshaller_ConvertToNative_m66DFFF1E86DCA6AF5E1BA34DB5AF24F65B8E903C,
 };
-static const int32_t s_InvokerIndices[24] = 
+static const int32_t s_InvokerIndices[26] = 
 {
-	29493,
-	29493,
-	26016,
-	26016,
-	23740,
-	23679,
-	20972,
-	7580,
-	2458,
-	7580,
-	3653,
-	19214,
-	19214,
-	19214,
-	19022,
-	14562,
-	19022,
-	23674,
-	20970,
-	29402,
-	29179,
-	26680,
-	29179,
-	29403,
+	20629,
+	15641,
+	31483,
+	31483,
+	27684,
+	27684,
+	25242,
+	25175,
+	22266,
+	8105,
+	2615,
+	8105,
+	3864,
+	20398,
+	20398,
+	20398,
+	20193,
+	15502,
+	20193,
+	25170,
+	22264,
+	31378,
+	31131,
+	28417,
+	31131,
+	31379,
 };
 IL2CPP_EXTERN_C const Il2CppCodeGenModule g_UnityEngine_UnityWebRequestAssetBundleModule_CodeGenModule;
 const Il2CppCodeGenModule g_UnityEngine_UnityWebRequestAssetBundleModule_CodeGenModule = 
 {
 	"UnityEngine.UnityWebRequestAssetBundleModule.dll",
-	24,
+	26,
 	s_methodPointers,
 	0,
 	NULL,
