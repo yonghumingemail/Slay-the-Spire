@@ -35,12 +35,12 @@ public class Anger_BuffObj : BuffObj
     {
         base.OnAddBuff(eventCent, onDataUpdate);
         _animator = view.GetComponent<Animator>();
-        eventCent.Subscribe(OnHealthActionChangeEventArgs.id, Effect, priority);
+        eventCent.Subscribe(OnHealthActionChange_EA.id, Effect, priority);
     }
 
     public override void OnRemoveBuff(PriorityQueueEventCenter eventCent)
     {
         base.OnRemoveBuff(eventCent);
-        eventCent.UnSubscribe(OnHealthActionChangeEventArgs.id, Effect);
+        eventCent.UnSubscribe(OnHealthActionChange_EA.id, Effect);
     }
 }

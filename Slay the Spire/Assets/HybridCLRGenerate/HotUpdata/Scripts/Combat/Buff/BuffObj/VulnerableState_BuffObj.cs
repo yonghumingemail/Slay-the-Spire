@@ -49,7 +49,7 @@ public class VulnerableState_BuffObj : BuffObj
     {
         base.OnAddBuff(eventCent, onDataUpdate);
 
-        eventCent.Subscribe(OnBeAttacked_EventArgs.id, Effect, priority);
+        eventCent.Subscribe(OnBeAttacked_EA.id, Effect, priority);
         eventCent.Subscribe(DamageCalculation_BeAttacked_EventArgs.id, DamageCalculation, priority);
         eventCent.SubscribeAsync(OnRoundEnd_EventArgs.id, OnRoundEnd, priority);
     }
@@ -57,7 +57,7 @@ public class VulnerableState_BuffObj : BuffObj
     public override void OnRemoveBuff(PriorityQueueEventCenter eventCent)
     {
         base.OnRemoveBuff(eventCent);
-        eventCent.UnSubscribe(OnBeAttacked_EventArgs.id, Effect);
+        eventCent.UnSubscribe(OnBeAttacked_EA.id, Effect);
         eventCent.UnSubscribe(DamageCalculation_BeAttacked_EventArgs.id, DamageCalculation);
         eventCent.UnSubscribeAsync(OnRoundEnd_EventArgs.id, OnRoundEnd);
     }

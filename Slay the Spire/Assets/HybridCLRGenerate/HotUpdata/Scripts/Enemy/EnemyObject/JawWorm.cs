@@ -29,7 +29,6 @@ public class JawWorm : Enemy
         var controller = await AddressablesMgr.Instance.LoadAssetAsync<RuntimeAnimatorController>("Assets/Art/Image/monsters/theBottom/jawWorm/JawWorm.controller");
         await Initialize(sprite, controller);
         
-        
         _gainPower_Action2 = new GainPower(3);
 
         IIntent[] action1IntentArray =

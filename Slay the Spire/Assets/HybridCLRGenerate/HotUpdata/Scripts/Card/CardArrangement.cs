@@ -20,7 +20,7 @@ public class CardArrangement
 
     public void UpdateCardPositions(SplineContainer splineContainer, List<Card> cards, Action callBack)
     {
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.Fire(this,OnCardArrangementStart_EventArgs.id,null);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.Fire(this,OnCardArrangementStart_EA.id,null);
         // 检查卡牌列表是否为空，为空则直接返回避免后续计算
         if (cards.Count == 0)
             return;
@@ -88,7 +88,7 @@ public class CardArrangement
 
         _sequence.onComplete += () =>
         {
-            EventCenter_Singleton.Instance._priorityQueueEventCenter.Fire(this,OnCardArrangementEnd_EventArgs.id,null);
+            EventCenter_Singleton.Instance._priorityQueueEventCenter.Fire(this,OnCardArrangementEnd_EA.id,null);
             callBack?.Invoke();
         };
     }

@@ -44,7 +44,7 @@ public class InflictDamage : IEntry
         }
         else
         {
-            Action_T.Fire(info,OnAttack_EventArgs.id,this,buffList_Sender._priorityEventCenter);
+            Action_T_EA<OnAttack_EA>.Fire(info,this,buffList_Sender._priorityEventCenter);
         }
 
         if (health == null)

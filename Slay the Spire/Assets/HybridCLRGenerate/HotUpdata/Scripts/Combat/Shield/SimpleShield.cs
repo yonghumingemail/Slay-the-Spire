@@ -26,8 +26,8 @@ public class SimpleShield : IShield
         _priorityEventCenter = priorityEventCenter;
 
         _priorityEventCenter.SubscribeAsync(OnRoundStart_EventArgs.id, OnRoundStart, -1);
-        _priorityEventCenter.Subscribe(OnBeAttacked_EventArgs.id, ShieldTrigger, -1);
-        _priorityEventCenter.Subscribe(OnDestroy_EventArgs.id, OnDestroy, -1);
+        _priorityEventCenter.Subscribe(OnBeAttacked_EA.id, ShieldTrigger, -1);
+        _priorityEventCenter.Subscribe(OnDestroy_EA.id, OnDestroy, -1);
 
         _updateView?.Invoke(this);
     }

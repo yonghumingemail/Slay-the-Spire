@@ -17,7 +17,8 @@ public class RoleCore
 
     #endregion
     
-    
+    #region 私有变量
+
     [SerializeField] private SimpleHealth _health;
     private IHealth_V health_V;
 
@@ -28,6 +29,11 @@ public class RoleCore
     private IBuffList_V buffList_V;
 
     private PriorityQueueEventCenter _priorityEventCenter;
+
+    #endregion
+
+  
+    
     public RoleCore(IHealth_V healthV, IShield_V shieldV, IBuffList_V buffListV,PriorityQueueEventCenter priorityQueueEventCenter)
     {
         _priorityEventCenter=priorityQueueEventCenter;

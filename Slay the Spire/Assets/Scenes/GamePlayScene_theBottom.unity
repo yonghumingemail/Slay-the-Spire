@@ -1480,13 +1480,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4701ccd085f50a2418be50ac28bef4ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health:
-    healthValue: 0
-    maxHealthValue: 0
-  _shield:
-    shieldVale: 0
-  _buffList:
-    _buffListObj: []
+  roleCore:
+    _health:
+      healthValue: 0
+      maxHealthValue: 0
+    _shield:
+      shieldVale: 0
+    _buffList:
+      _buffListObj: []
 --- !u!1 &374126614
 GameObject:
   m_ObjectHideFlags: 0

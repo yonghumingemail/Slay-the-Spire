@@ -44,8 +44,8 @@ public class CardInteraction : MonoBehaviour, IPointerEnterHandler,
                 cardComponentInfo.Background.bounds.size.y / 2
         };
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnCardArrangementStart_EventArgs.id,OnStartCardArrangement,0);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnCardArrangementEnd_EventArgs.id,OnCardArrangementComplete,0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnCardArrangementStart_EA.id,OnStartCardArrangement,0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnCardArrangementEnd_EA.id,OnCardArrangementComplete,0);
     }
 
     public virtual void OnCardArrangementComplete(object sender, BaseEventArgs args)
@@ -105,8 +105,8 @@ public class CardInteraction : MonoBehaviour, IPointerEnterHandler,
         OnMouseEnterDelegate = null;
         OnMouseExitDelegate = null;
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.UnSubscribe(OnCardArrangementStart_EventArgs.id,OnStartCardArrangement);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.UnSubscribe(OnCardArrangementEnd_EventArgs.id,OnCardArrangementComplete);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.UnSubscribe(OnCardArrangementStart_EA.id,OnStartCardArrangement);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.UnSubscribe(OnCardArrangementEnd_EA.id,OnCardArrangementComplete);
 
         transform.DOKill();
     }

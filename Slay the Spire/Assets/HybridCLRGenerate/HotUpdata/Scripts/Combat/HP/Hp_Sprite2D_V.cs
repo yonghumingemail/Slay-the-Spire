@@ -41,8 +41,18 @@ public class Hp_Sprite2D_V : MonoBehaviour, IHealth_V
     public void UpdateView(IHealth health)
     {
         // 计算当前生命值比例（0-1）
-        float value = (float)health.HealthValue / health.MaxHealth;
-
+        float value;
+        if (health.MaxHealth > 0)
+        {
+            value = (float)health.HealthValue / health.MaxHealth;
+        }
+        else
+        {
+            // 处理异常情况：打印警告或赋默认值
+            Debug.LogWarning("MaxHealth is zero, cannot calculate health ratio.");
+            value = 0f; 
+        }
+        
         // 计算血条新位置：基于生命值比例横向移动
         var pos = _hp.transform.localPosition;
         pos.x = -1 * _hp.Length * (1 - value);

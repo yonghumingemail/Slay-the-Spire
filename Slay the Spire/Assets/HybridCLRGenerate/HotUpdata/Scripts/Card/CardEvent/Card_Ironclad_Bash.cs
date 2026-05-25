@@ -30,9 +30,9 @@ public class Card_Ironclad_Bash : Card
     {
         await base.Initialized("Assets/ScriptableObject/CardEvent/Ironclad_Bash.asset");
 
-        _player._priorityEventCenter.Subscribe(DamageValueChange_Attack_EventArgs.id, DamageValueChange_Attack, 0);
-        priorityEventCenter.Subscribe(OnMouseEnterEnemy_EventArgs.id, OnMouseEnterEnemy, 0);
-        priorityEventCenter.Subscribe(OnMouseExitEnemy_EventArgs.id, OnMouseExitEnemy, 0);
+        _player._priorityEventCenter.Subscribe(DamageValueChange_Attack_EA.id, DamageValueChange_Attack, 0);
+        priorityEventCenter.Subscribe(OnMouseEnterEnemy_EA.id, OnMouseEnterEnemy, 0);
+        priorityEventCenter.Subscribe(OnMouseExitEnemy_EA.id, OnMouseExitEnemy, 0);
 
 
         _directionalCard = new DirectionalCard(this, "Enemy");

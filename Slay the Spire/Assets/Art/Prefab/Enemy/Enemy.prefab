@@ -594,7 +594,6 @@ MonoBehaviour:
   intentsViewArray: []
   prefab: {fileID: 0}
   intentSpacing: 0.64
-  isInitialized: 0
 --- !u!1 &8667854601330632269
 GameObject:
   m_ObjectHideFlags: 0

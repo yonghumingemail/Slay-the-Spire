@@ -85,7 +85,7 @@ public class Player : MonoBehaviour, IEventCenterObject<BaseEventArgs>
     private void OnDestroy()
     {
         EventManage.Clear();
-        _priorityEventCenter.Fire(this, OnDestroy_EventArgs.id, null);
+        _priorityEventCenter.Fire(this, OnDestroy_EA.id, null);
         _priorityEventCenter.Clear();
     }
 }

@@ -50,7 +50,7 @@ public class VulnerableState : IEntry
             buffListObj.AddBuff(buff);
         }
 
-        buffListObj._priorityEventCenter.Fire(this,DamageValueChange_BeAttacked_EventArgs.id,null);
+        buffListObj._priorityEventCenter.Fire(this,DamageValueChange_BeAttacked_EA.id,null);
         Buff_EventArgs.Fire(buff,stack,OnGainBuff_EventArgs.id,this, buffListObj._priorityEventCenter);
 
     }

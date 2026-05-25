@@ -30,14 +30,14 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
         spline = transform.Find("Spline").GetComponent<SplineContainer>();
         DirectionalArrowLine = transform.Find("DirectionalArrowLine").GetComponent<DirectionalArrowLine>();
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync(OnRoundStart_EventArgs.id, OnRoundStart, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync(OnRoundStart_EventArgs.id, OnRoundStart,
+            0);
         EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync(OnRoundEnd_EventArgs.id, OnRoundEnd, 0);
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnMouseEnterEnemy_EventArgs.id,
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnMouseEnterEnemy_EA.id,
             OnMouseEnterEnemy, 0);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnMouseExitEnemy_EventArgs.id,
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnMouseExitEnemy_EA.id,
             OnMouseExitEnemy, 0);
-
     }
 
     private void Start()
@@ -56,13 +56,13 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
     private void OnMouseEnterEnemy(object sender, BaseEventArgs args)
     {
         if (!SelectedCard || !(args is Action_T _args)) return;
-        Action_T.Fire(_args.value, OnMouseEnterEnemy_EventArgs.id, this, SelectedCard.priorityEventCenter);
+        Action_T_EA<OnMouseEnterEnemy_EA>.Fire(_args.value, this, SelectedCard.priorityEventCenter);
     }
 
     private void OnMouseExitEnemy(object sender, BaseEventArgs args)
     {
         if (!SelectedCard || !(args is Action_T _args)) return;
-        Action_T.Fire(_args.value, OnMouseExitEnemy_EventArgs.id, this, SelectedCard.priorityEventCenter);
+        Action_T_EA<OnMouseExitEnemy_EA>.Fire(_args.value, this, SelectedCard.priorityEventCenter);
     }
 
     public void SetSelectedCard(Card card)
@@ -78,10 +78,15 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
             }
         }
 
-        Action_T.Fire(SelectedCard, 
-            isSelected ? OnSelectCard_EventArgs.id : OnUnSelectCard_EventArgs.id,
-            this,
-            EventCenter_Singleton.Instance._priorityQueueEventCenter);
+        if (isSelected)
+        {
+            Action_T_EA<OnSelectCard_EA>.Fire(SelectedCard, this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
+        }
+        else
+        {
+            Action_T_EA<OnUnSelectCard_EA>.Fire(SelectedCard, this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
+        }
+        
     }
 
 

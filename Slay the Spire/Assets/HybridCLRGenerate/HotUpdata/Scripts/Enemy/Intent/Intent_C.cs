@@ -12,11 +12,7 @@ public class Intent_C : MonoBehaviour, INeedToInitialize
 
     public GameObject prefab;
     public float intentSpacing;
-
-
-    private Action OnComplete;
-
-
+    
     public async UniTask Initialize()
     {
         prefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/Enemy/Intent.prefab");

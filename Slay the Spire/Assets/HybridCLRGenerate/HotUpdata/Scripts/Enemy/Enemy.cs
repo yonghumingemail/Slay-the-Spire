@@ -33,7 +33,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public AlertBox alertBox { get; protected set; }
     protected Player _player;
 
-    [SerializeField] private RoleCore roleCore;
+    [SerializeField] protected RoleCore roleCore;
 
     public abstract EnemyAction GetNextAction();
 
@@ -119,12 +119,12 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
-        Action_T.Fire(this, OnMouseEnterEnemy_EventArgs.id, this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
+        Action_T_EA<OnMouseEnterEnemy_EA>.Fire(this, this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
     }
 
     public virtual void OnPointerExit(PointerEventData eventData)
     {
-        Action_T.Fire(this, OnMouseExitEnemy_EventArgs.id, this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
+        Action_T_EA<OnMouseExitEnemy_EA>.Fire(this, this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
     }
 
     public virtual void OnSelect()
@@ -139,7 +139,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     private void OnDestroy()
     {
-        _priorityEventCenter.Fire(this, OnDestroy_EventArgs.id, null);
+        _priorityEventCenter.Fire(this, OnDestroy_EA.id, null);
         _priorityEventCenter.Clear();
     }
 }

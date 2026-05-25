@@ -25,7 +25,7 @@ public class SimpleBuffList : IBuffList
         // 初始化Buff对象列表
         _buffListObj = new List<BuffObj>();
 
-     priorityEventCenter.Subscribe(OnDestroy_EventArgs.id,OnDestroy,0);
+     priorityEventCenter.Subscribe(OnDestroy_EA.id,OnDestroy,0);
 
     }
 

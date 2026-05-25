@@ -1,6 +1,6 @@
 using System;
-using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
+
 
 [Serializable]
 public class SimpleHealth : IHealth
@@ -17,11 +17,24 @@ public class SimpleHealth : IHealth
     public int MaxHealth
     {
         get => maxHealthValue;
-        private set => maxHealthValue = value;
+        set
+        {
+            if (healthValue > maxHealthValue)
+            {
+                healthValue = maxHealthValue;
+            }
+            else
+            {
+                healthValue = healthValue + value - maxHealthValue;
+            }
+
+            maxHealthValue = value;
+            _updateView?.Invoke(this);
+        }
     }
 
-    public int healthValue;
-    public int maxHealthValue;
+    [SerializeField] private int healthValue;
+    [SerializeField] private int maxHealthValue;
 
     public SimpleHealth(Action<IHealth> UpdateView, PriorityQueueEventCenter priorityEventCenter)
     {
@@ -32,13 +45,13 @@ public class SimpleHealth : IHealth
 
     public void AddHealth(ChangeValueInfo info)
     {
-        Action_T.Fire(info,OnBeAttacked_EventArgs.id,this,_priorityEventCenter);
+        Action_T_EA<OnBeAttacked_EA>.Fire(info, this, _priorityEventCenter);
 
         HealthValue = Mathf.Clamp(HealthValue + info.value, 0, MaxHealth);
         _updateView?.Invoke(this);
-        
-        Action_T.Fire(info,OnHealthActionChangeEventArgs.id,this,_priorityEventCenter);
-        
+
+        Action_T_EA<OnHealthActionChange_EA>.Fire(info, this, _priorityEventCenter);
+
         // Debug.Log(HealthValue);
     }
 }

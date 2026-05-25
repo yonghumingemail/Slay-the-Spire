@@ -35,7 +35,7 @@ public class GainShield : IEntry
         }
         else
         {
-            Action_T.Fire(info,OnGainShield_EventArgs.id,this,priorityEventCenter);
+            Action_T_EA<OnGainShield_EA>.Fire(info,this,priorityEventCenter);
         }
 
         if (shield == null)
