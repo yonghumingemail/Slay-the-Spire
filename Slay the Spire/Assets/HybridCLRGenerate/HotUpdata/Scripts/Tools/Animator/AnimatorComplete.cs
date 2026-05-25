@@ -8,13 +8,11 @@ public class AnimatorComplete : MonoBehaviour
     public string _clipName;
 
     private Action<string> onComplete;
-    private Animator _animator;
     private AnimatorOverrideController _animatorOverrideController;
     private UniTaskCompletionSource completionSource;
 
-    public void Awake()
+    public void Init(Animator _animator)
     {
-        _animator = GetComponent<Animator>();
         _animatorOverrideController = new AnimatorOverrideController(_animator.runtimeAnimatorController);
 
         foreach (var animationClip in _animatorOverrideController.animationClips)

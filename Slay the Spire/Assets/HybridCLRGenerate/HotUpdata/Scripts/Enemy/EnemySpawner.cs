@@ -10,13 +10,13 @@ public class EnemySpawner : MonoBehaviour
     public List<Enemy> enemyList = new List<Enemy>();
     public EventManage eventCenter { get; private set; } = new EventManage();
     private CombatManage _combatManage;
-
+    private GameObject enemyPrefab;
 
     private void Awake()
     {
         _combatManage = transform.GetComponentInParent<CombatManage>();
         
-        EventCenter_Singleton.Instance.Subscribe(GetObject_EventArgs<EnemySpawner>.id, Get);
+        EventCenter_Singleton.Instance.Subscribe(GetObject_GEA<EnemySpawner>.id, Get);
 
         EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync(OnRoundStart_EventArgs.id, OnRoundStart, 5);
         EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync(OnRoundEnd_EventArgs.id, OnRoundEnd, 0);
@@ -25,10 +25,21 @@ public class EnemySpawner : MonoBehaviour
         {
             enemyList.Add(transform.GetChild(i).GetComponent<Enemy>());
         }
+        Init().Forget();
+    }
+
+    private async UniTask Init()
+    {
+        enemyPrefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/Enemy/Enemy.prefab");
+        var obj = Instantiate(enemyPrefab,transform);
+        enemyList.Add(obj.AddComponent<JawWorm>());
     }
     private void Get(object send, BaseEventArgs baseEventHandler)
     {
-        GetObject_EventArgs<EnemySpawner>.Subscribe(baseEventHandler, this);
+        if (baseEventHandler is Func_T args)
+        {
+            args.value = this;
+        }
     }
     void Start()
     {

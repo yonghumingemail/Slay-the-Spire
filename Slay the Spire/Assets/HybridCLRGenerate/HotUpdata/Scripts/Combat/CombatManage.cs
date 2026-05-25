@@ -16,7 +16,7 @@ public class CombatManage : MonoBehaviour
 
     private void Awake()
     {
-        EventCenter_Singleton.Instance.Subscribe(GetObject_EventArgs<CombatManage>.id, Get);
+        EventCenter_Singleton.Instance.Subscribe(GetObject_GEA<CombatManage>.id, Get);
     }
 
     private void Update()
@@ -29,7 +29,10 @@ public class CombatManage : MonoBehaviour
 
     private void Get(object send, BaseEventArgs baseEventHandler)
     {
-        GetObject_EventArgs<CombatManage>.Subscribe(baseEventHandler, this);
+        if (baseEventHandler is Func_T args)
+        {
+            args.value = this;
+        }
     }
 
     public void AddCardToExecuteQueue(Card action)

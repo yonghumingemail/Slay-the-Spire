@@ -20,7 +20,7 @@ public class GainPower : IEntry
         }
 
         IEventCenterObject<BaseEventArgs> eventCenter = receiver.GetComponent<IEventCenterObject<BaseEventArgs>>();
-        IBuffList buffListObj = GetObject_EventArgs<IBuffList>.Fire(this, eventCenter.EventManage);
+        IBuffList buffListObj = GetObject_GEA<IBuffList>.Fire(this, eventCenter.EventManage);
 
 
         if (buffListObj == null)

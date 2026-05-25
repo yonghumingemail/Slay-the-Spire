@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class UIRebuildDebugger : MonoBehaviour
 {
-      IList<ICanvasElement> m_GraphicRebuildQueue;
+    IList<ICanvasElement> m_GraphicRebuildQueue;
+    public bool enable;
 
     void Awake()
     {
@@ -23,7 +24,7 @@ public class UIRebuildDebugger : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (m_GraphicRebuildQueue == null) return;
+        if (m_GraphicRebuildQueue == null || !enable) return;
 
         for (int j = 0; j < m_GraphicRebuildQueue.Count; j++)
         {
@@ -41,7 +42,7 @@ public class UIRebuildDebugger : MonoBehaviour
 
     void Update()
     {
-        if (m_GraphicRebuildQueue == null) return;
+        if (m_GraphicRebuildQueue == null || !enable) return;
 
         for (int j = 0; j < m_GraphicRebuildQueue.Count; j++)
         {
@@ -59,7 +60,7 @@ public class UIRebuildDebugger : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (m_GraphicRebuildQueue == null) return;
+        if (m_GraphicRebuildQueue == null || !enable) return;
 
         for (int j = 0; j < m_GraphicRebuildQueue.Count; j++)
         {

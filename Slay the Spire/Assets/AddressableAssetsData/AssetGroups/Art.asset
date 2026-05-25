@@ -30,6 +30,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 500450912ce960749a80e4906d697182
+    m_Address: Assets/Art/Image/monsters
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8f38bff17528d8f4f9e0629014532ce8
     m_Address: Assets/HybridCLRGenerate/HotUpdata/MataDataDll
     m_ReadOnly: 0

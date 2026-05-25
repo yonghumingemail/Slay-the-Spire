@@ -22,7 +22,7 @@ public class VulnerableState : IEntry
         }
         
         IEventCenterObject<BaseEventArgs> eventCenter_receiver = receiver.GetComponent<IEventCenterObject<BaseEventArgs>>();
-        IBuffList buffListObj = GetObject_EventArgs<IBuffList>.Fire(this,eventCenter_receiver.EventManage);
+        IBuffList buffListObj = GetObject_GEA<IBuffList>.Fire(this,eventCenter_receiver.EventManage);
         
 
         if (buffListObj == null)

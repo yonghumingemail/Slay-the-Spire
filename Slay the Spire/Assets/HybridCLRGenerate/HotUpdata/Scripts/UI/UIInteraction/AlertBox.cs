@@ -1,9 +1,10 @@
 using System;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using Z_Tools;
 
-public class AlertBox : MonoBehaviour
+public class AlertBox : MonoBehaviour,INeedToInitialize
 {
     private EnemySpawner enemySpawner;
 
@@ -17,8 +18,8 @@ public class AlertBox : MonoBehaviour
 
     private float speed;
     public Vector3 offset;
-
-    private void Awake()
+    
+    public UniTask Initialize()
     {
         LeftUp = transform.Find("LeftUp").GetComponent<SpriteRenderer>();
         LeftDown = transform.Find("LeftDown").GetComponent<SpriteRenderer>();
@@ -32,10 +33,9 @@ public class AlertBox : MonoBehaviour
         LeftDown.color = defaultColor;
         RightDown.color = defaultColor;
         RightUp.color = defaultColor;
-   
-        
+        return UniTask.CompletedTask;
     }
-
+    
     public void Show(Transform _transform, Sprite sprite)
     {
         transform.gameObject.SetActive(true);
@@ -74,4 +74,6 @@ public class AlertBox : MonoBehaviour
         RightDown.gameObject.SetActive(false);
         RightUp.gameObject.SetActive(false);
     }
+
+   
 }

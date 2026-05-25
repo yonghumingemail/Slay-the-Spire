@@ -7,9 +7,9 @@ using UnityEngine;
 public class SimpleShield : IShield
 {
     private PriorityQueueEventCenter _priorityEventCenter;
-    private IShield_V _shield_V;
-    private int maxValue;
-    
+    private Action<IShield> _updateView;
+    private int _maxValue;
+
     public int ShieldValue
     {
         get => shieldVale;
@@ -18,31 +18,31 @@ public class SimpleShield : IShield
 
     public int shieldVale;
 
-    public SimpleShield(IShield_V shieldSprite2DObj, PriorityQueueEventCenter priorityEventCenter)
+    public SimpleShield(Action<IShield> updateView, PriorityQueueEventCenter priorityEventCenter)
     {
-        maxValue = 999;
-        _shield_V = shieldSprite2DObj;
-        
+        _maxValue = 999;
+        _updateView = updateView;
+
         _priorityEventCenter = priorityEventCenter;
-        
-        _priorityEventCenter.SubscribeAsync(OnRoundStart_EventArgs.id,OnRoundStart,-1);
-        _priorityEventCenter.Subscribe(OnBeAttacked_EventArgs.id,ShieldTrigger,-1);
-        _priorityEventCenter.Subscribe(OnDestroy_EventArgs.id,OnDestroy,-1);
-        
-        _shield_V.UpdateView(this);
+
+        _priorityEventCenter.SubscribeAsync(OnRoundStart_EventArgs.id, OnRoundStart, -1);
+        _priorityEventCenter.Subscribe(OnBeAttacked_EventArgs.id, ShieldTrigger, -1);
+        _priorityEventCenter.Subscribe(OnDestroy_EventArgs.id, OnDestroy, -1);
+
+        _updateView?.Invoke(this);
     }
 
     public void AddShieldValue(ChangeValueInfo info)
     {
-        shieldVale = Mathf.Clamp(shieldVale + info.value, 0, maxValue);
-        _shield_V.UpdateView(this);
+        shieldVale = Mathf.Clamp(shieldVale + info.value, 0, _maxValue);
+        _updateView?.Invoke(this);
     }
 
     private void ShieldTrigger(object send, BaseEventArgs args)
     {
         var _args = Action_T.Check<ChangeValueInfo>(args);
         // 如果当前没有护盾，或者传入的值大于等于0，则直接返回，不做任何处理。
-        if (_args==null  || ShieldValue <= 0 || _args.value >= 0)
+        if (_args == null || ShieldValue <= 0 || _args.value >= 0)
         {
             return;
         }
@@ -57,19 +57,18 @@ public class SimpleShield : IShield
 
         // 更新护盾视觉表现
         AddShieldValue(_args);
-
     }
 
     private UniTask OnRoundStart(object send, BaseEventArgs args)
     {
         shieldVale = 0;
-        _shield_V.UpdateView(this);
+        _updateView?.Invoke(this);
         return UniTask.CompletedTask;
     }
 
     private void OnDestroy(object send, BaseEventArgs args)
     {
-        _shield_V = null;
+        _updateView?.Invoke(this);
         _priorityEventCenter = null;
         //  Debug.Log(this + "OnDestroy执行");
     }

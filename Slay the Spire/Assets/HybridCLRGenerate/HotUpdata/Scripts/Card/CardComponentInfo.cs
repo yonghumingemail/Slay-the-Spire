@@ -15,7 +15,7 @@ public class CardComponentInfo : MonoBehaviour
     public TextMeshPro TypeName => _typeName;
     public TextMeshPro OrbValue => _orbValue;
     public TextMeshPro Describe => _describe;
-    public Outline CardOutline => _cardOutline;
+    public CardOutline CardCardOutline => cardCardOutline;
     public HandPile HandPile => _handPile;
     public Camera MainCamera => _mainCamera;
     public Animator Animator => _animator;
@@ -29,7 +29,7 @@ public class CardComponentInfo : MonoBehaviour
     [SerializeField] private TextMeshPro _typeName;
     [SerializeField] private TextMeshPro _orbValue;
     [SerializeField] private TextMeshPro _describe;
-    [SerializeField] private Outline _cardOutline;
+    [SerializeField] private CardOutline cardCardOutline;
 
     private HandPile _handPile;
     private Camera _mainCamera;
@@ -48,7 +48,7 @@ public class CardComponentInfo : MonoBehaviour
         _typeName = transform.Find("UI/Head/Frame/TypeName").GetComponent<TextMeshPro>();
         _orbValue = transform.Find("UI/Head/Orb/Point").GetComponent<TextMeshPro>();
         _describe = transform.Find("UI/Describe").GetComponent<TextMeshPro>();
-        _cardOutline = transform.Find("Outline").GetComponent<Outline>();
+        cardCardOutline = transform.Find("Outline").GetComponent<CardOutline>();
 
         _handPile = GetComponentInParent<HandPile>();
         _mainCamera = Camera.main;

@@ -5,75 +5,58 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.U2D;
 
-public class Intent_C : MonoBehaviour
+public class Intent_C : MonoBehaviour, INeedToInitialize
 {
     public List<Intent_V> intentsViewArray;
     private IIntent[] displayedIntents;
 
     public GameObject prefab;
     public float intentSpacing;
-    public bool isInitialized;
 
 
-    
     private Action OnComplete;
 
-    private void Awake()
-    {
-        Initialize().Forget();
-        intentsViewArray = new List<Intent_V>(transform.GetComponentsInChildren<Intent_V>(true));
-    }
 
-    private async UniTask Initialize()
+    public async UniTask Initialize()
     {
-       
         prefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/Enemy/Intent.prefab");
 
-        isInitialized = true;
-        OnComplete?.Invoke();
-        OnComplete = null;
+        intentsViewArray = new List<Intent_V>(transform.GetComponentsInChildren<Intent_V>(true));
     }
 
 
     public void ShowIntent(IIntent[] intents)
     {
-        if (isInitialized)
+        foreach (var intent in displayedIntents ?? Enumerable.Empty<IIntent>())
         {
-            foreach (var intent in displayedIntents ?? Enumerable.Empty<IIntent>())
-            {
-                intent.OnHide();
-            }
-
-            displayedIntents = intents;
-            for (; intents.Length > intentsViewArray.Count;)
-            {
-                intentsViewArray.Add(Instantiate(prefab, transform).GetComponent<Intent_V>());
-            }
-
-            float firstCardPosition = -((intents.Length - 1) * intentSpacing / 2);
-
-            Vector3 temp;
-            for (int i = 0; i < intents.Length; i++)
-            {
-                intents[i].OnShow(intentsViewArray[i]);
-                float p = firstCardPosition + i * intentSpacing;
-
-                temp = intentsViewArray[i].transform.localPosition;
-                temp.x = p;
-
-                intentsViewArray[i].gameObject.SetActive(true);
-                intentsViewArray[i].transform.localPosition = temp;
-                intentsViewArray[i].UpdateUI(intents[i]);
-            }
-
-            for (int i = intents.Length; i < intentsViewArray.Count; i++)
-            {
-                intentsViewArray[i].gameObject.SetActive(false);
-            }
+            intent.OnHide();
         }
-        else
+
+        displayedIntents = intents;
+        for (; intents.Length > intentsViewArray.Count;)
         {
-            OnComplete += () => { ShowIntent(intents); };
+            intentsViewArray.Add(Instantiate(prefab, transform).GetComponent<Intent_V>());
+        }
+
+        float firstCardPosition = -((intents.Length - 1) * intentSpacing / 2);
+
+        Vector3 temp;
+        for (int i = 0; i < intents.Length; i++)
+        {
+            intents[i].OnShow(intentsViewArray[i]);
+            float p = firstCardPosition + i * intentSpacing;
+
+            temp = intentsViewArray[i].transform.localPosition;
+            temp.x = p;
+
+            intentsViewArray[i].gameObject.SetActive(true);
+            intentsViewArray[i].transform.localPosition = temp;
+            intentsViewArray[i].UpdateUI(intents[i]);
+        }
+
+        for (int i = intents.Length; i < intentsViewArray.Count; i++)
+        {
+            intentsViewArray[i].gameObject.SetActive(false);
         }
     }
 

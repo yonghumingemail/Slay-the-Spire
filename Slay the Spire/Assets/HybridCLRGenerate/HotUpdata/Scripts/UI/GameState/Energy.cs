@@ -22,12 +22,15 @@ public class Energy : MonoBehaviour
         image4 = transform.GetChild(0).GetChild(3).GetComponent<RectTransform>();
         _text = transform.Find("Text").GetComponent<TextMeshProUGUI>();
         UpdateUIInfo();
-        EventCenter_Singleton.Instance.Subscribe(GetObject_EventArgs<Energy>.id, Get);
+        EventCenter_Singleton.Instance.Subscribe(GetObject_GEA<Energy>.id, Get);
     }
 
     private void Get(object send, BaseEventArgs baseEventHandler)
     {
-        GetObject_EventArgs<Energy>.Subscribe(baseEventHandler, this);
+        if (baseEventHandler is Func_T args)
+        {
+            args.value = this;
+        }
     }
     
     private void FixedUpdate()

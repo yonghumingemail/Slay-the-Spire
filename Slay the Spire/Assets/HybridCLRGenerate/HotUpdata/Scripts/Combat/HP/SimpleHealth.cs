@@ -5,7 +5,7 @@ using UnityEngine;
 [Serializable]
 public class SimpleHealth : IHealth
 {
-    private IHealth_V _healthV;
+    private Action<IHealth> _updateView;
     private PriorityQueueEventCenter _priorityEventCenter;
 
     public int HealthValue
@@ -23,13 +23,11 @@ public class SimpleHealth : IHealth
     public int healthValue;
     public int maxHealthValue;
 
-    public SimpleHealth(int health, int maxHealth, IHealth_V healthV, PriorityQueueEventCenter priorityEventCenter)
+    public SimpleHealth(Action<IHealth> UpdateView, PriorityQueueEventCenter priorityEventCenter)
     {
-        HealthValue = health;
-        MaxHealth = maxHealth;
         _priorityEventCenter = priorityEventCenter;
-        _healthV = healthV;
-        _healthV.UpdateView(this);
+        _updateView = UpdateView;
+        _updateView?.Invoke(this);
     }
 
     public void AddHealth(ChangeValueInfo info)
@@ -37,7 +35,7 @@ public class SimpleHealth : IHealth
         Action_T.Fire(info,OnBeAttacked_EventArgs.id,this,_priorityEventCenter);
 
         HealthValue = Mathf.Clamp(HealthValue + info.value, 0, MaxHealth);
-        _healthV.UpdateView(this);
+        _updateView?.Invoke(this);
         
         Action_T.Fire(info,OnHealthActionChangeEventArgs.id,this,_priorityEventCenter);
         

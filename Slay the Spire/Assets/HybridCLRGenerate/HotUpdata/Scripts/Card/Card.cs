@@ -146,10 +146,10 @@ public abstract class Card : MonoBehaviour
 
         exteriorInfo = (await AddressablesMgr.Instance.LoadAssetAsync<CardExteriorInfo>(defaultDataPtah)).Copy();
         
-        _player =  GetObject_EventArgs<Player>.Fire(this,EventCenter_Singleton.Instance);
-        _combatManage = GetObject_EventArgs<CombatManage>.Fire(this,EventCenter_Singleton.Instance);
-        _energy = GetObject_EventArgs<Energy>.Fire(this,EventCenter_Singleton.Instance);
-        _discardPile =  GetObject_EventArgs<DiscardPile>.Fire(this,EventCenter_Singleton.Instance);
+        _player =  GetObject_GEA<Player>.Fire(this,EventCenter_Singleton.Instance);
+        _combatManage = GetObject_GEA<CombatManage>.Fire(this,EventCenter_Singleton.Instance);
+        _energy = GetObject_GEA<Energy>.Fire(this,EventCenter_Singleton.Instance);
+        _discardPile =  GetObject_GEA<DiscardPile>.Fire(this,EventCenter_Singleton.Instance);
 
         cardInteraction.OnMouseDownDelegate += (eventData) => { cardComponentInfo.HandPile.SetSelectedCard(this); };
         cardInteraction.OnMouseUpDelegate += (eventData) => { cardComponentInfo.HandPile.SetSelectedCard(null); };

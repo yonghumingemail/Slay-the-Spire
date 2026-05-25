@@ -7,11 +7,14 @@ public class DiscardPile : Pile
     protected override void Awake()
     {
         base.Awake();
-        EventCenter_Singleton.Instance.Subscribe(GetObject_EventArgs<DiscardPile>.id, Get);
+        EventCenter_Singleton.Instance.Subscribe(GetObject_GEA<DiscardPile>.id, Get);
     }
 
     private void Get(object send, BaseEventArgs baseEventHandler)
     {
-        GetObject_EventArgs<DiscardPile>.Subscribe(baseEventHandler, this);
+        if (baseEventHandler is Func_T args)
+        {
+            args.value = this;
+        }
     }
 }

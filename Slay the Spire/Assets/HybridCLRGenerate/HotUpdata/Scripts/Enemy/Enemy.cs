@@ -3,83 +3,85 @@ using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.U2D;
+using VContainer;
 using Z_Tools;
+
 
 [Serializable]
 public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectableObject,
     IEventCenterObject<BaseEventArgs>
 {
     public IEventManage<BaseEventArgs> EventManage { get; } = new EventManage(); //用于提供接口对象
-    public CancellationTokenSource TokenSource { get; } = new CancellationTokenSource();
+    public CancellationTokenSource TokenSource { get; } = new ();
 
-    public PriorityQueueEventCenter _priorityEventCenter =
-        new PriorityQueueEventCenter(); //用于记录和触发buff事件
-
-    [SerializeField] protected SimpleHealth _health;
-    protected IHealth_V health_V;
-
-    [SerializeField] protected SimpleShield _shield;
-    protected IShield_V shield_V;
-
-    [SerializeField] protected SimpleBuffList _buffList;
-    protected IBuffList_V buffList_V;
-
+    public PriorityQueueEventCenter _priorityEventCenter = new (); //用于记录和触发buff事件
 
     public SpriteRenderer spriteRenderer { get; protected set; }
 
     protected Animator _animator;
+    protected BoxCollider2D _boxCollider2D;
+    protected AnimatorComplete _animatorComplete;
 
     protected Intent_C intentC;
-    protected List<EnemyAction> actionList = new List<EnemyAction>();
+    protected List<EnemyAction> actionList = new ();
     protected EnemyAction currentAction;
     protected SpriteAtlas _spriteAtlas;
     public AlertBox alertBox { get; protected set; }
     protected Player _player;
-    protected AnimatorComplete _animatorComplete;
+
+    [SerializeField] private RoleCore roleCore;
 
     public abstract EnemyAction GetNextAction();
 
-    protected virtual void Start()
+    protected virtual async UniTask Initialize(Sprite sprite, RuntimeAnimatorController animatorController)
     {
-        Initialize().Forget();
-    }
+        _player = GetObject_GEA<Player>.Fire(this, EventCenter_Singleton.Instance);
 
-    protected virtual async UniTask Initialize()
-    {
-        _player = GetObject_EventArgs<Player>.Fire(this, EventCenter_Singleton.Instance);
+        var initArray = GetComponentsInChildren<INeedToInitialize>();
+        var tasks = new UniTask[initArray.Length];
+        int i = 0;
+        foreach (var VARIABLE in initArray)
+        {
+            tasks[i] = VARIABLE.Initialize();
+        }
 
-        spriteRenderer = transform.Find("UI").gameObject.GetComponent<SpriteRenderer>();
-        intentC = GetComponentInChildren<Intent_C>();
-        alertBox = GetComponentInChildren<AlertBox>();
-        _animator = GetComponent<Animator>();
-        _animatorComplete = GetComponent<AnimatorComplete>();
+        await tasks;
 
-        EventManage.Subscribe(GetObject_EventArgs<PriorityQueueEventCenter>.id, (send, handler) => { GetObject_EventArgs<PriorityQueueEventCenter>.Subscribe(handler, _priorityEventCenter); });
+        var UI = transform.Find("UI").gameObject;
+        spriteRenderer = UI.GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = sprite;
 
-        health_V = GetComponentInChildren<IHealth_V>();
+        _animator = UI.GetComponent<Animator>();
+        _animator.runtimeAnimatorController = animatorController;
+
+        _animatorComplete = UI.GetComponent<AnimatorComplete>();
+        _animatorComplete.Init(_animator);
+
+        _boxCollider2D = UI.AddComponent<BoxCollider2D>();
+
+        intentC = GetComponentInChildren<Intent_C>(true);
+        alertBox = GetComponentInChildren<AlertBox>(true);
+
+        var health_V = GetComponentInChildren<IHealth_V>(true);
         health_V.InitializeView(spriteRenderer.gameObject);
-        _health = new SimpleHealth(50, 100, health_V, _priorityEventCenter);
-        EventManage.Subscribe(GetObject_EventArgs<IHealth>.id, (send, handler) => { GetObject_EventArgs<IHealth>.Subscribe(handler, _health); });
-
-        shield_V = GetComponentInChildren<IShield_V>();
+        var shield_V = GetComponentInChildren<IShield_V>(true);
         shield_V.InitializeView(spriteRenderer.gameObject, health_V);
-        _shield = new SimpleShield(shield_V, _priorityEventCenter);
-        EventManage.Subscribe(GetObject_EventArgs<IShield>.id, (send, handler) => { GetObject_EventArgs<IShield>.Subscribe(handler, _shield); });
+        var buffList_V = GetComponentInChildren<IBuffList_V>();
 
-        buffList_V = GetComponentInChildren<IBuffList_V>();
-        await buffList_V.Initialized();
-        _buffList = new SimpleBuffList(buffList_V, _priorityEventCenter);
-        EventManage.Subscribe(GetObject_EventArgs<IBuffList>.id, (send, handler) => { GetObject_EventArgs<IBuffList>.Subscribe(handler, _buffList); });
+        roleCore = new RoleCore(health_V, shield_V, buffList_V, _priorityEventCenter);
+        roleCore.InterfaceRegistration(EventManage);
+
+        GetObject_GEA<PriorityQueueEventCenter>.Subscribe(_priorityEventCenter, EventManage);
 
         //改，不应该由enemy加载
         _spriteAtlas =
             await AddressablesMgr.Instance.LoadAssetAsync<SpriteAtlas>(
                 "Assets/Art/Image/SpriteAtlas/Intent.spriteatlasv2");
     }
-
 
     /// <summary>
     /// 在敌人回合结束时的回调,不需要外部调用，执行完意图后执行
@@ -89,7 +91,6 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     {
         //通知事件，回合结束
         await Action_Int_Async.Fire(roundCount, OnRoundEnd_EventArgs.id, this, _priorityEventCenter);
-        
     }
 
 
@@ -138,7 +139,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     private void OnDestroy()
     {
-        _priorityEventCenter.Fire(this,OnDestroy_EventArgs.id,null);
+        _priorityEventCenter.Fire(this, OnDestroy_EventArgs.id, null);
         _priorityEventCenter.Clear();
     }
 }

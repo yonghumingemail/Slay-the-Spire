@@ -2,7 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class Outline : MonoBehaviour
+public class CardOutline : MonoBehaviour
 {
     SpriteRenderer spriteRenderer;
     Color color;

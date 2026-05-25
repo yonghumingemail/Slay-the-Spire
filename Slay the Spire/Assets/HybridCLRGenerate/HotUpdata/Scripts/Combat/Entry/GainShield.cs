@@ -24,8 +24,8 @@ public class GainShield : IEntry
 
         IEventCenterObject<BaseEventArgs> eventCenter = receiver.GetComponent<IEventCenterObject<BaseEventArgs>>();
 
-        IShield shield  = GetObject_EventArgs<IShield>.Fire(this,eventCenter.EventManage);
-        var priorityEventCenter = GetObject_EventArgs<PriorityQueueEventCenter>.Fire(this,eventCenter.EventManage);
+        IShield shield  = GetObject_GEA<IShield>.Fire(this,eventCenter.EventManage);
+        var priorityEventCenter = GetObject_GEA<PriorityQueueEventCenter>.Fire(this,eventCenter.EventManage);
        
         
         ChangeValueInfo info = new ChangeValueInfo(sender, receiver, value);

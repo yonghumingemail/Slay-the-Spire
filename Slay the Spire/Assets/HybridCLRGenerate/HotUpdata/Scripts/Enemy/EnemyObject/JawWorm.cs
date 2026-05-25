@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 //大颚虫
@@ -7,7 +8,7 @@ public class JawWorm : Enemy
     private EnemyAction action1;
     private EnemyAction action2;
     private EnemyAction action3;
-    
+
     private AttackIntent attackIntent_Action1;
 
     private ReinforcementIntent reinforcementIntent_Action2;
@@ -17,9 +18,18 @@ public class JawWorm : Enemy
     private AttackIntent attackIntent_Action3;
     private DeFendIntent defendIntent_Action3;
 
-    protected override async UniTask Initialize()
+    private void Start()
     {
-        await base.Initialize();
+        Init().Forget();
+    }
+
+    protected async UniTask Init()
+    {
+        var sprite = await AddressablesMgr.Instance.LoadAssetAsync<Sprite>("Assets/Art/Image/monsters/theBottom/Monsters_TheBottom.spriteatlasv2[skeleton-idle_00]");
+        var controller = await AddressablesMgr.Instance.LoadAssetAsync<RuntimeAnimatorController>("Assets/Art/Image/monsters/theBottom/jawWorm/JawWorm.controller");
+        await Initialize(sprite, controller);
+        
+        
         _gainPower_Action2 = new GainPower(3);
 
         IIntent[] action1IntentArray =
@@ -45,7 +55,7 @@ public class JawWorm : Enemy
 
         currentAction = GetNextAction();
         intentC.ShowIntent(currentAction.intents);
-        _buffList.AddBuff(new Anger_BuffObj(2, 999,  gameObject));
+
     }
 
     public override EnemyAction GetNextAction()

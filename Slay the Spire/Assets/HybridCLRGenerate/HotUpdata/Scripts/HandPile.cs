@@ -87,7 +87,7 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
 
     public async UniTaskVoid Test11()
     {
-        drawPile = GetObject_EventArgs<DrawPile>.Fire(this, EventCenter_Singleton.Instance);
+        drawPile = GetObject_GEA<DrawPile>.Fire(this, EventCenter_Singleton.Instance);
 
         GameObject prefab =
             await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/Card/Card.prefab");
@@ -131,7 +131,6 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
     public async UniTask OnRoundStart(object sender, BaseEventArgs args)
     {
         await DrawCard(drawCardsCount + drawCardsOffer);
-        print("抽牌："+Time.time);
     }
 
     private async UniTask DrawCard(int count)
