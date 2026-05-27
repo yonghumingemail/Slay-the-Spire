@@ -16,10 +16,10 @@ public class EnemySpawner : MonoBehaviour
     {
         _combatManage = transform.GetComponentInParent<CombatManage>();
         
-        EventCenter_Singleton.Instance.Subscribe(GetObject_GEA<EnemySpawner>.id, Get);
+        EventCenter_Singleton.Instance.Subscribe<GetObject_GEA<EnemySpawner>>( Get);
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync(OnRoundStart_EventArgs.id, OnRoundStart, 5);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync(OnRoundEnd_EventArgs.id, OnRoundEnd, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundStart_EventArgs>( OnRoundStart, 5);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundEnd_EventArgs>(OnRoundEnd, 0);
 
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -32,25 +32,23 @@ public class EnemySpawner : MonoBehaviour
     {
         enemyPrefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/Enemy/Enemy.prefab");
         var obj = Instantiate(enemyPrefab,transform);
-        enemyList.Add(obj.AddComponent<JawWorm>());
+        var jawWorm = obj.AddComponent<JawWorm>();
+        await jawWorm.Init();
+        enemyList.Add(jawWorm);
     }
-    private void Get(object send, BaseEventArgs baseEventHandler)
+    private void Get(object send, GameEventArgs gameEventHandler)
     {
-        if (baseEventHandler is Func_T args)
+        if (gameEventHandler is Args_T args)
         {
             args.value = this;
         }
-    }
-    void Start()
-    {
-       
     }
 
 
     /// <summary>
     /// 点击回合结束后，顺序通知所有怪物回合开始
     /// </summary>
-    private async UniTask OnRoundEnd(object sender, BaseEventArgs args)
+    private async UniTask OnRoundEnd(object sender, GameEventArgs args)
     {
         if (args is not Action_Int_Async _args) return;
         foreach (var VARIABLE in enemyList)
@@ -60,7 +58,7 @@ public class EnemySpawner : MonoBehaviour
 
     }
 
-    private async UniTask OnRoundStart(object sender, BaseEventArgs args)
+    private async UniTask OnRoundStart(object sender, GameEventArgs args)
     {
         if (args is not Action_Int_Async _args) return;
         

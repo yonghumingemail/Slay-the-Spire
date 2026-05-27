@@ -10,7 +10,7 @@ public class Buff_V : MonoBehaviour, IBuff_V
     private SpriteRenderer _buffSprite;
     private SpriteRenderer _buffEffectSprite;
 
-    private void Awake()
+    public void Init()
     {
         _buffAnimator = GetComponent<Animator>();
         _stackText = transform.GetComponentInChildren<TextMeshPro>();

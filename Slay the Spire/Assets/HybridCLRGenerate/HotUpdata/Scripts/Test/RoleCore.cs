@@ -16,7 +16,7 @@ public class RoleCore
     public IBuffList_V BuffListV => buffList_V;
 
     #endregion
-    
+
     #region 私有变量
 
     [SerializeField] private SimpleHealth _health;
@@ -32,28 +32,36 @@ public class RoleCore
 
     #endregion
 
-  
-    
-    public RoleCore(IHealth_V healthV, IShield_V shieldV, IBuffList_V buffListV,PriorityQueueEventCenter priorityQueueEventCenter)
+    public RoleCore(GameObject gameObject, Renderer renderer, RoleCoreData data,
+        PriorityQueueEventCenter priorityQueueEventCenter)
     {
-        _priorityEventCenter=priorityQueueEventCenter;
-        
-        health_V = healthV;
-        shield_V = shieldV;
-        buffList_V = buffListV;
-        _health=new SimpleHealth(healthV.UpdateView,priorityQueueEventCenter);
-        _shield=new SimpleShield(shieldV.UpdateView,priorityQueueEventCenter);
-        _buffList=new SimpleBuffList(buffListV,priorityQueueEventCenter);
-        
-    }
-    
-    public void InterfaceRegistration(IEventManage<BaseEventArgs> EventManage)
-    {
-        GetObject_GEA<PriorityQueueEventCenter>.Subscribe(_priorityEventCenter,EventManage);
-        GetObject_GEA<SimpleBuffList>.Subscribe(_buffList,EventManage);
-        GetObject_GEA<SimpleHealth>.Subscribe(_health,EventManage);
-        GetObject_GEA<SimpleShield>.Subscribe(_shield,EventManage);
+        _priorityEventCenter = priorityQueueEventCenter;
+
+        health_V = gameObject.GetComponentInChildren<IHealth_V>(true);
+        health_V.InitializeView(renderer);
+
+        shield_V = gameObject.GetComponentInChildren<IShield_V>(true);
+        shield_V.InitializeView(health_V, renderer);
+
+        buffList_V = gameObject.GetComponentInChildren<IBuffList_V>(true);
+
+        _health = new SimpleHealth(health_V.UpdateView, priorityQueueEventCenter);
+        _shield = new SimpleShield(shield_V.UpdateView, priorityQueueEventCenter);
+        _buffList = new SimpleBuffList(buffList_V, priorityQueueEventCenter);
+
+        _health.MaxHealth = data.MaxHealthValue;
+        _health.HealthValue = data.HealthValue;
+        _shield.ShieldValue = data.ShieldValue;
+        _shield.MaxValue = data.MaxShieldValue;
+
+        health_V.UpdateView(_health);
+        shield_V.UpdateView(_shield);
     }
 
-  
+    public void InterfaceRegistration(IEventManage<GameEventArgs> EventManage)
+    {
+        GetObject_GEA<IBuffList>.Subscribe(_buffList, EventManage);
+        GetObject_GEA<IHealth>.Subscribe(_health, EventManage);
+        GetObject_GEA<IShield>.Subscribe(_shield, EventManage);
+    }
 }

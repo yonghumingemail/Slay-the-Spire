@@ -3,7 +3,6 @@ using GameFramework;
 using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 
-
 public class InflictDamage : IEntry
 {
     //初始伤害
@@ -27,11 +26,10 @@ public class InflictDamage : IEntry
             Debug.Log("接收者为空");
             return;
         }
-
-        IEventCenterObject<BaseEventArgs> eventCenter_Sender = sender.GetComponent<IEventCenterObject<BaseEventArgs>>();
-        IEventCenterObject<BaseEventArgs> eventCenter_Receiver =
-            receiver.GetComponent<IEventCenterObject<BaseEventArgs>>();
-
+        IEventCenterObject<GameEventArgs> eventCenter_Sender = sender.GetComponent<IEventCenterObject<GameEventArgs>>();
+        IEventCenterObject<GameEventArgs> eventCenter_Receiver =
+            receiver.GetComponent<IEventCenterObject<GameEventArgs>>();
+  
         IBuffList buffList_Sender = GetObject_GEA<IBuffList>.Fire(this, eventCenter_Sender.EventManage);
         IHealth health = GetObject_GEA<IHealth>.Fire(this, eventCenter_Receiver.EventManage);
 
@@ -44,7 +42,7 @@ public class InflictDamage : IEntry
         }
         else
         {
-            Action_T_EA<OnAttack_EA>.Fire(info,this,buffList_Sender._priorityEventCenter);
+            Args_T_EA<OnAttack_EA>.Fire(info, this, buffList_Sender._priorityEventCenter);
         }
 
         if (health == null)
@@ -65,12 +63,15 @@ public class InflictDamage : IEntry
     {
         calculated_damage = damage;
 
-        //  Debug.Log($"计算前的伤害：{calculated_damage}");
+      //  Debug.Log($"计算前的伤害：{calculated_damage}");
+        var info = ReferencePool.Acquire<ChangeValueInfo>();
+        info.value = calculated_damage;
+        Args_T_EA<DamageCalculation_Attack_EventArgs>.Fire(info, this, send);
+        Args_T_EA<DamageCalculation_BeAttacked_EventArgs>.Fire(info, this, receive);
+        calculated_damage = info.value;
 
-        calculated_damage = Action_Int.Fire(calculated_damage, DamageCalculation_Attack_EventArgs.id, this, send);
-        calculated_damage = Action_Int.Fire(calculated_damage, DamageCalculation_BeAttacked_EventArgs.id, this, receive);
-
+        ReferencePool.Release(info);
         OnUpdateData?.Invoke();
-        // Debug.Log($"计算后的伤害：{calculated_damage}");
+       // Debug.Log($"计算后的伤害：{calculated_damage}");
     }
 }

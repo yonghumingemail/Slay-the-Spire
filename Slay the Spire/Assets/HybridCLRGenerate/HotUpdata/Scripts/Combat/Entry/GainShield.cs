@@ -22,7 +22,7 @@ public class GainShield : IEntry
             return;
         }
 
-        IEventCenterObject<BaseEventArgs> eventCenter = receiver.GetComponent<IEventCenterObject<BaseEventArgs>>();
+        IEventCenterObject<GameEventArgs> eventCenter = receiver.GetComponent<IEventCenterObject<GameEventArgs>>();
 
         IShield shield  = GetObject_GEA<IShield>.Fire(this,eventCenter.EventManage);
         var priorityEventCenter = GetObject_GEA<PriorityQueueEventCenter>.Fire(this,eventCenter.EventManage);
@@ -35,7 +35,7 @@ public class GainShield : IEntry
         }
         else
         {
-            Action_T_EA<OnGainShield_EA>.Fire(info,this,priorityEventCenter);
+            Args_T_EA<OnGainShield_EA>.Fire(info,this,priorityEventCenter);
         }
 
         if (shield == null)
@@ -43,7 +43,6 @@ public class GainShield : IEntry
             Debug.LogWarning($" 目标对象 {receiver.name} 缺少 IShield 组件");
             return;
         }
-
         shield.AddShieldValue(info);
     }
 

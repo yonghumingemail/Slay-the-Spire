@@ -8,39 +8,40 @@ public class SimpleShield : IShield
 {
     private PriorityQueueEventCenter _priorityEventCenter;
     private Action<IShield> _updateView;
-    private int _maxValue;
+    public int MaxValue;
 
     public int ShieldValue
     {
         get => shieldVale;
-        private set => shieldVale = value;
+        set
+        {
+            shieldVale=value;
+            _updateView?.Invoke(this);
+        }
     }
 
-    public int shieldVale;
+   [SerializeField] private int shieldVale;
 
     public SimpleShield(Action<IShield> updateView, PriorityQueueEventCenter priorityEventCenter)
     {
-        _maxValue = 999;
         _updateView = updateView;
 
         _priorityEventCenter = priorityEventCenter;
 
-        _priorityEventCenter.SubscribeAsync(OnRoundStart_EventArgs.id, OnRoundStart, -1);
-        _priorityEventCenter.Subscribe(OnBeAttacked_EA.id, ShieldTrigger, -1);
-        _priorityEventCenter.Subscribe(OnDestroy_EA.id, OnDestroy, -1);
-
-        _updateView?.Invoke(this);
+        _priorityEventCenter.SubscribeAsync<OnRoundStart_EventArgs>(OnRoundStart, -1);
+        _priorityEventCenter.Subscribe<OnBeAttacked_EA>(ShieldTrigger, -1);
+        _priorityEventCenter.Subscribe<OnDestroy_EA>(OnDestroy, -1);
     }
 
     public void AddShieldValue(ChangeValueInfo info)
     {
-        shieldVale = Mathf.Clamp(shieldVale + info.value, 0, _maxValue);
+        shieldVale = Mathf.Clamp(shieldVale + info.value, 0, MaxValue);
         _updateView?.Invoke(this);
     }
 
-    private void ShieldTrigger(object send, BaseEventArgs args)
+    private void ShieldTrigger(object send, GameEventArgs args)
     {
-        var _args = Action_T.Check<ChangeValueInfo>(args);
+        var _args = Args_T.Check<ChangeValueInfo>(args);
         // 如果当前没有护盾，或者传入的值大于等于0，则直接返回，不做任何处理。
         if (_args == null || ShieldValue <= 0 || _args.value >= 0)
         {
@@ -59,14 +60,14 @@ public class SimpleShield : IShield
         AddShieldValue(_args);
     }
 
-    private UniTask OnRoundStart(object send, BaseEventArgs args)
+    private UniTask OnRoundStart(object send, GameEventArgs args)
     {
         shieldVale = 0;
         _updateView?.Invoke(this);
         return UniTask.CompletedTask;
     }
 
-    private void OnDestroy(object send, BaseEventArgs args)
+    private void OnDestroy(object send, GameEventArgs args)
     {
         _updateView?.Invoke(this);
         _priorityEventCenter = null;

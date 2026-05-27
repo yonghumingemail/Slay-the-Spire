@@ -16,7 +16,7 @@ public class CombatManage : MonoBehaviour
 
     private void Awake()
     {
-        EventCenter_Singleton.Instance.Subscribe(GetObject_GEA<CombatManage>.id, Get);
+        EventCenter_Singleton.Instance.Subscribe<GetObject_GEA<CombatManage>>( Get);
     }
 
     private void Update()
@@ -27,9 +27,9 @@ public class CombatManage : MonoBehaviour
         }
     }
 
-    private void Get(object send, BaseEventArgs baseEventHandler)
+    private void Get(object send, GameEventArgs gameEventHandler)
     {
-        if (baseEventHandler is Func_T args)
+        if (gameEventHandler is Args_T args)
         {
             args.value = this;
         }
@@ -61,7 +61,7 @@ public class CombatManage : MonoBehaviour
     public async UniTask OnRoundStart()
     {
         roundCount++;
-        await Action_Int_Async.Fire(roundCount, OnRoundStart_EventArgs.id, this,
+        await Action_Int_Async.Fire<OnRoundStart_EventArgs>(roundCount, this,
             EventCenter_Singleton.Instance._priorityQueueEventCenter);
     }
 }

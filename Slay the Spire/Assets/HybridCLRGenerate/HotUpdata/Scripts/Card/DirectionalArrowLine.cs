@@ -21,28 +21,26 @@ public class DirectionalArrowLine : MonoBehaviour
         sprites = new SpriteRenderer[transform.childCount];
         for (int i = 0; i < transform.childCount; i++)
         {
-            lines[i] = transform.GetChild(i).gameObject;
-            lines[i].gameObject.SetActive(false);
+            var child = transform.GetChild(i);
+            child.transform.localPosition = Vector3.zero;
+            lines[i] = child.gameObject;
             sprites[i] = transform.GetChild(i).GetComponent<SpriteRenderer>();
         }
-        
+
         gameObject.SetActive(false);
     }
-    
+
 
     public void Interrupt()
     {
         _tokenSource?.Cancel();
     }
+
     public void Enable(PointerEventData data)
     {
         _tokenSource?.Cancel();
-        transform.position = data.position;
+        transform.position = mainCamera.ScreenToWorldPoint(data.position);
         gameObject.SetActive(true);
-        foreach (var t in lines)
-        {
-            t.gameObject.SetActive(true);
-        }
 
         Trigger(data).Forget();
     }

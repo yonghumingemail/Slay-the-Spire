@@ -13,43 +13,44 @@ public class Power_BuffObj : BuffObj
         priority = 5;
     }
 
-    private void Effect(object send, BaseEventArgs args)
+    private void Effect(object send, GameEventArgs gameArgs)
     {
-        var _args = Action_T.Check<ChangeValueInfo>(args);
+        var _args = Args_T.Check<ChangeValueInfo>(gameArgs);
         if (_args != null)
         {
             _args.value += -stack;
         }
         else
         {
-           Debug.Log($"{send}send对象所给参数类型不匹配"); 
+            Debug.Log($"{send}对象所给参数类型不匹配");
         }
     }
 
-    private void DamageCalculation(object send, BaseEventArgs args)
+    private void DamageCalculation(object send, GameEventArgs gameArgs)
     {
-        var _args = Action_T.Check<ChangeValueInfo>(args);
+        var _args = Args_T.Check<ChangeValueInfo>(gameArgs);
         if (_args != null)
         {
             _args.value += stack;
+            Debug.Log($"调用者：{send},调用PowerBuff伤害计算，计算前：{_args.value - stack},计算后：{_args.value}");
         }
         else
         {
-            Debug.Log($"{send}send对象所给参数类型不匹配"); 
+            Debug.Log($"{send}send对象所给参数类型不匹配");
         }
     }
 
     public override void OnAddBuff(PriorityQueueEventCenter eventCent, Action<BuffObj> onDataUpdate)
     {
         base.OnAddBuff(eventCent, onDataUpdate);
-        eventCent.Subscribe(OnAttack_EA.id, Effect, priority);
-        eventCent.Subscribe(DamageCalculation_Attack_EventArgs.id, DamageCalculation, priority);
+        eventCent.Subscribe<OnAttack_EA>(Effect, priority);
+        eventCent.Subscribe<DamageCalculation_Attack_EventArgs>(DamageCalculation, priority);
     }
 
     public override void OnRemoveBuff(PriorityQueueEventCenter eventCent)
     {
         base.OnRemoveBuff(eventCent);
-        eventCent.UnSubscribe(OnAttack_EA.id, Effect);
-        eventCent.UnSubscribe(DamageCalculation_Attack_EventArgs.id, DamageCalculation);
+        eventCent.UnSubscribe<OnAttack_EA>(Effect);
+        eventCent.UnSubscribe<DamageCalculation_Attack_EventArgs>(DamageCalculation);
     }
 }

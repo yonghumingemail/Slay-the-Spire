@@ -30,9 +30,9 @@ public class Card_Ironclad_Bash : Card
     {
         await base.Initialized("Assets/ScriptableObject/CardEvent/Ironclad_Bash.asset");
 
-        _player._priorityEventCenter.Subscribe(DamageValueChange_Attack_EA.id, DamageValueChange_Attack, 0);
-        priorityEventCenter.Subscribe(OnMouseEnterEnemy_EA.id, OnMouseEnterEnemy, 0);
-        priorityEventCenter.Subscribe(OnMouseExitEnemy_EA.id, OnMouseExitEnemy, 0);
+        _player._priorityEventCenter.Subscribe<DamageValueChange_Attack_EA>(DamageValueChange_Attack, 0);
+        priorityEventCenter.Subscribe<OnMouseEnterEnemy_EA>(OnMouseEnterEnemy, 0);
+        priorityEventCenter.Subscribe<OnMouseExitEnemy_EA>(OnMouseExitEnemy, 0);
 
 
         _directionalCard = new DirectionalCard(this, "Enemy");
@@ -43,21 +43,21 @@ public class Card_Ironclad_Bash : Card
         AddCardEntry(_vulnerableState);
     }
 
-    public void DamageValueChange_Attack(object send, BaseEventArgs args)
+    public void DamageValueChange_Attack(object send, GameEventArgs args)
     {
         _inflictDamage.DamageCalculation(_player._priorityEventCenter, null);
     }
 
-    public void OnMouseEnterEnemy(object send, BaseEventArgs args)
+    public void OnMouseEnterEnemy(object send, GameEventArgs args)
     {
-        var enemy = Action_T.Check<Enemy>(args);
+        var enemy = Args_T.Check<Enemy>(args);
         _inflictDamage.DamageCalculation(_player._priorityEventCenter, enemy._priorityEventCenter);
         _directionalCard.OnMouseEnterSelectableObject(enemy);
     }
 
-    public void OnMouseExitEnemy(object send, BaseEventArgs args)
+    public void OnMouseExitEnemy(object send, GameEventArgs args)
     {
-        var enemy = Action_T.Check<Enemy>(args);
+        var enemy = Args_T.Check<Enemy>(args);
         _inflictDamage.DamageCalculation(_player._priorityEventCenter, null);
         _directionalCard.OnMouseExitSelectableObject(enemy);
     }

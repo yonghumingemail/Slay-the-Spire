@@ -6,12 +6,11 @@ namespace HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs
 {
     public class Action_Int_Async : GameEventArgs
     {
-        public override int Id { get; }
 
         public int args_int;
 
-        public static async UniTask Fire(int args_int, int id, object sender,
-            IPriorityEventManageAsync<BaseEventArgs> eventManage)
+        public static async UniTask Fire<EventName>(int args_int, object sender,
+            IPriorityEventManageAsync<GameEventArgs> eventManage)
         {
             if (eventManage == null)
             {
@@ -21,7 +20,7 @@ namespace HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs
 
             var args = ReferencePool.Acquire<Action_Int_Async>();
             args.args_int = args_int;
-            await eventManage.FireAsync(sender, id, args);
+            await eventManage.FireAsync<EventName>(sender, args);
             ReferencePool.Release(args);
         }
 
@@ -32,14 +31,10 @@ namespace HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs
     }
     public class OnRoundStart_EventArgs : Action_Int_Async
     {
-        public override int Id => id;
-        public static int id = typeof(OnRoundStart_EventArgs).GetHashCode();
     }
 
     public class OnRoundEnd_EventArgs : Action_Int_Async
     {
-        public override int Id => id;
-        public static int id = typeof(OnRoundEnd_EventArgs).GetHashCode();
     }
 
 

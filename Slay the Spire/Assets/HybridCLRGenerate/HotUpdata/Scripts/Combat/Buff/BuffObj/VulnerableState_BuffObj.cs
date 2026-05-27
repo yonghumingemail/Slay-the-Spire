@@ -16,14 +16,13 @@ public class VulnerableState_BuffObj : BuffObj
         tags = new[] { BuffTag_E.buff };
     }
 
-    private void Effect(object send, BaseEventArgs args)
+    private void Effect(object send, GameEventArgs args)
     {
-        var _args = Action_T.Check<ChangeValueInfo>(args);
+        var _args = Args_T.Check<ChangeValueInfo>(args);
         _args.value = (int)(_args.value * power);
-        
     }
 
-    private UniTask OnRoundEnd(object send, BaseEventArgs baseArgs)
+    private UniTask OnRoundEnd(object send, GameEventArgs gameArgs)
     {
         stack--;
         if (OnDataUpdate != null)
@@ -34,14 +33,22 @@ public class VulnerableState_BuffObj : BuffObj
         {
             Debug.Log(this + "缺少更新视图的方法");
         }
+
         return UniTask.CompletedTask;
     }
 
-    private void DamageCalculation(object send, BaseEventArgs baseArgs)
+    private void DamageCalculation(object send, GameEventArgs gameArgs)
     {
-        if (baseArgs is Action_Int args)
+        var _args = Args_T.Check<ChangeValueInfo>(gameArgs);
+        if (_args != null)
         {
-            args.value_Int = (int)(args.value_Int * power);
+            int value = _args.value;
+            _args.value = (int)(_args.value * power);
+            Debug.Log($"调用者：{send},调用VulnerableBuff伤害计算，计算前：{value},计算后：{_args.value}");
+        }
+        else
+        {
+            Debug.Log($"{send}send对象所给参数类型不匹配");
         }
     }
 
@@ -49,16 +56,16 @@ public class VulnerableState_BuffObj : BuffObj
     {
         base.OnAddBuff(eventCent, onDataUpdate);
 
-        eventCent.Subscribe(OnBeAttacked_EA.id, Effect, priority);
-        eventCent.Subscribe(DamageCalculation_BeAttacked_EventArgs.id, DamageCalculation, priority);
-        eventCent.SubscribeAsync(OnRoundEnd_EventArgs.id, OnRoundEnd, priority);
+        eventCent.Subscribe<OnBeAttacked_EA>(Effect, priority);
+        eventCent.Subscribe<DamageCalculation_BeAttacked_EventArgs>(DamageCalculation, priority);
+        eventCent.SubscribeAsync<OnRoundEnd_EventArgs>(OnRoundEnd, priority);
     }
 
     public override void OnRemoveBuff(PriorityQueueEventCenter eventCent)
     {
         base.OnRemoveBuff(eventCent);
-        eventCent.UnSubscribe(OnBeAttacked_EA.id, Effect);
-        eventCent.UnSubscribe(DamageCalculation_BeAttacked_EventArgs.id, DamageCalculation);
-        eventCent.UnSubscribeAsync(OnRoundEnd_EventArgs.id, OnRoundEnd);
+        eventCent.UnSubscribe<OnBeAttacked_EA>(Effect);
+        eventCent.UnSubscribe<DamageCalculation_BeAttacked_EventArgs>(DamageCalculation);
+        eventCent.UnSubscribeAsync<OnRoundEnd_EventArgs>(OnRoundEnd);
     }
 }

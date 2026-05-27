@@ -26,9 +26,7 @@ public class BuffList_V : MonoBehaviour, IBuffList_V,INeedToInitialize
 
     /// <summary>Buff UI预设体（用于实例化新的Buff UI）</summary>
     private GameObject buffVPrefab;
-
-
-
+    
     public async UniTask Initialize()
     {
         // 并行加载多个资源，提高加载效率
@@ -64,7 +62,10 @@ public class BuffList_V : MonoBehaviour, IBuffList_V,INeedToInitialize
             // 实例化新的Buff UI对象
             var tempObj = Instantiate(buffVPrefab, transform);
             tempObj.SetActive(false); // 初始设置为不活跃
-            buffPool.Push(tempObj.GetComponent<Buff_V>()); // 加入对象池
+            var buffV = tempObj.GetComponent<Buff_V>();
+            buffV.Init();
+            buffPool.Push(buffV); // 加入对象池
+            
         }
 
         // 从对象池中获取可用的Buff UI

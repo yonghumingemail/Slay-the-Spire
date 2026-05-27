@@ -2,12 +2,11 @@ using GameFramework;
 using UnityEngine;
 public class Buff_EventArgs : GameEventArgs
 {
-    public override int Id { get; }
     public BuffObj value;
     public int stack;
 
-    public static void Fire(BuffObj value, int stack, int id, object sender,
-        IPriorityEventManage<BaseEventArgs> eventManage)
+    public static void Fire<EventName>(BuffObj value, int stack, object sender,
+        IPriorityEventManage<GameEventArgs> eventManage)
     {
         if (eventManage == null)
         {
@@ -18,7 +17,7 @@ public class Buff_EventArgs : GameEventArgs
         var args = ReferencePool.Acquire<Buff_EventArgs>();
         args.value = value;
         args.stack = stack;
-        eventManage.Fire(sender, id, args);
+        eventManage.Fire<EventName>(sender, args);
         ReferencePool.Release(args);
     }
 
@@ -27,8 +26,6 @@ public class Buff_EventArgs : GameEventArgs
     }
 }
 
-public class OnGainBuff_EventArgs : Buff_EventArgs
+public class OnGainBuff_EventArgs 
 {
-    public override int Id => id;
-    public static int id = typeof(OnGainBuff_EventArgs).GetHashCode();
 }

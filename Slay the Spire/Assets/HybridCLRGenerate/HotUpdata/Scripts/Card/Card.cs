@@ -13,7 +13,7 @@ public abstract class Card : MonoBehaviour
 {
     #region Property
 
-    public CardComponentInfo CardComponentInfo => cardComponentInfo;
+    public CardComponentInfo CardInfo => cardInfo;
     public CardAnimator CardAnimator => cardAnimator;
     public CardInteraction CardInteraction => cardInteraction;
     public CardExteriorInfo ExteriorInfo => exteriorInfo;
@@ -23,7 +23,7 @@ public abstract class Card : MonoBehaviour
     //用于监听和触发子类实现的特殊事件
     public PriorityQueueEventCenter priorityEventCenter { get; private set; }
 
-    [SerializeField] protected CardComponentInfo cardComponentInfo;
+    [SerializeField] protected CardComponentInfo cardInfo;
     [SerializeField] protected CardAnimator cardAnimator;
     [SerializeField] protected CardInteraction cardInteraction;
     [SerializeField] protected CardExteriorInfo exteriorInfo;
@@ -51,7 +51,7 @@ public abstract class Card : MonoBehaviour
     {
         cardEntries.Add(entry);
         describe += entry.GetDescription();
-        cardComponentInfo.UpdateCardUI(this);
+        cardInfo.UpdateCardUI(this);
     }
 
     public virtual void ReturnToHandPosition()
@@ -70,12 +70,12 @@ public abstract class Card : MonoBehaviour
         if (enable)
         {
             gameObject.SetActive(true);
-            cardComponentInfo.Background.gameObject.SetActive(true);
+            cardInfo.Background.gameObject.SetActive(true);
             cardInteraction.isInteractable = true;
         }
         else
         {
-            cardComponentInfo.Background.gameObject.SetActive(false);
+            cardInfo.Background.gameObject.SetActive(false);
             cardInteraction.isInteractable = false;
         }
     }
@@ -83,14 +83,14 @@ public abstract class Card : MonoBehaviour
 
     public UniTask Recycle_DiscardPile(UniTaskCompletionSource source = null)
     {
-        cardComponentInfo.HandPile.cardInstances.Remove(this);
+        cardInfo.HandPile.cardInstances.Remove(this);
         source ??= new UniTaskCompletionSource();
 
         cardAnimator.Recycle_DiscardPile(() =>
         {
             gameObject.SetActive(false);
             Vector3 screenCenter =
-                cardComponentInfo.MainCamera.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f,
+                cardInfo.MainCamera.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f,
                     0f));
             screenCenter.z = transform.position.z;
             transform.position = screenCenter;
@@ -108,12 +108,10 @@ public abstract class Card : MonoBehaviour
     public virtual void UnSelectCard()
     {
         cardInteraction._isDragging = false;
-        cardComponentInfo.HandPile.SetSelectedCard(null);
-        cardComponentInfo.HandPile.DirectionalArrowLine.Interrupt();
-
+        
         cardAnimator.TransformEffectToRotation(gameObject, cardInteraction.position, cardInteraction.rotation,
             cardInteraction.scale);
-        Action_T_EA<OnUnSelectCard_EA>.Fire(this,this,priorityEventCenter);
+        Args_T_EA<OnUnSelectCard_EA>.Fire(this,this,priorityEventCenter);
     }
 
     public virtual void UpdateDescribe()
@@ -124,12 +122,12 @@ public abstract class Card : MonoBehaviour
             describe += VARIABLE.GetDescription();
         }
 
-        cardComponentInfo.UpdateCardTextUI(this);
+        cardInfo.UpdateCardTextUI(this);
     }
 
     public virtual UniTask CardTriggerAnimator()
     {
-        cardComponentInfo.HandPile.cardInstances.Remove(this);
+        cardInfo.HandPile.cardInstances.Remove(this);
         _source = new UniTaskCompletionSource();
         cardAnimator.MoveToScreenCenter(() => { Recycle_DiscardPile(_source); });
         return _source.Task;
@@ -140,7 +138,7 @@ public abstract class Card : MonoBehaviour
     {
         priorityEventCenter = new PriorityQueueEventCenter();
 
-        cardComponentInfo = GetComponent<CardComponentInfo>();
+        cardInfo = GetComponent<CardComponentInfo>();
         cardAnimator = GetComponent<CardAnimator>();
         cardInteraction = GetComponent<CardInteraction>();
 
@@ -151,13 +149,12 @@ public abstract class Card : MonoBehaviour
         _energy = GetObject_GEA<Energy>.Fire(this,EventCenter_Singleton.Instance);
         _discardPile =  GetObject_GEA<DiscardPile>.Fire(this,EventCenter_Singleton.Instance);
 
-        cardInteraction.OnMouseDownDelegate += (eventData) => { cardComponentInfo.HandPile.SetSelectedCard(this); };
-        cardInteraction.OnMouseUpDelegate += (eventData) => { cardComponentInfo.HandPile.SetSelectedCard(null); };
+        cardInteraction.OnMouseDownDelegate += (eventData) => {  };
 
         isStrengthen = false;
         cardEntries = new List<IEntry>();
 
-        cardComponentInfo.UpdateCardUI(this);
+        cardInfo.UpdateCardUI(this);
     }
     
 

@@ -39,8 +39,8 @@ public class AttackIntent : IIntent
         _receive = receive;
         _send = send;
 
-        _receive.Subscribe(DamageValueChange_BeAttacked_EA.id,DamageValueChange,0);
-        _send.Subscribe(DamageValueChange_Attack_EA.id,DamageValueChange,0);
+        _receive.Subscribe<DamageValueChange_BeAttacked_EA>(DamageValueChange,0);
+        _send.Subscribe<DamageValueChange_Attack_EA>(DamageValueChange,0);
 
     }
 
@@ -72,7 +72,7 @@ public class AttackIntent : IIntent
         return "敌人将要造成" + (number == 1 ? $"{value}点伤害" : $"{value}次X{number}点伤害");
     }
 
-    private void DamageValueChange(object send,BaseEventArgs args)
+    private void DamageValueChange(object send,GameEventArgs args)
     {
         _inflictDamage.DamageCalculation(_send, _receive);
         value = _inflictDamage.calculated_damage;

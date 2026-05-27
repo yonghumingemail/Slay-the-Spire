@@ -6,12 +6,11 @@ public class Intent_V : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
 {
     public SpriteRenderer _spriteRenderer { get; private set; }
     public TextMeshPro _textMeshPro { get; private set; }
-
     public Animator _animator { get; private set; }
-    private void Awake()
+    public void Init()
     {
-        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        _textMeshPro = GetComponentInChildren<TextMeshPro>();
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>(true);
+        _textMeshPro = GetComponentInChildren<TextMeshPro>(true);
         _animator = GetComponent<Animator>();
     }
 

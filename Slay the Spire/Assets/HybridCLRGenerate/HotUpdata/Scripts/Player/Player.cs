@@ -6,21 +6,23 @@ using UnityEngine;
 using Z_Tools;
 
 
-public class Player : MonoBehaviour, IEventCenterObject<BaseEventArgs>
+public class Player : MonoBehaviour, IEventCenterObject<GameEventArgs>
 {
-    public IEventManage<BaseEventArgs> EventManage { get; } = new EventManage(); //用于提供接口对象
-    public PriorityQueueEventCenter _priorityEventCenter { get; } = new (); //用于记录buff事件
-    public CancellationTokenSource TokenSource { get; } = new ();
-    
+    public IEventManage<GameEventArgs> EventManage { get; } = new EventManage(); //用于提供接口对象
+    public PriorityQueueEventCenter _priorityEventCenter { get; } = new(); //用于记录buff事件
+    public CancellationTokenSource TokenSource { get; } = new();
+
     private Animator animator;
-    [SerializeField]private RoleCore roleCore;
+    private SpriteRenderer _spriteRenderer;
+    [SerializeField] private RoleCore roleCore;
+
     private void Awake()
     {
         Initialize().Forget();
     }
 
-    private GainPower gainPower = new (2);
-    private VulnerableState vulnerableState = new (2);
+    private GainPower gainPower = new(2);
+    private VulnerableState vulnerableState = new(2);
 
     private void Update()
     {
@@ -35,9 +37,9 @@ public class Player : MonoBehaviour, IEventCenterObject<BaseEventArgs>
     {
         animator = GetComponent<Animator>();
 
-        EventCenter_Singleton.Instance.Subscribe(GetObject_GEA<Player>.id, Get);
+        EventCenter_Singleton.Instance.Subscribe<GetObject_GEA<Player>>(Get);
 
-        var initArray = GetComponentsInChildren<INeedToInitialize>();
+        var initArray = GetComponentsInChildren<INeedToInitialize>(true);
         var tasks = new UniTask[initArray.Length];
         int i = 0;
         foreach (var VARIABLE in initArray)
@@ -46,37 +48,34 @@ public class Player : MonoBehaviour, IEventCenterObject<BaseEventArgs>
         }
 
         await tasks;
+        var roleCoreData =
+            await AddressablesMgr.Instance.LoadAssetAsync<RoleCoreData>(
+                "Assets/ScriptableObject/RoleCoreData/Player/Player.asset");
 
-        var health_V = GetComponentInChildren<IHealth_V>();
-        health_V.InitializeView(gameObject);
-
-        var shield_V = GetComponentInChildren<IShield_V>();
-        shield_V.InitializeView(gameObject, health_V);
-
-        var buffList_V = GetComponentInChildren<IBuffList_V>();
-
-        roleCore=new RoleCore(health_V, shield_V, buffList_V,_priorityEventCenter);
+        _spriteRenderer = transform.Find("UI").GetComponent<SpriteRenderer>();
+        roleCore = new RoleCore(gameObject, _spriteRenderer, roleCoreData, _priorityEventCenter);
         roleCore.InterfaceRegistration(EventManage);
-        
+
+
         GetObject_GEA<PriorityQueueEventCenter>.Subscribe(_priorityEventCenter, EventManage);
-        
+
         //监听玩家死亡，将token设置为取消
     }
 
-    private void Get(object send, BaseEventArgs baseEventHandler)
+    private void Get(object send, GameEventArgs gameEventHandler)
     {
-        if (baseEventHandler is Func_T args)
+        if (gameEventHandler is Args_T args)
         {
             args.value = this;
         }
     }
 
 
-    private async UniTask OnRoundEnd(object sender, BaseEventArgs baseEventArgs)
+    private async UniTask OnRoundEnd(object sender, GameEventArgs gameEventArgs)
     {
-        if (baseEventArgs is OnRoundEnd_EventArgs args)
+        if (gameEventArgs is OnRoundEnd_EventArgs args)
         {
-            await Action_Int_Async.Fire(args.args_int, OnRoundEnd_EventArgs.id, this,
+            await Action_Int_Async.Fire<OnRoundEnd_EventArgs>(args.args_int, this,
                 _priorityEventCenter);
         }
     }
@@ -85,7 +84,7 @@ public class Player : MonoBehaviour, IEventCenterObject<BaseEventArgs>
     private void OnDestroy()
     {
         EventManage.Clear();
-        _priorityEventCenter.Fire(this, OnDestroy_EA.id, null);
+        _priorityEventCenter.Fire<OnDestroy_EA>(this, null);
         _priorityEventCenter.Clear();
     }
 }

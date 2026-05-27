@@ -10,11 +10,11 @@ public class DrawPile : Pile
     {
         base.Awake();
         _discardPile = transform.parent.Find("DiscardPile").GetComponent<DiscardPile>();
-        EventCenter_Singleton.Instance.Subscribe(GetObject_GEA<DrawPile>.id, Get);
+        EventCenter_Singleton.Instance.Subscribe<GetObject_GEA<DrawPile>>( Get);
     }
-    private void Get(object send, BaseEventArgs baseEventHandler)
+    private void Get(object send, GameEventArgs gameEventHandler)
     {
-        if (baseEventHandler is Func_T args)
+        if (gameEventHandler is Args_T args)
         {
             args.value = this;
         }

@@ -1,4 +1,5 @@
 using System;
+using GameFramework;
 using UnityEngine;
 
 
@@ -11,7 +12,11 @@ public class SimpleHealth : IHealth
     public int HealthValue
     {
         get => healthValue;
-        private set => healthValue = value;
+        set
+        {
+            healthValue = Mathf.Clamp(value, 0, MaxHealth);
+            _updateView?.Invoke(this);
+        }
     }
 
     public int MaxHealth
@@ -23,11 +28,7 @@ public class SimpleHealth : IHealth
             {
                 healthValue = maxHealthValue;
             }
-            else
-            {
-                healthValue = healthValue + value - maxHealthValue;
-            }
-
+            
             maxHealthValue = value;
             _updateView?.Invoke(this);
         }
@@ -40,18 +41,18 @@ public class SimpleHealth : IHealth
     {
         _priorityEventCenter = priorityEventCenter;
         _updateView = UpdateView;
-        _updateView?.Invoke(this);
     }
 
     public void AddHealth(ChangeValueInfo info)
     {
-        Action_T_EA<OnBeAttacked_EA>.Fire(info, this, _priorityEventCenter);
+        Args_T_EA<OnBeAttacked_EA>.Fire(info, this, _priorityEventCenter);
 
         HealthValue = Mathf.Clamp(HealthValue + info.value, 0, MaxHealth);
         _updateView?.Invoke(this);
 
-        Action_T_EA<OnHealthActionChange_EA>.Fire(info, this, _priorityEventCenter);
+        Args_T_EA<OnHealthArgsChangeEa>.Fire(info, this, _priorityEventCenter);
 
+        ReferencePool.Release(info);
         // Debug.Log(HealthValue);
     }
 }

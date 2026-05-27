@@ -25,7 +25,7 @@ public class SimpleBuffList : IBuffList
         // 初始化Buff对象列表
         _buffListObj = new List<BuffObj>();
 
-     priorityEventCenter.Subscribe(OnDestroy_EA.id,OnDestroy,0);
+     priorityEventCenter.Subscribe<OnDestroy_EA>(OnDestroy,0);
 
     }
 
@@ -72,7 +72,7 @@ public class SimpleBuffList : IBuffList
         return _buffListObj;
     }
 
-    private void OnDestroy(object sender, BaseEventArgs args)
+    private void OnDestroy(object sender, GameEventArgs args)
     {
         foreach (var VARIABLE in _buffListObj)
         {

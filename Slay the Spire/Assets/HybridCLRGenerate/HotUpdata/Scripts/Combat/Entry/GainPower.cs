@@ -19,7 +19,7 @@ public class GainPower : IEntry
             return;
         }
 
-        IEventCenterObject<BaseEventArgs> eventCenter = receiver.GetComponent<IEventCenterObject<BaseEventArgs>>();
+        IEventCenterObject<GameEventArgs> eventCenter = receiver.GetComponent<IEventCenterObject<GameEventArgs>>();
         IBuffList buffListObj = GetObject_GEA<IBuffList>.Fire(this, eventCenter.EventManage);
 
 
@@ -48,9 +48,9 @@ public class GainPower : IEntry
             buffListObj.AddBuff(buff);
         }
 
-        buffListObj._priorityEventCenter.Fire(this, DamageValueChange_Attack_EA.id, null);
+        buffListObj._priorityEventCenter.Fire<DamageValueChange_Attack_EA>(this, null);
 
-        Buff_EventArgs.Fire(buff, stack, OnGainBuff_EventArgs.id, this, buffListObj._priorityEventCenter);
+        Buff_EventArgs.Fire<OnGainBuff_EventArgs>(buff, stack, this, buffListObj._priorityEventCenter);
     }
 
     public string GetDescription()

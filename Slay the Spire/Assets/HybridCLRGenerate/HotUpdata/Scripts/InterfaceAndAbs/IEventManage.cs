@@ -1,30 +1,31 @@
+using System;
 using Cysharp.Threading.Tasks;
 
-public interface IBaseEventManage<TEventArgs> where TEventArgs : BaseEventArgs
+public interface IBaseEventManage<TEventArgs> where TEventArgs : GameEventArgs
 {
-    void UnSubscribe(int id, GameEventHandler<TEventArgs> _delegate);
-    void UnSubscribeAll(int id);
-    void Fire(object send, int id,TEventArgs args);
+    void UnSubscribe<EventName>(GameEventHandler<TEventArgs> _delegate);
+    void UnSubscribeAll<EventName>();
+    void Fire<EventName>(object send, TEventArgs args);
     void Clear();
 }
 
 public interface IEventManage<TEventArgs> : IBaseEventManage<TEventArgs>
-    where TEventArgs : BaseEventArgs
+    where TEventArgs : GameEventArgs
 {
-    void Subscribe(int id, GameEventHandler<TEventArgs> _delegate);
+    void Subscribe<EventName>(GameEventHandler<TEventArgs> _delegate);
 }
 
 public interface IPriorityEventManage<TEventArgs> : IBaseEventManage<TEventArgs>
-    where TEventArgs : BaseEventArgs
+    where TEventArgs : GameEventArgs
 {
-    void Subscribe(int id, GameEventHandler<TEventArgs> _delegate, int priority);
+    void Subscribe<EventName>(GameEventHandler<TEventArgs> _delegate, int priority);
 }
+
 public interface IPriorityEventManageAsync<TEventArgs> : IPriorityEventManage<TEventArgs>
-    where TEventArgs : BaseEventArgs
+    where TEventArgs : GameEventArgs
 {
-    void SubscribeAsync(int id, GameEventHandlerAsync<BaseEventArgs> _delegate, int priority);
-    void UnSubscribeAsync(int id,GameEventHandlerAsync<BaseEventArgs> _delegate);
-    void UnSubscribeAllAsync(int id);
-    UniTask FireAsync(object send, int id, BaseEventArgs args);
-   
+    void SubscribeAsync<EventName>(GameEventHandlerAsync<GameEventArgs> _delegate, int priority);
+    void UnSubscribeAsync<EventName>(GameEventHandlerAsync<GameEventArgs> _delegate);
+    void UnSubscribeAllAsync<EventName>();
+    UniTask FireAsync<EventName>(object send, GameEventArgs args);
 }

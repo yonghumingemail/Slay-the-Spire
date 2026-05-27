@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.U2D;
 
 public class Intent_C : MonoBehaviour, INeedToInitialize
 {
@@ -12,12 +10,25 @@ public class Intent_C : MonoBehaviour, INeedToInitialize
 
     public GameObject prefab;
     public float intentSpacing;
-    
+
     public async UniTask Initialize()
     {
         prefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/Enemy/Intent.prefab");
 
-        intentsViewArray = new List<Intent_V>(transform.GetComponentsInChildren<Intent_V>(true));
+        var gam1 = Instantiate(prefab, transform);
+        var gam2 = Instantiate(prefab, transform);
+        gam1.SetActive(false);
+        gam2.SetActive(false);
+
+        intentsViewArray = new List<Intent_V>()
+        {
+            gam1.GetComponent<Intent_V>(),
+            gam2.GetComponent<Intent_V>()
+        };
+        foreach (var VARIABLE in intentsViewArray)
+        {
+            VARIABLE.Init();
+        }
     }
 
 

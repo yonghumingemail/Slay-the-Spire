@@ -13,7 +13,7 @@ public class Hp_Sprite2D_V : MonoBehaviour, IHealth_V
     /// <summary>
     /// 血条x轴的缩放
     /// </summary>
-   [SerializeField] private float scale_X = 1;
+    [SerializeField] private float scale_X = 1;
 
     /// <summary>血条动画变化速度（秒）</summary>
     public float animatorSpeed = 0.15f;
@@ -32,6 +32,7 @@ public class Hp_Sprite2D_V : MonoBehaviour, IHealth_V
         get => scale_X;
         set => scale_X = value;
     }
+    
 
     /// <summary>
     /// 更新血条显示
@@ -50,9 +51,9 @@ public class Hp_Sprite2D_V : MonoBehaviour, IHealth_V
         {
             // 处理异常情况：打印警告或赋默认值
             Debug.LogWarning("MaxHealth is zero, cannot calculate health ratio.");
-            value = 0f; 
+            value = 0f;
         }
-        
+
         // 计算血条新位置：基于生命值比例横向移动
         var pos = _hp.transform.localPosition;
         pos.x = -1 * _hp.Length * (1 - value);
@@ -66,22 +67,15 @@ public class Hp_Sprite2D_V : MonoBehaviour, IHealth_V
     }
 
 
-    /// <summary>
-    /// 初始化血条组件
-    /// 设置血条位置、尺寸适配并获取必要的组件引用
-    /// </summary>
-    /// <param name="obj">目标对象</param>
-    public void InitializeView(GameObject obj)
+    public void InitializeView(Renderer _renderer)
     {
         // 获取子对象中的文本和血条组件
         _textMeshPro = transform.Find("Value").GetComponent<TextMeshPro>();
         _hp = transform.Find("Blood").GetComponent<AdaptiveResize_Renderer>();
 
-        // 获取目标对象的精灵信息用于尺寸适配
-        Renderer _renderer = obj.GetComponentInChildren<Renderer>();
-
         // 调整血条子组件的尺寸以匹配目标对象精灵
-        AdaptiveResize_Renderer[] spriteRendererChild = transform.GetComponentsInChildren<AdaptiveResize_Renderer>();
+        AdaptiveResize_Renderer[] spriteRendererChild =
+            transform.GetComponentsInChildren<AdaptiveResize_Renderer>(true);
 
         float maxSpriteSize = 0;
         // 遍历所有血条精灵组件并重新调整尺寸

@@ -19,7 +19,8 @@ public class DirectionalCard
 
         card.CardInteraction.OnMouseDownDelegate += data =>
         {
-            card.CardComponentInfo.HandPile.DirectionalArrowLine.Enable(data);
+            card.CardInfo.HandPile.DirectionalArrowLine.Enable(data);
+            card.CardInfo.HandPile.SetSelectedCard(card);
         };
         card.CardInteraction.OnMouseUpDelegate += data => { OnMouseUp(card, data); };
     }
@@ -39,7 +40,7 @@ public class DirectionalCard
             await card.CardTriggerAnimator();
 
             card.Enable(false);
-            card.CardComponentInfo.HandPile.SortCards();
+            card.CardInfo.HandPile.SortCards();
 
             return true;
         }
@@ -52,13 +53,15 @@ public class DirectionalCard
     public void OnMouseUp(Card card, PointerEventData _data)
     {
         SelectableObject?.OnUnSelect();
-        card.CardComponentInfo.HandPile.DirectionalArrowLine.Interrupt();
+        card.CardInfo.HandPile.DirectionalArrowLine.Interrupt();
+        
         if (!card.CardInteraction._isDragging) return;
         targetInfo = Physics2D.Raycast(_data.pressEventCamera.ScreenToWorldPoint(_data.position), Vector3.forward,
             15,
             1 << LayerMask.NameToLayer(detectLayerName));
-
+        Debug.Log(targetInfo.collider==null);
         card._combatManage.AddCardToExecuteQueue(card);
+        card.CardInfo.HandPile.SetSelectedCard(null);
     }
 
     public void OnMouseEnterSelectableObject(ISelectableObject selectableObject)

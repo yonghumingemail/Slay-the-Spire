@@ -8,12 +8,12 @@ using UnityEngine.EventSystems;
 using UnityEngine.Splines;
 using Z_Tools;
 
-public class HandPile : MonoBehaviour, IPointerEnterHandler,
-    IPointerExitHandler
+public class HandPile : MonoBehaviour,IPointerEnterHandler
 {
-    private CardArrangement cardArrangement;
     private SplineContainer spline;
     private DrawPile drawPile;
+    private CardArrangement cardArrangement;
+
     public DirectionalArrowLine DirectionalArrowLine { get; private set; }
     public List<Card> cardInstances = new List<Card>();
     public Card SelectedCard;
@@ -30,13 +30,13 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
         spline = transform.Find("Spline").GetComponent<SplineContainer>();
         DirectionalArrowLine = transform.Find("DirectionalArrowLine").GetComponent<DirectionalArrowLine>();
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync(OnRoundStart_EventArgs.id, OnRoundStart,
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundStart_EventArgs>(OnRoundStart,
             0);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync(OnRoundEnd_EventArgs.id, OnRoundEnd, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundEnd_EventArgs>(OnRoundEnd, 0);
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnMouseEnterEnemy_EA.id,
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe<OnMouseEnterEnemy_EA>(
             OnMouseEnterEnemy, 0);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe(OnMouseExitEnemy_EA.id,
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe<OnMouseExitEnemy_EA>(
             OnMouseExitEnemy, 0);
     }
 
@@ -53,40 +53,40 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
         }
     }
 
-    private void OnMouseEnterEnemy(object sender, BaseEventArgs args)
+    private void OnMouseEnterEnemy(object sender, GameEventArgs args)
     {
-        if (!SelectedCard || !(args is Action_T _args)) return;
-        Action_T_EA<OnMouseEnterEnemy_EA>.Fire(_args.value, this, SelectedCard.priorityEventCenter);
+        if (!SelectedCard || !(args is Args_T _args)) return;
+        Args_T_EA<OnMouseEnterEnemy_EA>.Fire(_args.value, this, SelectedCard.priorityEventCenter);
     }
 
-    private void OnMouseExitEnemy(object sender, BaseEventArgs args)
+    private void OnMouseExitEnemy(object sender, GameEventArgs args)
     {
-        if (!SelectedCard || !(args is Action_T _args)) return;
-        Action_T_EA<OnMouseExitEnemy_EA>.Fire(_args.value, this, SelectedCard.priorityEventCenter);
+        if (!SelectedCard || !(args is Args_T _args)) return;
+        Args_T_EA<OnMouseExitEnemy_EA>.Fire(_args.value, this, SelectedCard.priorityEventCenter);
     }
 
     public void SetSelectedCard(Card card)
     {
-        SelectedCard = card;
-        bool isSelected = SelectedCard != null;
-        foreach (var VARIABLE in cardInstances)
+        if (!card)
         {
-            if (card != VARIABLE)
-            {
-                //card不为空时，即当前选择了卡牌，则将其他卡牌的交互禁用，反之则启用
-                VARIABLE.CardInteraction.isInteractable = !isSelected;
-            }
-        }
-
-        if (isSelected)
-        {
-            Action_T_EA<OnSelectCard_EA>.Fire(SelectedCard, this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
+            DirectionalArrowLine.Interrupt();
+            SelectedCard?.UnSelectCard();
+            Args_T_EA<OnUnSelectCard_EA>.Fire(SelectedCard, this,
+                EventCenter_Singleton.Instance._priorityQueueEventCenter);
         }
         else
         {
-            Action_T_EA<OnUnSelectCard_EA>.Fire(SelectedCard, this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
+            foreach (var VARIABLE in cardInstances)
+            {
+                if (card != VARIABLE)
+                {
+                    //card不为空时，即当前选择了卡牌，则将其他卡牌的交互禁用，反之则启用
+                    VARIABLE.CardInteraction.isInteractable = card;
+                }
+            }
+            Args_T_EA<OnSelectCard_EA>.Fire(SelectedCard, this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
         }
-        
+        SelectedCard = card;
     }
 
 
@@ -116,7 +116,7 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
         }
     }
 
-    private async UniTask OnRoundEnd(object sender, BaseEventArgs args)
+    private async UniTask OnRoundEnd(object sender, GameEventArgs args)
     {
         // 创建副本，避免循环中列表变化的影响
         var cardsToProcess = cardInstances.ToArray();
@@ -133,7 +133,7 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
 
     public float speed2;
 
-    public async UniTask OnRoundStart(object sender, BaseEventArgs args)
+    public async UniTask OnRoundStart(object sender, GameEventArgs args)
     {
         await DrawCard(drawCardsCount + drawCardsOffer);
     }
@@ -162,11 +162,7 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler,
     {
         if (SelectedCard)
         {
-            SelectedCard.UnSelectCard();
+            SetSelectedCard(null);
         }
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
     }
 }

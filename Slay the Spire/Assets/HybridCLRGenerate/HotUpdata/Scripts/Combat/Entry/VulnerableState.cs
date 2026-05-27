@@ -21,7 +21,7 @@ public class VulnerableState : IEntry
             return;
         }
         
-        IEventCenterObject<BaseEventArgs> eventCenter_receiver = receiver.GetComponent<IEventCenterObject<BaseEventArgs>>();
+        IEventCenterObject<GameEventArgs> eventCenter_receiver = receiver.GetComponent<IEventCenterObject<GameEventArgs>>();
         IBuffList buffListObj = GetObject_GEA<IBuffList>.Fire(this,eventCenter_receiver.EventManage);
         
 
@@ -50,8 +50,8 @@ public class VulnerableState : IEntry
             buffListObj.AddBuff(buff);
         }
 
-        buffListObj._priorityEventCenter.Fire(this,DamageValueChange_BeAttacked_EA.id,null);
-        Buff_EventArgs.Fire(buff,stack,OnGainBuff_EventArgs.id,this, buffListObj._priorityEventCenter);
+        buffListObj._priorityEventCenter.Fire<DamageValueChange_BeAttacked_EA>(this,null);
+        Buff_EventArgs.Fire<OnGainBuff_EventArgs>(buff,stack,this, buffListObj._priorityEventCenter);
 
     }
 

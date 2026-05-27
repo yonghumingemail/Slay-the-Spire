@@ -151,9 +151,9 @@ namespace CardCrawlGame.Map
             LastMinuteNodeChecker(map);
 
             // 调试日志：打印剩余未使用的房间（正常情况应该为空或很少）
-            Debug.Log("#### Unassigned Rooms:");
-            foreach (var r in roomList)
-                Debug.Log(r.GetType().Name);
+            // Debug.Log("#### Unassigned Rooms:");
+            // foreach (var r in roomList)
+            //     Debug.Log(r.GetType().Name);
         }
 
         // ------------------------------------------------------

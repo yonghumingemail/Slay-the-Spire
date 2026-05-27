@@ -6,26 +6,27 @@ using UnityEngine;
 public struct PriorityEvent
 {
     public int priority;
-    public GameEventHandler<BaseEventArgs> _delegate;
+    public GameEventHandler<GameEventArgs> _delegate;
 }
 
 public struct PriorityEventAsync
 {
     public int priority;
-    public GameEventHandlerAsync<BaseEventArgs> _delegate;
+    public GameEventHandlerAsync<GameEventArgs> _delegate;
 }
-[Serializable]
-public class PriorityQueueEventCenter : IPriorityEventManageAsync<BaseEventArgs>
-{
-   [SerializeField] public List<string> eventIds = new  ();
-    private readonly Dictionary<int, List<PriorityEvent>> Event_Dic = new();
-    private readonly Dictionary<int, List<PriorityEventAsync>> Event_DicAsync = new();
 
-    public void Subscribe(int id, GameEventHandler<BaseEventArgs> _delegate, int priority)
+[Serializable]
+public class PriorityQueueEventCenter : IPriorityEventManageAsync<GameEventArgs>
+{
+    private readonly Dictionary<Type, List<PriorityEvent>> Event_Dic = new();
+    private readonly Dictionary<Type, List<PriorityEventAsync>> Event_DicAsync = new();
+
+    public void Subscribe<EventName>(GameEventHandler<GameEventArgs> _delegate, int priority)
     {
-        if (!Event_Dic.TryGetValue(id, out var _))
+        var eventName = typeof(EventName);
+        if (!Event_Dic.TryGetValue(eventName, out var _))
         {
-            Event_Dic.Add(id, new List<PriorityEvent>());
+            Event_Dic.Add(eventName, new List<PriorityEvent>());
         }
 
         var temp = new PriorityEvent
@@ -33,17 +34,18 @@ public class PriorityQueueEventCenter : IPriorityEventManageAsync<BaseEventArgs>
             priority = priority,
             _delegate = _delegate
         };
-        Event_Dic[id].Add(temp);
-        eventIds.Add(_delegate.Method.Name);
+        Event_Dic[eventName].Add(temp);
+
         //用插排更好
-        Event_Dic[id].Sort((a, b) => b.priority.CompareTo(a.priority));
+        Event_Dic[eventName].Sort((a, b) => b.priority.CompareTo(a.priority));
     }
 
-    public void SubscribeAsync(int id, GameEventHandlerAsync<BaseEventArgs> _delegate, int priority)
+    public void SubscribeAsync<EventName>(GameEventHandlerAsync<GameEventArgs> _delegate, int priority)
     {
-        if (!Event_DicAsync.TryGetValue(id, out var _))
+        var eventName = typeof(EventName);
+        if (!Event_DicAsync.TryGetValue(eventName, out var _))
         {
-            Event_DicAsync.Add(id, new List<PriorityEventAsync>());
+            Event_DicAsync.Add(eventName, new List<PriorityEventAsync>());
         }
 
         var temp = new PriorityEventAsync
@@ -51,51 +53,56 @@ public class PriorityQueueEventCenter : IPriorityEventManageAsync<BaseEventArgs>
             priority = priority,
             _delegate = _delegate
         };
-        Event_DicAsync[id].Add(temp);
-        eventIds.Add(_delegate.Method.Name);
+        Event_DicAsync[eventName].Add(temp);
+
         //用插排更好
-        Event_DicAsync[id].Sort((a, b) => b.priority.CompareTo(a.priority));
+        Event_DicAsync[eventName].Sort((a, b) => b.priority.CompareTo(a.priority));
     }
 
-    public void UnSubscribe(int id, GameEventHandler<BaseEventArgs> _delegate)
+    public void UnSubscribe<EventName>(GameEventHandler<GameEventArgs> _delegate)
     {
-        if (!Event_Dic.TryGetValue(id, out var list)) return;
+        var eventName = typeof(EventName);
+        if (!Event_Dic.TryGetValue(eventName, out var list)) return;
 
         for (int i = 0; i < list.Count; i++)
         {
             if (list[i]._delegate != _delegate) continue;
             list.RemoveAt(i);
-            eventIds.Remove(_delegate.Method.Name);
+
             return;
         }
     }
-    public void UnSubscribeAsync(int id, GameEventHandlerAsync<BaseEventArgs> _delegate)
+
+    public void UnSubscribeAsync<EventName>(GameEventHandlerAsync<GameEventArgs> _delegate)
     {
-        if (!Event_DicAsync.TryGetValue(id, out var list)) return;
+        var eventName = typeof(EventName);
+        if (!Event_DicAsync.TryGetValue(eventName, out var list)) return;
 
         for (int i = 0; i < list.Count; i++)
         {
             if (list[i]._delegate != _delegate) continue;
             list.RemoveAt(i);
-            eventIds.Remove(_delegate.Method.Name);
+
             return;
         }
     }
 
-    public void UnSubscribeAll(int id)
+    public void UnSubscribeAll<EventName>()
     {
-        Event_Dic.Remove(id, out var _delegate);
-        eventIds.Remove(_delegate[id]._delegate.Method.Name);
-    } 
-    public void UnSubscribeAllAsync(int id)
-    {
-        Event_DicAsync.Remove(id, out var _delegate);
-        eventIds.Remove(_delegate[id]._delegate.Method.Name);
+        var eventName = typeof(EventName);
+        Event_Dic.Remove(eventName, out var _delegate);
     }
 
-    public void Fire(object send, int id, BaseEventArgs args)
+    public void UnSubscribeAllAsync<EventName>()
     {
-        if (Event_Dic.TryGetValue(id, out var list))
+        var eventName = typeof(EventName);
+        Event_DicAsync.Remove(eventName, out var _delegate);
+    }
+
+    public void Fire<EventName>(object send, GameEventArgs args)
+    {
+        var eventName = typeof(EventName);
+        if (Event_Dic.TryGetValue(eventName, out var list))
         {
             foreach (var _event in list)
             {
@@ -104,23 +111,24 @@ public class PriorityQueueEventCenter : IPriorityEventManageAsync<BaseEventArgs>
         }
         else
         {
-            Debug.Log($"调用者:{send},事件{id}不存在");
+            Debug.Log($"调用者:{send},事件{eventName}不存在");
         }
     }
 
-    public async UniTask FireAsync(object send, int id, BaseEventArgs args)
+    public async UniTask FireAsync<EventName>(object send, GameEventArgs args)
     {
-        if (Event_DicAsync.TryGetValue(id, out var list))
+        var eventName = typeof(EventName);
+        if (Event_DicAsync.TryGetValue(eventName, out var list))
         {
             foreach (var _event in list)
             {
-                if( _event._delegate==null) continue;
+                if (_event._delegate == null) continue;
                 await _event._delegate.Invoke(send, args);
             }
         }
         else
         {
-            Debug.Log($"事件id{id}不存在");
+            Debug.Log($"调用者:{send},事件{eventName}不存在");
         }
     }
 

@@ -17,13 +17,8 @@ public class JawWorm : Enemy
 
     private AttackIntent attackIntent_Action3;
     private DeFendIntent defendIntent_Action3;
-
-    private void Start()
-    {
-        Init().Forget();
-    }
-
-    protected async UniTask Init()
+    
+    public async UniTask Init()
     {
         var sprite = await AddressablesMgr.Instance.LoadAssetAsync<Sprite>("Assets/Art/Image/monsters/theBottom/Monsters_TheBottom.spriteatlasv2[skeleton-idle_00]");
         var controller = await AddressablesMgr.Instance.LoadAssetAsync<RuntimeAnimatorController>("Assets/Art/Image/monsters/theBottom/jawWorm/JawWorm.controller");
@@ -104,7 +99,7 @@ public class JawWorm : Enemy
 
     public async UniTask Action1()
     {
-        print("啃咬");
+        //print("啃咬");
         _animator.Play("Attack");
         await attackIntent_Action1.Trigger(gameObject, _player.gameObject, _player.TokenSource.Token);
         await _animatorComplete.AwaitCurrentAnimatorComplete();
@@ -112,7 +107,7 @@ public class JawWorm : Enemy
 
     public UniTask Action2()
     {
-        print("咆哮");
+       // print("咆哮");
         _gainPower_Action2.Trigger(gameObject, gameObject);
         defendIntent_Action2._gainShield.Trigger(gameObject, gameObject);
         return UniTask.CompletedTask;
@@ -120,7 +115,7 @@ public class JawWorm : Enemy
 
     public async UniTask Action3()
     {
-        print("猛击");
+       // print("猛击");
         _animator.Play("Attack");
         await attackIntent_Action3.Trigger(gameObject, _player.gameObject, _player.TokenSource.Token);
         defendIntent_Action3._gainShield.Trigger(gameObject, gameObject);
