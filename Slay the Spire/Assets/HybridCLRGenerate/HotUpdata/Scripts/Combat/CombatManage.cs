@@ -61,7 +61,7 @@ public class CombatManage : MonoBehaviour
     public async UniTask OnRoundStart()
     {
         roundCount++;
-        await Action_Int_Async.Fire<OnRoundStart_EventArgs>(roundCount, this,
+        await Action_Int_Async.Fire<OnRoundStart_EventName>(roundCount, this,
             EventCenter_Singleton.Instance._priorityQueueEventCenter);
     }
 }

@@ -9,33 +9,43 @@ public class MouseInteraction : MonoBehaviour,
     IPointerUpHandler,
     IMouseDownOrUp, IMouseEnterORExit
 {
+    public bool isEnableDownOrUp { get; set; }
     public Action<PointerEventData> OnMouseDownDelegate { get; set; }
     public Action<PointerEventData> OnMouseUpDelegate { get; set; }
+    
+
+    public bool isEnableEnterORExit { get; set; }
     public Action<PointerEventData> OnMouseEnterDelegate { get; set; }
     public Action<PointerEventData> OnMouseExitDelegate { get; set; }
+
     public bool isDebug;
+
 
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
+        if (!isEnableEnterORExit) return;
         if (isDebug) print("OnPointerEnter");
         OnMouseEnterDelegate?.Invoke(eventData);
     }
 
     public virtual void OnPointerExit(PointerEventData eventData)
     {
-        if (isDebug)   print("OnPointerExit");
+        if (!isEnableEnterORExit) return;
+        if (isDebug) print("OnPointerExit");
         OnMouseExitDelegate?.Invoke(eventData);
     }
 
     public virtual void OnPointerDown(PointerEventData eventData)
     {
+        if (!isEnableDownOrUp) return;
         if (isDebug) print("OnPointerDown");
         OnMouseDownDelegate?.Invoke(eventData);
     }
 
     public virtual void OnPointerUp(PointerEventData eventData)
     {
-        if (isDebug)   print("OnPointerUp");
+        if (!isEnableDownOrUp) return;
+        if (isDebug) print("OnPointerUp");
         OnMouseUpDelegate?.Invoke(eventData);
     }
 

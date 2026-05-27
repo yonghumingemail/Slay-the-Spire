@@ -12,15 +12,15 @@ public class SimpleShield : IShield
 
     public int ShieldValue
     {
-        get => shieldVale;
+        get => shieldValue;
         set
         {
-            shieldVale=value;
+            shieldValue=value;
             _updateView?.Invoke(this);
         }
     }
 
-   [SerializeField] private int shieldVale;
+   [SerializeField] private int shieldValue;
 
     public SimpleShield(Action<IShield> updateView, PriorityQueueEventCenter priorityEventCenter)
     {
@@ -28,14 +28,14 @@ public class SimpleShield : IShield
 
         _priorityEventCenter = priorityEventCenter;
 
-        _priorityEventCenter.SubscribeAsync<OnRoundStart_EventArgs>(OnRoundStart, -1);
+        _priorityEventCenter.SubscribeAsync<OnRoundStart_EventName>(OnRoundStart, -1);
         _priorityEventCenter.Subscribe<OnBeAttacked_EA>(ShieldTrigger, -1);
         _priorityEventCenter.Subscribe<OnDestroy_EA>(OnDestroy, -1);
     }
 
     public void AddShieldValue(ChangeValueInfo info)
     {
-        shieldVale = Mathf.Clamp(shieldVale + info.value, 0, MaxValue);
+        shieldValue = Mathf.Clamp(shieldValue + info.value, 0, MaxValue);
         _updateView?.Invoke(this);
     }
 
@@ -52,7 +52,7 @@ public class SimpleShield : IShield
         int damageAbsorbed = Mathf.Min(ShieldValue, -_args.value);
 
         // 先扣除护盾值
-        ShieldValue -= damageAbsorbed;
+        shieldValue -= damageAbsorbed;
         // 再减少伤害值
         _args.value += damageAbsorbed;
 
@@ -62,7 +62,7 @@ public class SimpleShield : IShield
 
     private UniTask OnRoundStart(object send, GameEventArgs args)
     {
-        shieldVale = 0;
+        shieldValue = 0;
         _updateView?.Invoke(this);
         return UniTask.CompletedTask;
     }

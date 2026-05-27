@@ -32,9 +32,9 @@ public class Anger_BuffObj : BuffObj
         
     }
 
-    public override void OnAddBuff(PriorityQueueEventCenter eventCent, Action<BuffObj> onDataUpdate)
+    public override void OnAddBuff(PriorityQueueEventCenter eventCent)
     {
-        base.OnAddBuff(eventCent, onDataUpdate);
+        base.OnAddBuff(eventCent);
         _animator = view.GetComponent<Animator>();
         eventCent.Subscribe<OnHealthArgsChangeEa>(Effect, priority);
     }

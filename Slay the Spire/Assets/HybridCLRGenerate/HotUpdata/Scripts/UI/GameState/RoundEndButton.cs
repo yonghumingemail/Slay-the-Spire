@@ -37,7 +37,7 @@ public class RoundEndButton : MonoBehaviour
         }
         _text.SetText("敌方回合");
         _button.interactable = false;
-       await Action_Int_Async.Fire<OnRoundEnd_EventArgs>(_combatManage.RoundCount, this,
+       await Action_Int_Async.Fire<OnRoundEnd_EventName>(_combatManage.RoundCount, this,
             EventCenter_Singleton.Instance._priorityQueueEventCenter);
        
         _text.SetText("结束回合");

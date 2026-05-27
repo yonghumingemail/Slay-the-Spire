@@ -40,9 +40,9 @@ public class Power_BuffObj : BuffObj
         }
     }
 
-    public override void OnAddBuff(PriorityQueueEventCenter eventCent, Action<BuffObj> onDataUpdate)
+    public override void OnAddBuff(PriorityQueueEventCenter eventCent)
     {
-        base.OnAddBuff(eventCent, onDataUpdate);
+        base.OnAddBuff(eventCent);
         eventCent.Subscribe<OnAttack_EA>(Effect, priority);
         eventCent.Subscribe<DamageCalculation_Attack_EventArgs>(DamageCalculation, priority);
     }

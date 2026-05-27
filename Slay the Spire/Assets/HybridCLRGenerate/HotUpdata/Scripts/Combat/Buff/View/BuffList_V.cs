@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -17,6 +16,7 @@ public class BuffList_V : MonoBehaviour, IBuffList_V,INeedToInitialize
 
     /// <summary>Buff数据到UI对象的映射字典</summary>
     public Dictionary<BuffObj, Buff_V> buffGameDic = new();
+    public List<BuffObj> buffObjs = new();
 
     /// <summary>Buff UI对象池（用于复用减少实例化开销）</summary>
     private Stack<Buff_V> buffPool = new();
@@ -74,6 +74,7 @@ public class BuffList_V : MonoBehaviour, IBuffList_V,INeedToInitialize
         // 初始化Buff UI（设置图标、数据等）
        
         buffObj.view = tempBuff_V.gameObject;
+        buffObjs.Add(buffObj);
         buffGameDic.Add(buffObj, tempBuff_V);
         
         UpdateBuffUIPos();
@@ -105,6 +106,7 @@ public class BuffList_V : MonoBehaviour, IBuffList_V,INeedToInitialize
 
         // 从字典中移除映射关系
         buffObj.view = null;
+        buffObjs.Remove(buffObj);
         buffGameDic.Remove(buffObj);
         UpdateBuffUIPos();
 
@@ -120,12 +122,10 @@ public class BuffList_V : MonoBehaviour, IBuffList_V,INeedToInitialize
     public void UpdateBuffView(BuffObj buffObj)
     {
         // 查找对应的UI对象
-        if (buffGameDic.TryGetValue(buffObj, out var tempBuff_V))
-        {
-            // 调用UI更新方法
-            tempBuff_V.UpdateBuffUI(buffObj);
-            tempBuff_V.TriggerAnimator();
-        }
+        if (!buffGameDic.TryGetValue(buffObj, out var tempBuff_V)) return;
+        // 调用UI更新方法
+        tempBuff_V.UpdateBuffUI(buffObj);
+        tempBuff_V.TriggerAnimator();
     }
 
     [ContextMenu("更新buff位置")]
@@ -140,9 +140,9 @@ public class BuffList_V : MonoBehaviour, IBuffList_V,INeedToInitialize
     private void UpdateBuffUIPos()
     {
         int i = 0;
-        foreach (var buffV in buffGameDic.Values)
+        foreach (var buffV in buffObjs)
         {
-            buffV.transform.localPosition = new Vector3(firstPos + (i%rowMaxCount) * intervalX, -i / (rowMaxCount + 1) * intervalY, 0);
+            buffGameDic[buffV].transform.localPosition = new Vector3(firstPos + (i%rowMaxCount) * intervalX, -i / (rowMaxCount + 1) * intervalY, 0);
             i++;
         }
     }

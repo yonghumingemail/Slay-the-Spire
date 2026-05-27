@@ -33,12 +33,12 @@ public class SimpleBuffList : IBuffList
     // 添加Buff对象
     public void AddBuff(BuffObj buffObj)
     {
-        // 将Buff对象添加到内部列表
+        buffObj.OnDataUpdate += UpdateView;
+        buffObj.OnRemove+= RemoveBuff;
+        buffObj.OnAddBuff(_priorityEventCenter);
+        
         _buffListObj.Add(buffObj);
-        // 通知视图更新，显示新添加的Buff
         _buffListV.AddBuff(buffObj);
-        // 触发Buff对象的添加事件，传入事件中心
-        buffObj.OnAddBuff(_priorityEventCenter, UpdateView);
     }
 
     // 移除Buff对象

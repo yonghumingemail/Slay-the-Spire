@@ -8,24 +8,20 @@ public class ChangeValueInfo : IReference
     public GameObject receiver;
 
     public int value;
+
     public ChangeValueInfo()
     {
     }
-    public ChangeValueInfo(GameObject sender, GameObject receiver, int value)
+
+    public static ChangeValueInfo GetInstance(GameObject sender, GameObject receiver, int value)
     {
-        this.sender = sender;
-        this.receiver = receiver;
-        this.value = value;
-    }
-    
-    public void Init(GameObject sender, GameObject receiver, int value)
-    {
-        this.sender = sender;
-        this.receiver = receiver;
-        this.value = value;
+        var instance = ReferencePool.Acquire<ChangeValueInfo>();
+        instance.sender = sender;
+        instance.receiver = receiver;
+        instance.value = value;
+        return instance;
     }
 
-  
 
     public void Clear()
     {

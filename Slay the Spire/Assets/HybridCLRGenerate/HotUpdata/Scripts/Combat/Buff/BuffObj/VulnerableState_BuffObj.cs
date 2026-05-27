@@ -25,15 +25,14 @@ public class VulnerableState_BuffObj : BuffObj
     private UniTask OnRoundEnd(object send, GameEventArgs gameArgs)
     {
         stack--;
-        if (OnDataUpdate != null)
+        if (stack > 0)
         {
-            OnDataUpdate.Invoke(this);
+            OnDataUpdate?.Invoke(this);
         }
         else
         {
-            Debug.Log(this + "缺少更新视图的方法");
+            OnRemove?.Invoke(this);
         }
-
         return UniTask.CompletedTask;
     }
 
@@ -52,13 +51,12 @@ public class VulnerableState_BuffObj : BuffObj
         }
     }
 
-    public override void OnAddBuff(PriorityQueueEventCenter eventCent, Action<BuffObj> onDataUpdate)
+    public override void OnAddBuff(PriorityQueueEventCenter eventCent)
     {
-        base.OnAddBuff(eventCent, onDataUpdate);
-
+        base.OnAddBuff(eventCent);
         eventCent.Subscribe<OnBeAttacked_EA>(Effect, priority);
         eventCent.Subscribe<DamageCalculation_BeAttacked_EventArgs>(DamageCalculation, priority);
-        eventCent.SubscribeAsync<OnRoundEnd_EventArgs>(OnRoundEnd, priority);
+        eventCent.SubscribeAsync<OnRoundEnd_EventName>(OnRoundEnd, priority);
     }
 
     public override void OnRemoveBuff(PriorityQueueEventCenter eventCent)
@@ -66,6 +64,6 @@ public class VulnerableState_BuffObj : BuffObj
         base.OnRemoveBuff(eventCent);
         eventCent.UnSubscribe<OnBeAttacked_EA>(Effect);
         eventCent.UnSubscribe<DamageCalculation_BeAttacked_EventArgs>(DamageCalculation);
-        eventCent.UnSubscribeAsync<OnRoundEnd_EventArgs>(OnRoundEnd);
+        eventCent.UnSubscribeAsync<OnRoundEnd_EventName>(OnRoundEnd);
     }
 }

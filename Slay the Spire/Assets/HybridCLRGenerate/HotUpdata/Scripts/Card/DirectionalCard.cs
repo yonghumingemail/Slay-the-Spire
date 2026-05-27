@@ -59,7 +59,6 @@ public class DirectionalCard
         targetInfo = Physics2D.Raycast(_data.pressEventCamera.ScreenToWorldPoint(_data.position), Vector3.forward,
             15,
             1 << LayerMask.NameToLayer(detectLayerName));
-        Debug.Log(targetInfo.collider==null);
         card._combatManage.AddCardToExecuteQueue(card);
         card.CardInfo.HandPile.SetSelectedCard(null);
     }

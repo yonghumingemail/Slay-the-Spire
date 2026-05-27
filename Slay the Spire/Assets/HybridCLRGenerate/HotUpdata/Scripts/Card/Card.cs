@@ -1,12 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using DG.Tweening;
-using GameFramework;
-using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using Z_Tools;
 
 public abstract class Card : MonoBehaviour
@@ -148,17 +143,11 @@ public abstract class Card : MonoBehaviour
         _combatManage = GetObject_GEA<CombatManage>.Fire(this,EventCenter_Singleton.Instance);
         _energy = GetObject_GEA<Energy>.Fire(this,EventCenter_Singleton.Instance);
         _discardPile =  GetObject_GEA<DiscardPile>.Fire(this,EventCenter_Singleton.Instance);
-
-        cardInteraction.OnMouseDownDelegate += (eventData) => {  };
-
+        
         isStrengthen = false;
         cardEntries = new List<IEntry>();
 
         cardInfo.UpdateCardUI(this);
     }
     
-
-    private void OnDestroy()
-    {
-    }
 }

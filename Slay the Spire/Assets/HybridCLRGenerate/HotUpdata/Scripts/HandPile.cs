@@ -30,9 +30,9 @@ public class HandPile : MonoBehaviour,IPointerEnterHandler
         spline = transform.Find("Spline").GetComponent<SplineContainer>();
         DirectionalArrowLine = transform.Find("DirectionalArrowLine").GetComponent<DirectionalArrowLine>();
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundStart_EventArgs>(OnRoundStart,
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundStart_EventName>(OnRoundStart,
             0);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundEnd_EventArgs>(OnRoundEnd, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundEnd_EventName>(OnRoundEnd, 0);
 
         EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe<OnMouseEnterEnemy_EA>(
             OnMouseEnterEnemy, 0);
@@ -146,9 +146,11 @@ public class HandPile : MonoBehaviour,IPointerEnterHandler
         foreach (var card in cards)
         {
             card.Enable(true);
+            card.CardInteraction.isInteractable = false;
             cardInstances.Add(card);
             SortCards();
             await Task.Delay((int)(1000 * speed2));
+            card.CardInteraction.isInteractable = true;
         }
     }
 

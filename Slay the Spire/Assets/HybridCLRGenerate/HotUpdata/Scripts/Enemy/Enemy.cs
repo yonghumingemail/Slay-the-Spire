@@ -111,7 +111,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     protected virtual async UniTask OnRoundEnd(int roundCount)
     {
         //通知事件，回合结束
-        await Action_Int_Async.Fire<OnRoundEnd_EventArgs>(roundCount, this, _priorityEventCenter);
+        await Action_Int_Async.Fire<OnRoundEnd_EventName>(roundCount, this, _priorityEventCenter);
     }
 
 
@@ -122,7 +122,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public virtual async UniTask OnRoundStart(int roundCount)
     {
         //通知事件，回合开始
-        await Action_Int_Async.Fire<OnRoundEnd_EventArgs>(roundCount, this, _priorityEventCenter);
+        await Action_Int_Async.Fire<OnRoundStart_EventName>(roundCount, this, _priorityEventCenter);
 
         await currentAction.Execute.Invoke();
         actionList.Add(currentAction);

@@ -2235,7 +2235,6 @@ GameObject:
   m_Component:
   - component: {fileID: 585751081}
   - component: {fileID: 585751082}
-  - component: {fileID: 585751083}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2271,27 +2270,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4701ccd085f50a2418be50ac28bef4ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: HotUpdate::Player
-  roleCore:
-    _health:
-      healthValue: 0
-      maxHealthValue: 0
-    _shield:
-      MaxValue: 0
-      shieldVale: 0
-    _buffList:
-      _buffListObj: []
---- !u!114 &585751083
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 585751080}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b7b113e594b28e4e970c2462a5e8a87, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: HotUpdate::JawWorm
   roleCore:
     _health:
       healthValue: 0
@@ -4037,7 +4015,7 @@ Transform:
   m_GameObject: {fileID: 1062049141}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.04, y: 6.44, z: -0.28}
+  m_LocalPosition: {x: -0.04, y: 6.44, z: -1}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:

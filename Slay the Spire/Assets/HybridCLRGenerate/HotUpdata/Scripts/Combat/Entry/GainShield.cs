@@ -28,7 +28,7 @@ public class GainShield : IEntry
         var priorityEventCenter = GetObject_GEA<PriorityQueueEventCenter>.Fire(this,eventCenter.EventManage);
        
         
-        ChangeValueInfo info = new ChangeValueInfo(sender, receiver, value);
+        ChangeValueInfo info = ChangeValueInfo.GetInstance(sender,receiver,value);
         if (priorityEventCenter == null)
         {
             Debug.LogWarning($" 目标对象 {receiver.name} 缺少 priorityEventCenter 组件");

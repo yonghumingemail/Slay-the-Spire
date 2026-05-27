@@ -18,8 +18,8 @@ public class EnemySpawner : MonoBehaviour
         
         EventCenter_Singleton.Instance.Subscribe<GetObject_GEA<EnemySpawner>>( Get);
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundStart_EventArgs>( OnRoundStart, 5);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundEnd_EventArgs>(OnRoundEnd, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundStart_EventName>( OnRoundStart, 5);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundEnd_EventName>(OnRoundEnd, 0);
 
         for (int i = 0; i < transform.childCount; i++)
         {

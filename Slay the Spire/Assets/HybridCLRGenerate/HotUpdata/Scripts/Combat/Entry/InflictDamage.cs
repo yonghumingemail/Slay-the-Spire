@@ -34,7 +34,7 @@ public class InflictDamage : IEntry
         IHealth health = GetObject_GEA<IHealth>.Fire(this, eventCenter_Receiver.EventManage);
 
 
-        ChangeValueInfo info = new ChangeValueInfo(sender, receiver, -damage);
+        ChangeValueInfo info = ChangeValueInfo.GetInstance(sender,receiver,-damage);
 
         if (buffList_Sender == null)
         {
