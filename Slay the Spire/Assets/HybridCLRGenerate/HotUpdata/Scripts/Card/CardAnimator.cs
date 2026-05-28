@@ -5,52 +5,48 @@ using UnityEngine;
 using Z_Tools;
 
 [Serializable]
-public class CardAnimator:MonoBehaviour
+public class CardAnimator
 {
-    [SerializeField] private Animator _animator;
-    public Animator Animator => _animator;
-
+    
     [Header("DOTween动画播放速度")] [SerializeField]
     private float animatorSpeed = 0.25f;
 
-    private Camera _mainCamera;
+    public Camera camera{get;set;}
     private Sequence _sequence;
 
-    private void Awake()
+    public  CardAnimator(Camera camera)
     {
-        _animator = GetComponent<Animator>();
-        _mainCamera = Camera.main;
+        this.camera = camera;
     }
-
-
-
+    
+    
     #region DOTween动画
 
-    public void MoveToScreenCenter( Action callback)
+    public void MoveToScreenCenter(GameObject target,Action callback)
     {
         Vector3 screenCenter =
-            _mainCamera.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
-        screenCenter.z = transform.position.z;
+            camera.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
+        screenCenter.z = target.transform.position.z;
 
-        DOTween.To(() => transform.position, value => { transform.position = value; }, screenCenter,
+        DOTween.To(() => target.transform.position, value => { target.transform.position = value; }, screenCenter,
                 animatorSpeed)
             .onComplete += () => { callback?.Invoke(); };
     }
 
-    public void Recycle_DiscardPile( Action callback)
+    public void Recycle_DiscardPile(GameObject target,Action callback)
     {
-        Vector3 screenRightDown = _mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0f));
-        screenRightDown.z = transform.position.z;
+        Vector3 screenRightDown = camera.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0f));
+        screenRightDown.z = target.transform.position.z;
 
-        TransformEffect(gameObject,screenRightDown, new Vector3(0, 0, -180), Vector3.zero, callback: callback);
+        TransformEffect(target, screenRightDown, new Vector3(0, 0, -180), Vector3.zero, callback: callback);
     }
 
-    public void Recycle_DrawPile( Action callback)
+    public void Recycle_DrawPile(GameObject target,Action callback)
     {
-        Vector3 screenLeftDown = _mainCamera.ScreenToWorldPoint(new Vector3(0, 0, 0f));
-        screenLeftDown.z = transform.position.z;
+        Vector3 screenLeftDown = camera.ScreenToWorldPoint(new Vector3(0, 0, 0f));
+        screenLeftDown.z = target.transform.position.z;
 
-        TransformEffect(gameObject,screenLeftDown, new Vector3(0, 0, 180), Vector3.zero, callback: callback);
+        TransformEffect(target, screenLeftDown, new Vector3(0, 0, 180), Vector3.zero, callback: callback);
     }
 
     // 方法1：绝对旋转（旋转到指定四元数,无方向）
@@ -68,11 +64,12 @@ public class CardAnimator:MonoBehaviour
         _sequence.Insert(0, rotation);
         _sequence.Insert(0, scale);
 
-        
+
         _sequence.onComplete += () => callback?.Invoke();
     }
+
 // 方法2：相对旋转（旋转指定角度,有方向）
-    public void TransformEffect( GameObject target,Vector3 targetPosition,
+    public void TransformEffect(GameObject target, Vector3 targetPosition,
         Vector3 rotateAngle, Vector3 targetScale, RotateMode rotateMode = RotateMode.LocalAxisAdd,
         Action callback = null)
     {
@@ -92,7 +89,4 @@ public class CardAnimator:MonoBehaviour
 
     #endregion
 
-    public void OnDestroy()
-    {
-    }
 }

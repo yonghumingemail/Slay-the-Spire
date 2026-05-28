@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88952252748ea3847ac045156b3a65ea, type: 3}
   m_Name: JawWorm
   m_EditorClassIdentifier: HotUpdate::RoleCoreData
-  HealthValue: 40
-  MaxHealthValue: 40
+  HealthValue: 100
+  MaxHealthValue: 100
   ShieldValue: 0
   MaxShieldValue: 999

@@ -1,24 +1,23 @@
 using System;
 using DG.Tweening;
-using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Z_Tools;
 
-public class CardInteraction : MonoBehaviour, IPointerEnterHandler,
-    IPointerExitHandler,
-    IPointerDownHandler,
-    IPointerUpHandler
+[Serializable]
+public class CardInteraction
 {
-    public Action<PointerEventData> OnMouseDownDelegate { get; set; }
-    public Action<PointerEventData> OnMouseUpDelegate { get; set; }
-    public Action<PointerEventData> OnMouseEnterDelegate { get; set; }
-    public Action<PointerEventData> OnMouseExitDelegate { get; set; }
-
     public bool _isDragging;
     public bool isInteractable = true;
+    public Camera camera
+    {
+        get => cardAnimator.camera;
+        set { cardAnimator.camera = value; }
+    }
 
-    public CardAnimator cardAnimator;
+    private CardAnimator cardAnimator;
+
+    private CardView _view;
 
     public float magnification = 1.1f;
     [Header("位置信息")] [SerializeField] public Vector3 position;
@@ -27,34 +26,35 @@ public class CardInteraction : MonoBehaviour, IPointerEnterHandler,
     [SerializeField] public Vector3 mouseOverPosition;
     [SerializeField] public Vector3 mouseOverScale;
 
-
-    private CardComponentInfo cardComponentInfo;
-
-    private void Start()
+    public void Initialize(Camera camera, int maxCardCount, CardView view,MouseInteraction mouseInteraction)
     {
-        cardAnimator = GetComponent<CardAnimator>();
-        cardComponentInfo = GetComponent<CardComponentInfo>();
-        scale = transform.localScale;
-        mouseOverScale = transform.localScale * magnification;
+        cardAnimator = new CardAnimator(camera);
+        _view = view;
+
+        scale = _view.transform.localScale;
+        mouseOverScale = scale * magnification;
 
         mouseOverPosition = new Vector3
         {
-            z = -0.1f * cardComponentInfo.HandPile.maxHandSize - 0.1f,
-            y = cardComponentInfo.MainCamera.ViewportToWorldPoint(new Vector3(0.5f, 0)).y +
-                cardComponentInfo.Background.bounds.size.y / 2
+            z = -0.1f * maxCardCount - 0.1f,
+            y = camera.ViewportToWorldPoint(new Vector3(0.5f, 0)).y +
+                (view.Background.bounds.size.y - 2) / 2
         };
-
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe<OnCardArrangementStart_EA>(OnStartCardArrangement,0);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe<OnCardArrangementEnd_EA>(OnCardArrangementEnd,0);
+        
+        mouseInteraction.OnMouseDownDelegate += OnPointerDown;
+        mouseInteraction.OnMouseUpDelegate += OnPointerUp;
+        mouseInteraction.OnMouseEnterDelegate += OnPointerEnter;
+        mouseInteraction.OnMouseExitDelegate += OnPointerExit;
+        
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe<OnCardArrangementStart_EA>(OnStartCardArrangement, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe<OnCardArrangementEnd_EA>(OnCardArrangementEnd, 0);
     }
 
+    
+    
     public virtual void OnCardArrangementEnd(object sender, GameEventArgs args)
     {
         isInteractable = true;
-
-        position = transform.position;
-        rotation = transform.rotation;
-        mouseOverPosition.x = position.x;
     }
 
     public virtual void OnStartCardArrangement(object sender, GameEventArgs args)
@@ -66,20 +66,16 @@ public class CardInteraction : MonoBehaviour, IPointerEnterHandler,
 
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
-        
         if (!isInteractable || _isDragging) return;
-        
-        cardAnimator.TransformEffectToRotation(gameObject, mouseOverPosition, Quaternion.identity, mouseOverScale);
-        OnMouseEnterDelegate?.Invoke(eventData);
+
+        cardAnimator.TransformEffectToRotation(_view.gameObject, mouseOverPosition, Quaternion.identity, mouseOverScale);
     }
 
     public virtual void OnPointerExit(PointerEventData eventData)
     {
-        
         if (!isInteractable || _isDragging) return;
-        
-        cardAnimator.TransformEffectToRotation(gameObject, position, rotation, scale);
-        OnMouseExitDelegate?.Invoke(eventData);
+
+        cardAnimator.TransformEffectToRotation(_view.gameObject, position, rotation, scale);
     }
 
     public virtual void OnPointerDown(PointerEventData eventData)
@@ -87,12 +83,10 @@ public class CardInteraction : MonoBehaviour, IPointerEnterHandler,
         if (!isInteractable) return;
 
         _isDragging = true;
-        OnMouseDownDelegate?.Invoke(eventData);
     }
 
     public virtual void OnPointerUp(PointerEventData eventData)
     {
-        OnMouseUpDelegate?.Invoke(eventData);
         _isDragging = false;
     }
 
@@ -100,14 +94,7 @@ public class CardInteraction : MonoBehaviour, IPointerEnterHandler,
 
     protected virtual void OnDestroy()
     {
-        OnMouseDownDelegate = null;
-        OnMouseUpDelegate = null;
-        OnMouseEnterDelegate = null;
-        OnMouseExitDelegate = null;
-
         EventCenter_Singleton.Instance._priorityQueueEventCenter.UnSubscribe<OnCardArrangementStart_EA>(OnStartCardArrangement);
         EventCenter_Singleton.Instance._priorityQueueEventCenter.UnSubscribe<OnCardArrangementEnd_EA>(OnCardArrangementEnd);
-
-        transform.DOKill();
     }
 }

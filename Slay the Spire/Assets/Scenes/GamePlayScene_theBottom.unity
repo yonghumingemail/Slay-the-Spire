@@ -1568,7 +1568,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 40
   _maxEnergy: 3
-  _energy: 10
+  _energy: 100
 --- !u!114 &478283662
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2276,7 +2276,7 @@ MonoBehaviour:
       maxHealthValue: 0
     _shield:
       MaxValue: 0
-      shieldVale: 0
+      shieldValue: 0
     _buffList:
       _buffListObj: []
 --- !u!1 &591397502
@@ -7145,6 +7145,7 @@ MonoBehaviour:
   rowMaxCount: 5
   intervalX: 0.45
   intervalY: 0.45
+  buffObjs: []
 --- !u!1 &2053134842
 GameObject:
   m_ObjectHideFlags: 0

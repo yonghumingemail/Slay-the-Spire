@@ -32,6 +32,7 @@ public abstract class Card : MonoBehaviour
     public List<IEntry> cardEntries { get; protected set; }
     public string describe { get; protected set; }
     public bool isStrengthen { get; protected set; }
+    public bool mouseEnter { get; set; }
 
     #region abstract methods
 
@@ -52,9 +53,13 @@ public abstract class Card : MonoBehaviour
     public virtual void ReturnToHandPosition()
     {
         cardAnimator.TransformEffectToRotation(gameObject, cardInteraction.position, cardInteraction.rotation,
-            cardInteraction.scale);
+            cardInteraction.scale, () =>
+            {
+                Debug.Log("Return to hand position");
+                cardInteraction.isInteractable = true;
+            });
     }
-
+    
     public virtual bool CanBeTriggered()
     {
         return _energy._energy - exteriorInfo.orbValue >= 0;
@@ -78,10 +83,9 @@ public abstract class Card : MonoBehaviour
 
     public UniTask Recycle_DiscardPile(UniTaskCompletionSource source = null)
     {
-        cardInfo.HandPile.cardInstances.Remove(this);
         source ??= new UniTaskCompletionSource();
 
-        cardAnimator.Recycle_DiscardPile(() =>
+        cardAnimator.Recycle_DiscardPile(gameObject,() =>
         {
             gameObject.SetActive(false);
             Vector3 screenCenter =
@@ -124,7 +128,7 @@ public abstract class Card : MonoBehaviour
     {
         cardInfo.HandPile.cardInstances.Remove(this);
         _source = new UniTaskCompletionSource();
-        cardAnimator.MoveToScreenCenter(() => { Recycle_DiscardPile(_source); });
+        cardAnimator.MoveToScreenCenter(gameObject,() => { Recycle_DiscardPile(_source); });
         return _source.Task;
     }
 

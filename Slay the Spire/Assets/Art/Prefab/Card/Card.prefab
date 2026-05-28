@@ -1151,9 +1151,8 @@ GameObject:
   m_Component:
   - component: {fileID: 226703569809468817}
   - component: {fileID: -8632270315364346999}
-  - component: {fileID: 5150682347552092080}
-  - component: {fileID: -4177396280908238291}
-  - component: {fileID: -4178447350768168763}
+  - component: {fileID: 5882922287099139476}
+  - component: {fileID: 1447652973272626773}
   m_Layer: 0
   m_Name: Card
   m_TagString: Untagged
@@ -1171,7 +1170,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6264155486511405605}
@@ -1200,7 +1199,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &5150682347552092080
+--- !u!114 &5882922287099139476
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1209,12 +1208,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7722627056249905881}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 676fcc861f5b4a5439054719bd4a4696, type: 3}
+  m_Script: {fileID: 11500000, guid: 6096e87f3e5e9ef489c2deb33b7b395a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  _animator: {fileID: 0}
-  animatorSpeed: 0.25
---- !u!114 &-4177396280908238291
+  m_EditorClassIdentifier: HotUpdate::MouseInteraction
+  isDebug: 0
+--- !u!114 &1447652973272626773
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1223,30 +1221,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7722627056249905881}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51d01e7d00d1bd54dbf6d0fa272d3bda, type: 3}
+  m_Script: {fileID: 11500000, guid: ce0dcb06b5e1e434494b43284c4efe43, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  _isDragging: 0
-  isInteractable: 1
-  cardAnimator: {fileID: 0}
-  magnification: 1.1
-  position: {x: 0, y: 0, z: 0}
-  rotation: {x: 0, y: 0, z: 0, w: 0}
-  scale: {x: 0, y: 0, z: 0}
-  mouseOverPosition: {x: 0, y: 0, z: 0}
-  mouseOverScale: {x: 0, y: 0, z: 0}
---- !u!114 &-4178447350768168763
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7722627056249905881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ba488bc1b03cad49a63d75d69d86f85, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: HotUpdate::CardView
   _background: {fileID: 0}
   _frame: {fileID: 0}
   _banners: {fileID: 0}
@@ -1285,7 +1262,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
+  m_LocalScale: {x: 0.315, y: 0.315, z: 0.315}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2034686785267874913}

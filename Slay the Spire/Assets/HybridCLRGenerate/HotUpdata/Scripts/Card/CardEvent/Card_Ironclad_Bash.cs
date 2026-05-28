@@ -13,6 +13,7 @@ public class Card_Ironclad_Bash : Card
 
     public override UniTask<bool> Trigger(CancellationToken cancellationToken, bool conditionCheck = true)
     {
+        
         return _directionalCard.Trigger(this, cancellationToken,
             !conditionCheck || (_energy._energy - exteriorInfo.orbValue) > -1);
     }

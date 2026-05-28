@@ -15,7 +15,7 @@ public class HandPile : MonoBehaviour,IPointerEnterHandler
     private CardArrangement cardArrangement;
 
     public DirectionalArrowLine DirectionalArrowLine { get; private set; }
-    public List<Card> cardInstances = new List<Card>();
+    public List<Card> cardInstances = new();
     public Card SelectedCard;
 
     public int drawCardsCount;

@@ -20,7 +20,7 @@ public class CardArrangement
 
     public void UpdateCardPositions(SplineContainer splineContainer, List<Card> cards, Action callBack)
     {
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.Fire<OnCardArrangementEnd_EA>(this,null);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.Fire<OnCardArrangementStart_EA>(this,null);
         // 检查卡牌列表是否为空，为空则直接返回避免后续计算
         if (cards.Count == 0)
             return;
@@ -63,6 +63,7 @@ public class CardArrangement
             Vector3 splineWorldPos = spline.EvaluatePosition(p);
             splineWorldPos.z = z;
             z -= 0.1f;
+            
             // 获取曲线在该点的切线方向（前向向量）
             Vector3 forward = spline.EvaluateTangent(p);
             // 获取曲线在该点的上向量

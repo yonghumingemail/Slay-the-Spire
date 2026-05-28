@@ -66,6 +66,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
        _boxCollider2D= FitColliderToRenderer(gameObject,spriteRenderer);
        
+       
         intentC = GetComponentInChildren<Intent_C>(true);
         alertBox = GetComponentInChildren<AlertBox>(true);
 
@@ -85,6 +86,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     {
         // 2. 获取或添加 BoxCollider2D
         BoxCollider2D _collider = target.AddComponent<BoxCollider2D>();
+        _collider.isTrigger = true;
 
         // 3. 获取 Renderer 的世界轴对齐边界 (Bounds)
         Bounds bounds = _renderer.bounds;

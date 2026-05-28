@@ -17,12 +17,15 @@ public class DirectionalCard
         targetInfo = default;
         SelectableObject = null;
 
-        card.CardInteraction.OnMouseDownDelegate += data =>
-        {
-            card.CardInfo.HandPile.DirectionalArrowLine.Enable(data);
-            card.CardInfo.HandPile.SetSelectedCard(card);
-        };
-        card.CardInteraction.OnMouseUpDelegate += data => { OnMouseUp(card, data); };
+        // card.CardInteraction.OnMouseDownDelegate += data =>
+        // {
+        //     card.CardInfo.HandPile.DirectionalArrowLine.Enable(data);
+        //     card.CardInfo.HandPile.SetSelectedCard(card);
+        // };
+        // card.CardInteraction.OnMouseUpDelegate += data => { OnMouseUp(card, data); };
+        //
+        // card.CardInteraction.OnMouseEnterDelegate += data => { card.mouseEnter = true; };
+        // card.CardInteraction.OnMouseExitDelegate += data => { card.mouseEnter = false; };
     }
 
     public async UniTask<bool> Trigger(Card card, CancellationToken cancellationToken, bool conditionCheck)
@@ -30,17 +33,18 @@ public class DirectionalCard
         if (targetInfo.collider&&conditionCheck)
         {
             card._energy.SetEnergy(card._energy._energy - card.ExteriorInfo.orbValue);
-            card.CardInteraction.isInteractable = false;
+           
             foreach (var VARIABLE in card.cardEntries)
             {
                  VARIABLE.Trigger(card._player.gameObject, targetInfo.collider.gameObject);
                 await UniTask.Yield(cancellationToken);
             }
-
+            card.CardInfo.HandPile.cardInstances.Remove(card);
+            card.CardInfo.HandPile.SortCards();
             await card.CardTriggerAnimator();
 
             card.Enable(false);
-            card.CardInfo.HandPile.SortCards();
+           
 
             return true;
         }
@@ -59,6 +63,7 @@ public class DirectionalCard
         targetInfo = Physics2D.Raycast(_data.pressEventCamera.ScreenToWorldPoint(_data.position), Vector3.forward,
             15,
             1 << LayerMask.NameToLayer(detectLayerName));
+        card.CardInteraction.isInteractable = false;
         card._combatManage.AddCardToExecuteQueue(card);
         card.CardInfo.HandPile.SetSelectedCard(null);
     }
