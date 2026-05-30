@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -8,8 +9,7 @@ public abstract class Card : MonoBehaviour
 {
     #region Property
 
-    public CardComponentInfo CardInfo => cardInfo;
-    public CardAnimator CardAnimator => cardAnimator;
+    public CardView View => cardView;
     public CardInteraction CardInteraction => cardInteraction;
     public CardExteriorInfo ExteriorInfo => exteriorInfo;
 
@@ -18,21 +18,27 @@ public abstract class Card : MonoBehaviour
     //用于监听和触发子类实现的特殊事件
     public PriorityQueueEventCenter priorityEventCenter { get; private set; }
 
-    [SerializeField] protected CardComponentInfo cardInfo;
+    protected CardView cardView;
     [SerializeField] protected CardAnimator cardAnimator;
     [SerializeField] protected CardInteraction cardInteraction;
     [SerializeField] protected CardExteriorInfo exteriorInfo;
 
-    public Player _player { get; private set; }
-    public CombatManage _combatManage { get; private set; }
-    public Energy _energy;
-    protected DiscardPile _discardPile;
-    protected UniTaskCompletionSource _source;
+    public Camera mainCamera { get; protected set; }
+
+    public Player _player { get; protected set; }
+    public CombatManage _combatManage { get; protected set; }
+    public Energy _energy { get; protected set; }
+    public DiscardPile _discardPile { get; protected set; }
+
+    public Action<Card> OnTrigger { get; set; }
+    public Action<Card> OnSelectCard { get; set; }
+    public Action<Card> OnUnSelectCard { get; set; }
+
 
     public List<IEntry> cardEntries { get; protected set; }
     public string describe { get; protected set; }
     public bool isStrengthen { get; protected set; }
-    public bool mouseEnter { get; set; }
+
 
     #region abstract methods
 
@@ -42,54 +48,62 @@ public abstract class Card : MonoBehaviour
 
     #endregion
 
+    public void UpdatePosInfo(Vector3 position, Quaternion rotation)
+    {
+        cardInteraction.position = position;
+        cardInteraction.rotation = rotation;
+        cardInteraction.mouseOverPosition.x = position.x;
+        if (!cardInteraction.isMouseEnter)
+        {
+            ReturnToHandPosition();
+        }
+    }
 
     public virtual void AddCardEntry<T>(T entry) where T : IEntry
     {
         cardEntries.Add(entry);
         describe += entry.GetDescription();
-        cardInfo.UpdateCardUI(this);
+        cardView.UpdateCardUI(this);
     }
 
-    public virtual void ReturnToHandPosition()
+    public virtual void ReturnToHandPosition(Action callback=null)
     {
-        cardAnimator.TransformEffectToRotation(gameObject, cardInteraction.position, cardInteraction.rotation,
-            cardInteraction.scale, () =>
-            {
-                Debug.Log("Return to hand position");
-                cardInteraction.isInteractable = true;
-            });
+        OnUnSelectCard?.Invoke(this);
+        cardAnimator.TransformEffect(gameObject, cardInteraction.position, cardInteraction.rotation,
+            cardInteraction.scale,  callback);
     }
-    
+
     public virtual bool CanBeTriggered()
     {
         return _energy._energy - exteriorInfo.orbValue >= 0;
     }
 
+    
+    
     public virtual void Enable(bool enable)
     {
         if (enable)
         {
             gameObject.SetActive(true);
-            cardInfo.Background.gameObject.SetActive(true);
-            cardInteraction.isInteractable = true;
+            cardInteraction.Enable();
         }
         else
         {
-            cardInfo.Background.gameObject.SetActive(false);
-            cardInteraction.isInteractable = false;
+            gameObject.SetActive(false);
+            cardInteraction.Disable();
         }
     }
 
 
-    public UniTask Recycle_DiscardPile(UniTaskCompletionSource source = null)
+    public UniTask Recycle_DiscardPile(Action callback = null, UniTaskCompletionSource source = null)
     {
         source ??= new UniTaskCompletionSource();
 
-        cardAnimator.Recycle_DiscardPile(gameObject,() =>
+        cardAnimator.Recycle_DiscardPile(gameObject, () =>
         {
             gameObject.SetActive(false);
             Vector3 screenCenter =
-                cardInfo.MainCamera.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f,
+                mainCamera.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f,
                     0f));
             screenCenter.z = transform.position.z;
             transform.position = screenCenter;
@@ -98,6 +112,7 @@ public abstract class Card : MonoBehaviour
 
             _discardPile.AddCard(this).Forget();
             source.TrySetResult();
+            callback?.Invoke();
         });
 
         return source.Task;
@@ -107,10 +122,8 @@ public abstract class Card : MonoBehaviour
     public virtual void UnSelectCard()
     {
         cardInteraction._isDragging = false;
-        
-        cardAnimator.TransformEffectToRotation(gameObject, cardInteraction.position, cardInteraction.rotation,
-            cardInteraction.scale);
-        Args_T_EA<OnUnSelectCard_EA>.Fire(this,this,priorityEventCenter);
+        ReturnToHandPosition();
+        Args_T_EA<OnUnSelectCard_EA>.Fire(this, this, priorityEventCenter);
     }
 
     public virtual void UpdateDescribe()
@@ -121,37 +134,35 @@ public abstract class Card : MonoBehaviour
             describe += VARIABLE.GetDescription();
         }
 
-        cardInfo.UpdateCardTextUI(this);
+        cardView.UpdateCardTextUI(this);
     }
 
-    public virtual UniTask CardTriggerAnimator()
+    public virtual void CardTriggerAnimator(Action callback = null)
     {
-        cardInfo.HandPile.cardInstances.Remove(this);
-        _source = new UniTaskCompletionSource();
-        cardAnimator.MoveToScreenCenter(gameObject,() => { Recycle_DiscardPile(_source); });
-        return _source.Task;
+        cardAnimator.MoveToScreenCenter(gameObject, () => { Recycle_DiscardPile(callback); });
     }
 
 
     protected virtual async UniTask Initialized(string defaultDataPtah)
     {
         priorityEventCenter = new PriorityQueueEventCenter();
-
-        cardInfo = GetComponent<CardComponentInfo>();
-        cardAnimator = GetComponent<CardAnimator>();
+        mainCamera = Camera.main;
+        cardView = GetComponent<CardView>();
         cardInteraction = GetComponent<CardInteraction>();
+        cardInteraction.Init(mainCamera);
+        cardAnimator = new CardAnimator(mainCamera);
 
         exteriorInfo = (await AddressablesMgr.Instance.LoadAssetAsync<CardExteriorInfo>(defaultDataPtah)).Copy();
-        
-        _player =  GetObject_GEA<Player>.Fire(this,EventCenter_Singleton.Instance);
-        _combatManage = GetObject_GEA<CombatManage>.Fire(this,EventCenter_Singleton.Instance);
-        _energy = GetObject_GEA<Energy>.Fire(this,EventCenter_Singleton.Instance);
-        _discardPile =  GetObject_GEA<DiscardPile>.Fire(this,EventCenter_Singleton.Instance);
-        
-        isStrengthen = false;
+
+        _player = GetObject_GEA<Player>.Fire(this, EventCenter_Singleton.Instance);
+        _combatManage = GetObject_GEA<CombatManage>.Fire(this, EventCenter_Singleton.Instance);
+        _energy = GetObject_GEA<Energy>.Fire(this, EventCenter_Singleton.Instance);
+        _discardPile = GetObject_GEA<DiscardPile>.Fire(this, EventCenter_Singleton.Instance);
+
         cardEntries = new List<IEntry>();
 
-        cardInfo.UpdateCardUI(this);
+        cardInteraction.OnMouseDownDelegate += (data) => { OnSelectCard?.Invoke(this); };
+
+        cardView.UpdateCardUI(this);
     }
-    
 }

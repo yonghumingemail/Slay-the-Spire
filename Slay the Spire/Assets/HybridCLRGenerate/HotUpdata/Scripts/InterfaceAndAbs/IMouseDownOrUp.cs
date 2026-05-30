@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 public interface IMouseDownOrUp
 {
-    bool isEnableDownOrUp { get; set; }
+    bool IsEnableDownOrUp { get; set; }
     Action<PointerEventData> OnMouseDownDelegate { get; set; }
     Action<PointerEventData> OnMouseUpDelegate { get; set; }
 }

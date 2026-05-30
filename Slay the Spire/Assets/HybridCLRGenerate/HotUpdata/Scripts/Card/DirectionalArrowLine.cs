@@ -14,9 +14,9 @@ public class DirectionalArrowLine : MonoBehaviour
     public Color defaultColor = new Color(1, 1, 1, 1);
     private Camera mainCamera;
 
-    private void Awake()
+    public void Init(Camera camera_)
     {
-        mainCamera = Camera.main;
+        mainCamera = camera_;
         lines = new GameObject[transform.childCount];
         sprites = new SpriteRenderer[transform.childCount];
         for (int i = 0; i < transform.childCount; i++)
@@ -39,9 +39,9 @@ public class DirectionalArrowLine : MonoBehaviour
     public void Enable(PointerEventData data)
     {
         _tokenSource?.Cancel();
-        transform.position = mainCamera.ScreenToWorldPoint(data.position);
         gameObject.SetActive(true);
 
+        transform.position = mainCamera.ScreenToWorldPoint(data.position);
         Trigger(data).Forget();
     }
 

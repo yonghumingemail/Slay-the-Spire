@@ -9,7 +9,7 @@ using Z_Tools;
 public class CardArrangement
 {
     public int _maxCardsCount;
-    private Sequence _sequence;
+
 
     public CardArrangement(int maxCardsCount = 10)
     {
@@ -20,7 +20,6 @@ public class CardArrangement
 
     public void UpdateCardPositions(SplineContainer splineContainer, List<Card> cards, Action callBack)
     {
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.Fire<OnCardArrangementStart_EA>(this,null);
         // 检查卡牌列表是否为空，为空则直接返回避免后续计算
         if (cards.Count == 0)
             return;
@@ -31,8 +30,7 @@ public class CardArrangement
                 cards.RemoveAt(i);
             }
         }
-
-
+        
         if (cards.Count >= _maxCardsCount)
         {
             _maxCardsCount = cards.Count;
@@ -48,8 +46,6 @@ public class CardArrangement
 
         // 从容器中获取样条曲线引用
         Spline spline = splineContainer.Spline;
-        _sequence.Kill();
-        _sequence = DOTween.Sequence();
 
         float z = -0.1f;
         // 遍历所有卡牌，逐个设置位置和旋转
@@ -64,33 +60,13 @@ public class CardArrangement
             splineWorldPos.z = z;
             z -= 0.1f;
             
-            // 获取曲线在该点的切线方向（前向向量）
             Vector3 forward = spline.EvaluateTangent(p);
-            // 获取曲线在该点的上向量
             Vector3 up = spline.EvaluateUpVector(p);
-
-            // 计算卡牌的旋转：使用LookRotation创建朝向矩阵
-            // 第一个参数是卡牌的朝向（z轴对齐），第二个参数是卡牌的上方向（y轴对齐）
-            // 这里使用叉积计算正确的上方向，确保卡牌与曲线方向匹配
             Quaternion rotation = Quaternion.LookRotation(up, Vector3.Cross(up, forward).normalized);
-
-            Transform temp = cards[i].transform;
-
-            var positionAnimator = DOTween
-                .To(() => temp.position, value => { temp.position = value; }, splineWorldPos, speed)
-                .SetEase(Ease.OutQuad);
-            var rotationAnimator = DOTween
-                .To(() => temp.rotation, value => temp.rotation = value, rotation.eulerAngles, speed)
-                .SetEase(Ease.OutQuad);
-
-            _sequence.Insert(0, positionAnimator);
-            _sequence.Insert(0, rotationAnimator);
+            
+            cards[i].UpdatePosInfo(splineWorldPos, rotation);
         }
-
-        _sequence.onComplete += () =>
-        {
-            EventCenter_Singleton.Instance._priorityQueueEventCenter.Fire<OnCardArrangementEnd_EA>(this,null);
-            callBack?.Invoke();
-        };
+        
+        callBack?.Invoke();
     }
 }

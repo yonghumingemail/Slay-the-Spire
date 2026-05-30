@@ -30,6 +30,7 @@ public class Card_Ironclad_Strike : Card
         priorityEventCenter.Subscribe<OnMouseExitEnemy_EA>(OnMouseExitEnemy, 0);
         
         _directionalCard = new DirectionalCard(this, "Enemy");
+        await _directionalCard.Init(this,mainCamera);
 
         _inflictDamage = new InflictDamage(6,UpdateDescribe);
         AddCardEntry(_inflictDamage);

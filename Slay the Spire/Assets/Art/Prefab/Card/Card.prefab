@@ -1151,8 +1151,8 @@ GameObject:
   m_Component:
   - component: {fileID: 226703569809468817}
   - component: {fileID: -8632270315364346999}
-  - component: {fileID: 5882922287099139476}
   - component: {fileID: 1447652973272626773}
+  - component: {fileID: 4395787869518716714}
   m_Layer: 0
   m_Name: Card
   m_TagString: Untagged
@@ -1199,19 +1199,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &5882922287099139476
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7722627056249905881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6096e87f3e5e9ef489c2deb33b7b395a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: HotUpdate::MouseInteraction
-  isDebug: 0
 --- !u!114 &1447652973272626773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1234,6 +1221,27 @@ MonoBehaviour:
   _orbValue: {fileID: 0}
   _describe: {fileID: 0}
   cardCardOutline: {fileID: 0}
+--- !u!114 &4395787869518716714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7722627056249905881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51d01e7d00d1bd54dbf6d0fa272d3bda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HotUpdate::CardInteraction
+  isDebug: 0
+  _isDragging: 0
+  isInteractable: 1
+  magnification: 1.1
+  position: {x: 0, y: 0, z: 0}
+  rotation: {x: 0, y: 0, z: 0, w: 0}
+  scale: {x: 0, y: 0, z: 0}
+  mouseOverPosition: {x: 0, y: 0, z: 0}
+  mouseOverScale: {x: 0, y: 0, z: 0}
 --- !u!1 &8855185122200895538
 GameObject:
   m_ObjectHideFlags: 0

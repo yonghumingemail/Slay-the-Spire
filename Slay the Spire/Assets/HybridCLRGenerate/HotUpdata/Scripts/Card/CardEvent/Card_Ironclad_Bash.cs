@@ -37,6 +37,7 @@ public class Card_Ironclad_Bash : Card
 
 
         _directionalCard = new DirectionalCard(this, "Enemy");
+        await _directionalCard.Init(this,mainCamera);
 
         _inflictDamage = new InflictDamage(6, UpdateDescribe);
         _vulnerableState = new VulnerableState(2);

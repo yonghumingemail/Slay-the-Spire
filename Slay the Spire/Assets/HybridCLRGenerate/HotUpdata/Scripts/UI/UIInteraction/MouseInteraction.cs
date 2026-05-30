@@ -9,12 +9,24 @@ public class MouseInteraction : MonoBehaviour,
     IPointerUpHandler,
     IMouseDownOrUp, IMouseEnterORExit
 {
-    public bool isEnableDownOrUp { get; set; }
+    public bool IsEnableDownOrUp
+    {
+        get => isEnableDownOrUp;
+        set => isEnableDownOrUp = value;
+    }
+
+    [SerializeField] private bool isEnableDownOrUp = true;
     public Action<PointerEventData> OnMouseDownDelegate { get; set; }
     public Action<PointerEventData> OnMouseUpDelegate { get; set; }
-    
 
-    public bool isEnableEnterORExit { get; set; }
+
+    public bool IsEnableEnterORExit
+    {
+        get => isEnableEnterORExit;
+        set => isEnableEnterORExit = value;
+    }
+
+    [SerializeField] private bool isEnableEnterORExit = true;
     public Action<PointerEventData> OnMouseEnterDelegate { get; set; }
     public Action<PointerEventData> OnMouseExitDelegate { get; set; }
 
