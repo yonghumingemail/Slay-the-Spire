@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -7,13 +8,11 @@ using Z_Tools;
 
 public abstract class Card : MonoBehaviour
 {
-    #region Property
-
+    
     public CardView View => cardView;
     public CardInteraction CardInteraction => cardInteraction;
     public CardExteriorInfo ExteriorInfo => exteriorInfo;
 
-    #endregion
 
     //用于监听和触发子类实现的特殊事件
     public PriorityQueueEventCenter priorityEventCenter { get; private set; }
@@ -35,65 +34,48 @@ public abstract class Card : MonoBehaviour
     public Action<Card> OnUnSelectCard { get; set; }
 
 
+    public virtual bool TriggerCondition => (_energy._energy - exteriorInfo.orbValue) > -1;
     public List<IEntry> cardEntries { get; protected set; }
-    public string describe { get; protected set; }
+    public StringBuilder describeBuilder { get; protected set; } = new();
     public bool isStrengthen { get; protected set; }
 
+    protected int detectLayer { get; set; }
+    protected abstract string defaultDataPtah { get; set; }
 
     #region abstract methods
 
     public abstract UniTask<bool> Trigger(CancellationToken cancellationToken, bool conditionCheck = true);
     public abstract void Strengthen();
-    public abstract UniTask Initialized();
 
     #endregion
 
+
     public void UpdatePosInfo(Vector3 position, Quaternion rotation)
     {
-        cardInteraction.position = position;
-        cardInteraction.rotation = rotation;
-        cardInteraction.mouseOverPosition.x = position.x;
-        if (!cardInteraction.isMouseEnter)
+        cardInteraction.UpdatePositionInfo(position, rotation);
+        if (!cardInteraction.IsMouseEnter || !cardInteraction.IsDragging)
         {
-            ReturnToHandPosition();
+            cardInteraction.ReturnToHandPosition();
         }
     }
 
     public virtual void AddCardEntry<T>(T entry) where T : IEntry
     {
         cardEntries.Add(entry);
-        describe += entry.GetDescription();
-        cardView.UpdateCardUI(this);
+        UpdateDescribe();
     }
-
-    public virtual void ReturnToHandPosition(Action callback=null)
-    {
-        OnUnSelectCard?.Invoke(this);
-        cardAnimator.TransformEffect(gameObject, cardInteraction.position, cardInteraction.rotation,
-            cardInteraction.scale,  callback);
-    }
-
-    public virtual bool CanBeTriggered()
-    {
-        return _energy._energy - exteriorInfo.orbValue >= 0;
-    }
-
     
-    
-    public virtual void Enable(bool enable)
+    public virtual void Enable()
     {
-        if (enable)
-        {
-            gameObject.SetActive(true);
-            cardInteraction.Enable();
-        }
-        else
-        {
-            gameObject.SetActive(false);
-            cardInteraction.Disable();
-        }
+        gameObject.SetActive(true);
+        cardInteraction.Enable();
     }
 
+    public virtual void Disable()
+    {
+        gameObject.SetActive(false);
+        cardInteraction.Disable();
+    }
 
     public UniTask Recycle_DiscardPile(Action callback = null, UniTaskCompletionSource source = null)
     {
@@ -121,19 +103,15 @@ public abstract class Card : MonoBehaviour
 
     public virtual void UnSelectCard()
     {
-        cardInteraction._isDragging = false;
-        ReturnToHandPosition();
-        Args_T_EA<OnUnSelectCard_EA>.Fire(this, this, priorityEventCenter);
+        OnUnSelectCard?.Invoke(null);
+        cardInteraction.ReturnToHandPosition();
     }
 
     public virtual void UpdateDescribe()
     {
-        describe = string.Empty;
-        foreach (var VARIABLE in cardEntries)
-        {
-            describe += VARIABLE.GetDescription();
-        }
-
+        describeBuilder.Clear();
+        foreach (var entry in cardEntries)
+            describeBuilder.Append(entry.GetDescription());
         cardView.UpdateCardTextUI(this);
     }
 
@@ -143,24 +121,25 @@ public abstract class Card : MonoBehaviour
     }
 
 
-    protected virtual async UniTask Initialized(string defaultDataPtah)
+    public virtual async UniTask Initialized()
     {
         priorityEventCenter = new PriorityQueueEventCenter();
+        cardEntries = new List<IEntry>();
+        detectLayer = 1 << LayerMask.NameToLayer("Enemy");
+        
         mainCamera = Camera.main;
+        cardAnimator = new CardAnimator(mainCamera);
         cardView = GetComponent<CardView>();
         cardInteraction = GetComponent<CardInteraction>();
-        cardInteraction.Init(mainCamera);
-        cardAnimator = new CardAnimator(mainCamera);
-
+        cardInteraction.Init(cardAnimator);
+        
         exteriorInfo = (await AddressablesMgr.Instance.LoadAssetAsync<CardExteriorInfo>(defaultDataPtah)).Copy();
 
         _player = GetObject_GEA<Player>.Fire(this, EventCenter_Singleton.Instance);
         _combatManage = GetObject_GEA<CombatManage>.Fire(this, EventCenter_Singleton.Instance);
         _energy = GetObject_GEA<Energy>.Fire(this, EventCenter_Singleton.Instance);
         _discardPile = GetObject_GEA<DiscardPile>.Fire(this, EventCenter_Singleton.Instance);
-
-        cardEntries = new List<IEntry>();
-
+        
         cardInteraction.OnMouseDownDelegate += (data) => { OnSelectCard?.Invoke(this); };
 
         cardView.UpdateCardUI(this);

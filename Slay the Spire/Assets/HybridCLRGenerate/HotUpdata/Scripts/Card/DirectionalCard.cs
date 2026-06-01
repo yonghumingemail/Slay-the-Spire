@@ -3,88 +3,94 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Z_Tools;
-using Object = UnityEngine.Object;
 
-public class DirectionalCard
+public abstract class DirectionalCard : Card
 {
-    private GameObject directionalArrowLinePrefab;
+    protected RaycastHit2D targetInfo;
+
+    protected ISelectableObject SelectableObject;
+
+    protected GameObject directionalArrowLinePrefab;
+    protected DirectionalArrowLine directionalArrowLine;
 
 
-    public RaycastHit2D targetInfo;
-    public string detectLayerName;
-    public ISelectableObject SelectableObject { get; private set; }
-    public DirectionalArrowLine directionalArrowLine { get; private set; }
-
-    public DirectionalCard(Card card, string detectLayerName)
+    public override async UniTask Initialized()
     {
-        this.detectLayerName = detectLayerName;
-        targetInfo = default;
-        SelectableObject = null;
+        await base.Initialized();
 
-        card.CardInteraction.OnMouseUpDelegate += data => { OnMouseUp(card, data); };
-    }
-
-    public async UniTask Init(Card card, Camera camera)
-    {
         directionalArrowLinePrefab = await
             AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/DirectionalArrowLine.prefab");
-        directionalArrowLine = Object.Instantiate(directionalArrowLinePrefab, card.transform)
-            .GetComponent<DirectionalArrowLine>();
-        directionalArrowLine.Init(camera);
-        card.CardInteraction.OnMouseDownDelegate += directionalArrowLine.Enable;
-        card.priorityEventCenter.Subscribe<OnUnSelectCard_EA>(OnUnSelectCard, 0);
+        directionalArrowLine = Instantiate(directionalArrowLinePrefab, transform).GetComponent<DirectionalArrowLine>();
+        directionalArrowLine.Init(mainCamera);
+
+        CardInteraction.OnMouseDownDelegate += OnMouseDown_;
+        CardInteraction.OnMouseUpDelegate += OnMouseUp_;
     }
 
-    private void OnUnSelectCard(object sender, GameEventArgs args)
+
+    public override void UnSelectCard()
     {
         directionalArrowLine.Interrupt();
+        base.UnSelectCard();
     }
 
-    public async UniTask<bool> Trigger(Card card, CancellationToken cancellationToken, bool conditionCheck)
+    public override async UniTask<bool> Trigger(CancellationToken cancellationToken, bool conditionCheck = true)
     {
-        if (targetInfo.collider && conditionCheck)
+        Debug.Log($"对象：{targetInfo.collider},条件：{(!conditionCheck || TriggerCondition)}");
+        if (targetInfo.collider && (!conditionCheck || TriggerCondition))
         {
-            card.OnTrigger?.Invoke(card);
-            card._energy.SetEnergy(card._energy._energy - card.ExteriorInfo.orbValue);
-
-            foreach (var VARIABLE in card.cardEntries)
+            OnTrigger?.Invoke(this);
+            if (conditionCheck)
             {
-                VARIABLE.Trigger(card._player.gameObject, targetInfo.collider.gameObject);
+                _energy.SetEnergy(_energy._energy - ExteriorInfo.orbValue);
+            }
+
+            foreach (var VARIABLE in cardEntries)
+            {
+                VARIABLE.Trigger(_player.gameObject, targetInfo.collider.gameObject);
                 await UniTask.Yield(cancellationToken);
             }
 
-            card.CardTriggerAnimator(() => { card.Enable(false); });
-
+            CardTriggerAnimator(Disable);
             return true;
         }
 
-        card.ReturnToHandPosition(card.CardInteraction.enable);
+        CardInteraction.ReturnToHandPosition(CardInteraction.enable);
         return false;
     }
 
-
-    public void OnMouseUp(Card card, PointerEventData _data)
+    protected virtual void OnMouseDown_(PointerEventData _data)
     {
-        card.CardInteraction.isInteractable = false;
-        SelectableObject?.OnUnSelect();
-        directionalArrowLine.Interrupt();
-        if (!card.CardInteraction._isDragging) return;
-        targetInfo = Physics2D.Raycast(_data.pressEventCamera.ScreenToWorldPoint(_data.position), Vector3.forward,
-            15,
-            1 << LayerMask.NameToLayer(detectLayerName));
-        card._combatManage.AddCardToExecuteQueue(card);
+        directionalArrowLine.Enable(_data);
+        Vector3 pos = cardInteraction.mouseOverPosition;
+        pos.x = 0;
+        cardAnimator.TransformEffect(gameObject, pos, Quaternion.identity, cardInteraction.mouseOverScale);
     }
 
-    public void OnMouseEnterSelectableObject(ISelectableObject selectableObject)
+    protected virtual void OnMouseUp_(PointerEventData _data)
+    {
+        CardInteraction.Disable();
+        SelectableObject?.OnUnSelect();
+        directionalArrowLine.Interrupt();
+        targetInfo = Physics2D.Raycast(mainCamera.ScreenToWorldPoint(_data.position), Vector3.forward,
+            15, detectLayer);
+        _combatManage.AddCardToExecuteQueue(this);
+    }
+
+    protected virtual void OnMouseEnterSelectableObject(ISelectableObject selectableObject)
     {
         SelectableObject = selectableObject;
         selectableObject?.OnSelect();
     }
 
-    public void OnMouseExitSelectableObject(ISelectableObject selectableObject)
+    protected virtual void OnMouseExitSelectableObject(ISelectableObject selectableObject)
     {
         SelectableObject = selectableObject;
         SelectableObject?.OnUnSelect();
+    }
+
+    private void OnDestroy()
+    {
+        AddressablesMgr.Instance.Release("Assets/Art/Prefab/UI/DirectionalArrowLine.prefab");
     }
 }

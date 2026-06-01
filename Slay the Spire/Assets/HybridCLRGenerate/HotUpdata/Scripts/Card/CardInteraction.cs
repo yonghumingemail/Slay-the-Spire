@@ -7,9 +7,6 @@ using Z_Tools;
 [Serializable]
 public class CardInteraction : MouseInteraction
 {
-    public bool _isDragging;
-    public bool isInteractable = true;
-
     public Camera _Camera
     {
         get => cardAnimator.camera;
@@ -21,21 +18,38 @@ public class CardInteraction : MouseInteraction
     private CardView _view;
 
     public float magnification = 1.1f;
-    [Header("位置信息")] [SerializeField] public Vector3 position;
+    [Header("位置信息")] [SerializeField] private Vector3 position;
     [SerializeField] public Quaternion rotation;
 
-    [SerializeField] public Vector3 scale;
-    [SerializeField] public Vector3 mouseOverPosition;
-    [SerializeField] public Vector3 mouseOverScale;
+    public Vector3 scale { get; private set; }
+    public Vector3 mouseOverPosition { get; private set; }
+    public Vector3 mouseOverScale { get; private set; }
 
-    public bool isMouseEnter { get; set; }
+    [SerializeField] private bool isMouseEnter;
+    [SerializeField] private bool isDragging;
+    [SerializeField] private bool isInteractable;
+
+    public bool IsMouseEnter => isMouseEnter;
+
+    public bool IsDragging
+    {
+        get => isDragging;
+        set => isDragging = value;
+    }
+
+    public bool IsInteractable
+    {
+        get => isInteractable;
+        set => isInteractable = value;
+    }
 
     public Action enable { get; private set; }
     public Action disable { get; private set; }
 
-    public void Init(Camera camera)
+
+    public void Init(CardAnimator animator)
     {
-        cardAnimator = new CardAnimator(camera);
+        cardAnimator = animator;
         _view = GetComponent<CardView>();
         var handPile = GetObject_GEA<HandPile>.Fire(this, EventCenter_Singleton.Instance);
 
@@ -43,32 +57,47 @@ public class CardInteraction : MouseInteraction
         mouseOverScale = scale * magnification;
         mouseOverPosition = new Vector3
         {
+            x = 0,
             z = -0.1f * handPile.maxHandCount - 0.1f,
-            y = camera.ViewportToWorldPoint(new Vector3(0.5f, 0)).y +
+            y = animator.camera.ViewportToWorldPoint(new Vector3(0.5f, 0)).y +
                 (_view.Background.bounds.size.y - 0.42f) / 2
         };
-
         enable = Enable;
         disable = Disable;
     }
 
-    #region 交互事件
+    public void UpdatePositionInfo(Vector3 position_, Quaternion rotation_)
+    {
+        position = position_;
+        rotation = rotation_;
+        position_.y = mouseOverPosition.y;
+        position_.z = mouseOverPosition.z;
+        mouseOverPosition = position_;
+    }
+
+    public virtual void ReturnToHandPosition(Action callback = null)
+    {
+        cardAnimator.TransformEffect(gameObject, position, rotation, scale, callback);
+    }
 
     public void Enable()
     {
-        isInteractable = true; 
+        IsInteractable = true;
     }
 
     public void Disable()
     {
         isMouseEnter = false;
-        isInteractable = false;
+        IsInteractable = false;
+        isDragging = false;
     }
-    
+
+    #region 交互事件
+
     public override void OnPointerEnter(PointerEventData eventData)
     {
+        if (!IsInteractable || IsDragging) return;
         base.OnPointerEnter(eventData);
-        if (!isInteractable || _isDragging) return;
         isMouseEnter = true;
         cardAnimator.TransformEffect(_view.gameObject, mouseOverPosition, Quaternion.identity,
             mouseOverScale);
@@ -76,25 +105,23 @@ public class CardInteraction : MouseInteraction
 
     public override void OnPointerExit(PointerEventData eventData)
     {
+        if (!IsInteractable || IsDragging) return;
         base.OnPointerExit(eventData);
-        if (!isInteractable || _isDragging) return;
-
         isMouseEnter = false;
         cardAnimator.TransformEffect(_view.gameObject, position, rotation, scale);
     }
 
     public override void OnPointerDown(PointerEventData eventData)
     {
+        if (!IsInteractable) return;
         base.OnPointerDown(eventData);
-        if (!isInteractable) return;
-
-        _isDragging = true;
+        IsDragging = true;
     }
 
     public override void OnPointerUp(PointerEventData eventData)
     {
         base.OnPointerUp(eventData);
-        _isDragging = false;
+        IsDragging = false;
     }
 
     #endregion

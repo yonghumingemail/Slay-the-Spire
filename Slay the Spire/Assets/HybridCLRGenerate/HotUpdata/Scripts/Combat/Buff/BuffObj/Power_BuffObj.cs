@@ -44,13 +44,13 @@ public class Power_BuffObj : BuffObj
     {
         base.OnAddBuff(eventCent);
         eventCent.Subscribe<OnAttack_EA>(Effect, priority);
-        eventCent.Subscribe<DamageCalculation_Attack_EventArgs>(DamageCalculation, priority);
+        eventCent.Subscribe<DamageCalculation_Attack_EN>(DamageCalculation, priority);
     }
 
     public override void OnRemoveBuff(PriorityQueueEventCenter eventCent)
     {
         base.OnRemoveBuff(eventCent);
         eventCent.UnSubscribe<OnAttack_EA>(Effect);
-        eventCent.UnSubscribe<DamageCalculation_Attack_EventArgs>(DamageCalculation);
+        eventCent.UnSubscribe<DamageCalculation_Attack_EN>(DamageCalculation);
     }
 }

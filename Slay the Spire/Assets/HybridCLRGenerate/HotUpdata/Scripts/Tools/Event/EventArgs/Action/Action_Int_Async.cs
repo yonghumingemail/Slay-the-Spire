@@ -29,11 +29,11 @@ namespace HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs
             args_int = 0;
         }
     }
-    public class OnRoundStart_EventName 
+    public class OnRoundStart_EN 
     {
     }
 
-    public class OnRoundEnd_EventName
+    public class OnRoundEnd_EN
     {
     }
 

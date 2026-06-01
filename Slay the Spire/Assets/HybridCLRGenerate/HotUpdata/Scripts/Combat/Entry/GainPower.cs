@@ -48,7 +48,7 @@ public class GainPower : IEntry
             buffListObj.AddBuff(buff);
         }
 
-        buffListObj._priorityEventCenter.Fire<DamageValueChange_Attack_EA>(this, null);
+        buffListObj._priorityEventCenter.Fire<DamageValueChange_Attack_EN>(this, null);
 
         Buff_EventArgs.Fire<OnGainBuff_EventArgs>(buff, stack, this, buffListObj._priorityEventCenter);
     }

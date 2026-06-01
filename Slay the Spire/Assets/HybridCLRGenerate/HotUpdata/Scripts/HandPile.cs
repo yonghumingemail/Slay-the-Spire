@@ -9,7 +9,7 @@ using UnityEngine.Splines;
 using UnityEngine.Sprites;
 using Z_Tools;
 
-public class HandPile : MonoBehaviour,IPointerEnterHandler
+public class HandPile : MonoBehaviour, IPointerEnterHandler
 {
     private SplineContainer spline;
     private DrawPile drawPile;
@@ -23,23 +23,21 @@ public class HandPile : MonoBehaviour,IPointerEnterHandler
 
     public float speed;
     public int maxHandCount { get; private set; } = 10;
-    
+
     private void Awake()
     {
         cardArrangement = new CardArrangement(maxHandCount);
         spline = transform.Find("Spline").GetComponent<SplineContainer>();
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundStart_EventName>(OnRoundStart,
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundStart_EN>(OnRoundStart,
             0);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundEnd_EventName>(OnRoundEnd, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundEnd_EN>(OnRoundEnd, 0);
 
         EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe<OnMouseEnterEnemy_EA>(
             OnMouseEnterEnemy, 0);
         EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe<OnMouseExitEnemy_EA>(
             OnMouseExitEnemy, 0);
         EventCenter_Singleton.Instance.Subscribe<GetObject_GEA<HandPile>>(Get);
-        
-   
     }
 
     private void Get(object send, GameEventArgs gameEventHandler)
@@ -110,7 +108,7 @@ public class HandPile : MonoBehaviour,IPointerEnterHandler
             card.OnSelectCard += SetSelectedCard;
             card.OnUnSelectCard += SetSelectedCard;
             card.Initialized().Forget();
-            card.Enable(false);
+            card.Disable();
             drawPile.AddCard(card).Forget();
         }
     }
@@ -123,13 +121,12 @@ public class HandPile : MonoBehaviour,IPointerEnterHandler
 
     private async UniTask OnRoundEnd(object sender, GameEventArgs args)
     {
-        // 创建副本，避免循环中列表变化的影响
-        var cardsToProcess = cardInstances.ToArray();
-        UniTask[] tasks = new UniTask[cardsToProcess.Length];
+        var cardsToProcess = cardInstances;
+        UniTask[] tasks = new UniTask[cardsToProcess.Count];
 
-        for (int i = 0; i < cardsToProcess.Length; i++)
+        for (int i = 0; i < cardsToProcess.Count; i++)
         {
-            cardsToProcess[i].CardInteraction.isInteractable = false;
+            cardsToProcess[i].CardInteraction.Disable();
             tasks[i] = cardsToProcess[i].Recycle_DiscardPile();
         }
 
@@ -150,12 +147,12 @@ public class HandPile : MonoBehaviour,IPointerEnterHandler
         cardArrangement.speed = speed;
         foreach (var card in cards)
         {
-            card.Enable(true);
-            card.CardInteraction.isInteractable = false;
+            card.Enable();
+            card.CardInteraction.Disable();
             cardInstances.Add(card);
             SortCards();
             await Task.Delay((int)(1000 * speed2));
-            card.CardInteraction.isInteractable = true;
+            card.CardInteraction.Enable();
         }
     }
 
@@ -168,8 +165,7 @@ public class HandPile : MonoBehaviour,IPointerEnterHandler
     {
         if (SelectedCard)
         {
-         //  SetSelectedCard(null);
+            //  SetSelectedCard(null);
         }
     }
-
 }

@@ -51,18 +51,12 @@ public class CardAnimator
         Quaternion targetRotation, Vector3 targetScale, Action callback = null)
     {
         _sequence.Kill();
-        _sequence = DOTween.Sequence();
-
-        var move = target.transform.DOMove(targetPosition, animatorSpeed);
-        var rotation = target.transform.DORotateQuaternion(targetRotation, animatorSpeed);
-        var scale = target.transform.DOScale(targetScale, animatorSpeed);
-
-        _sequence.Insert(0, move);
-        _sequence.Insert(0, rotation);
-        _sequence.Insert(0, scale);
-
-
-        _sequence.onComplete += () => callback?.Invoke();
+        var seq = DOTween.Sequence();
+        seq.Insert(0, target.transform.DOMove(targetPosition, animatorSpeed));
+        seq.Insert(0, target.transform.DORotateQuaternion(targetRotation, animatorSpeed));
+        seq.Insert(0, target.transform.DOScale(targetScale, animatorSpeed));
+        seq.onComplete += () => callback?.Invoke();
+        _sequence = seq;
     }
 
     /// 相对旋转（旋转指定角度,有方向）
@@ -71,17 +65,12 @@ public class CardAnimator
         Action callback = null)
     {
         _sequence.Kill();
-        _sequence = DOTween.Sequence();
-
-        var move = target.transform.DOMove(targetPosition, animatorSpeed);
-        var rotation = target.transform.DORotate(rotateAngle, animatorSpeed, rotateMode);
-        var scale = target.transform.DOScale(targetScale, animatorSpeed);
-
-        _sequence.Insert(0, move);
-        _sequence.Insert(0, rotation);
-        _sequence.Insert(0, scale);
-
-        _sequence.onComplete += () => callback?.Invoke();
+        var seq = DOTween.Sequence();
+        seq.Insert(0, target.transform.DOMove(targetPosition, animatorSpeed));
+        seq.Insert(0, target.transform.DORotate(rotateAngle, animatorSpeed, rotateMode));
+        seq.Insert(0, target.transform.DOScale(targetScale, animatorSpeed));
+        seq.onComplete += () => callback?.Invoke();
+        _sequence = seq;
     }
 
     #endregion

@@ -1,18 +1,11 @@
-using System;
-using System.Threading;
 using Cysharp.Threading.Tasks;
-using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 
-public class Card_Ironclad_Strike : Card
+
+public class Card_Ironclad_Strike : DirectionalCard
 {
     private InflictDamage _inflictDamage;
-    private DirectionalCard _directionalCard;
 
-    public override UniTask<bool> Trigger(CancellationToken cancellationToken, bool conditionCheck = true)
-    {
-        return _directionalCard.Trigger(this, cancellationToken,
-            !conditionCheck || (_energy._energy - exteriorInfo.orbValue) > -1);
-    }
+    protected override string defaultDataPtah { get; set; } = "Assets/ScriptableObject/CardEvent/Ironclad_Strike.asset";
 
     public override void Strengthen()
     {
@@ -23,14 +16,12 @@ public class Card_Ironclad_Strike : Card
 
     public override async UniTask Initialized()
     {
-        await base.Initialized("Assets/ScriptableObject/CardEvent/Ironclad_Strike.asset");
+        await base.Initialized();
         
-        _player._priorityEventCenter.Subscribe<DamageValueChange_Attack_EA>(DamageValueChange_Attack, 0);
+        _player._priorityEventCenter.Subscribe<DamageValueChange_Attack_EN>(DamageValueChange_Attack, 0);
         priorityEventCenter.Subscribe<OnMouseEnterEnemy_EA>(OnMouseEnterEnemy, 0);
         priorityEventCenter.Subscribe<OnMouseExitEnemy_EA>(OnMouseExitEnemy, 0);
         
-        _directionalCard = new DirectionalCard(this, "Enemy");
-        await _directionalCard.Init(this,mainCamera);
 
         _inflictDamage = new InflictDamage(6,UpdateDescribe);
         AddCardEntry(_inflictDamage);
@@ -44,14 +35,14 @@ public class Card_Ironclad_Strike : Card
     {
         var enemy = Args_T.Check<Enemy>(args);
         _inflictDamage.DamageCalculation(_player._priorityEventCenter, enemy._priorityEventCenter);
-        _directionalCard.OnMouseEnterSelectableObject(enemy);
+        OnMouseEnterSelectableObject(enemy);
 
     }
     public void OnMouseExitEnemy(object send,GameEventArgs args)
     {
         var enemy = Args_T.Check<Enemy>(args);
         _inflictDamage.DamageCalculation(_player._priorityEventCenter, null);
-        _directionalCard.OnMouseExitSelectableObject(enemy);
+        OnMouseExitSelectableObject(enemy);
 
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -14,9 +13,11 @@ public class CombatManage : MonoBehaviour
     public Queue<Card> executeQueue = new Queue<Card>();
     public bool isExecute = false;
 
+    [SerializeField] private int MonsterRoomCount;
+
     private void Awake()
     {
-        EventCenter_Singleton.Instance.Subscribe<GetObject_GEA<CombatManage>>( Get);
+        EventCenter_Singleton.Instance.Subscribe<GetObject_GEA<CombatManage>>(Get);
     }
 
     private void Update()
@@ -26,6 +27,7 @@ public class CombatManage : MonoBehaviour
             OnRoundStart().Forget();
         }
     }
+
 
     private void Get(object send, GameEventArgs gameEventHandler)
     {
@@ -61,7 +63,7 @@ public class CombatManage : MonoBehaviour
     public async UniTask OnRoundStart()
     {
         roundCount++;
-        await Action_Int_Async.Fire<OnRoundStart_EventName>(roundCount, this,
+        await Action_Int_Async.Fire<OnRoundStart_EN>(roundCount, this,
             EventCenter_Singleton.Instance._priorityQueueEventCenter);
     }
 }

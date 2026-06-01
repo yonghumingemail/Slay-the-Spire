@@ -20,34 +20,38 @@ public class Args_T_EA<EventName> : Args_T where EventName : class
 }
 
 
-public class OnMouseEnterEnemy_EA 
+public class OnMouseEnterEnemy_EA : Args_T_EA<OnMouseEnterEnemy_EA>
 {
 }
 
-public class OnMouseExitEnemy_EA 
+public class OnMouseExitEnemy_EA: Args_T_EA<OnMouseExitEnemy_EA>
 {
 }
 
-public class OnUnSelectCard_EA 
+public class OnAttack_EA: Args_T_EA<OnAttack_EA>
 {
 }
 
-public class OnSelectCard_EA 
+public class OnBeAttacked_EA: Args_T_EA<OnBeAttacked_EA>
 {
 }
 
-public class OnAttack_EA 
+public class OnGainShield_EA: Args_T_EA<OnGainShield_EA>
 {
 }
 
-public class OnBeAttacked_EA
+public class OnHealthArgsChangeEa: Args_T_EA<OnHealthArgsChangeEa>
 {
 }
 
-public class OnGainShield_EA 
+public class OnEnterRoom_EN : Args_T_EA<OnEnterRoom_EN>
 {
 }
 
-public class OnHealthArgsChangeEa 
+public class DamageCalculation_Attack_EN : Args_T_EA<DamageCalculation_Attack_EN>
+{
+}
+
+public class DamageCalculation_BeAttacked_EN : Args_T_EA<DamageCalculation_BeAttacked_EN>
 {
 }

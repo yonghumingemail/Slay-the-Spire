@@ -54,7 +54,7 @@ public class CardView : MonoBehaviour
         _name.SetText(card.ExteriorInfo.cardName);
         _typeName.SetText(Enum.GetName(card.ExteriorInfo.cardType.GetType(), card.ExteriorInfo.cardType));
         _orbValue.SetText(card.ExteriorInfo.orbValue.ToString());
-        _describe.SetText(card.describe);
+        _describe.SetText(card.describeBuilder);
     }
 
     public void UpdateCardSpriteUI(CardExteriorInfo exteriorInfo)

@@ -17,13 +17,10 @@ public class JawWorm : Enemy
 
     private AttackIntent attackIntent_Action3;
     private DeFendIntent defendIntent_Action3;
-    
-    public async UniTask Init()
+
+    public override async UniTask Initialize()
     {
-        var sprite = await AddressablesMgr.Instance.LoadAssetAsync<Sprite>("Assets/Art/Image/monsters/theBottom/Monsters_TheBottom.spriteatlasv2[skeleton-idle_00]");
-        var controller = await AddressablesMgr.Instance.LoadAssetAsync<RuntimeAnimatorController>("Assets/Art/Image/monsters/theBottom/jawWorm/JawWorm.controller");
-        await Initialize(sprite, controller);
-        
+        await base.Initialize();
         _gainPower_Action2 = new GainPower(3);
 
         IIntent[] action1IntentArray =
@@ -49,7 +46,6 @@ public class JawWorm : Enemy
 
         currentAction = GetNextAction();
         intentC.ShowIntent(currentAction.intents);
-
     }
 
     public override EnemyAction GetNextAction()
@@ -97,28 +93,32 @@ public class JawWorm : Enemy
     }
 
 
-    public async UniTask Action1()
+    private async UniTask Action1()
     {
         //print("啃咬");
         _animator.Play("Attack");
         await attackIntent_Action1.Trigger(gameObject, _player.gameObject, _player.TokenSource.Token);
         await _animatorComplete.AwaitCurrentAnimatorComplete();
+        Debug.Log(Time.time);
     }
 
-    public UniTask Action2()
+    private async UniTask Action2()
     {
-       // print("咆哮");
+        // print("咆哮");
+        _animator.Play("Enhance");
         _gainPower_Action2.Trigger(gameObject, gameObject);
         defendIntent_Action2._gainShield.Trigger(gameObject, gameObject);
-        return UniTask.CompletedTask;
+        await _animatorComplete.AwaitCurrentAnimatorComplete();
+        Debug.Log(Time.time);
     }
 
-    public async UniTask Action3()
+    private async UniTask Action3()
     {
-       // print("猛击");
+        // print("猛击");
         _animator.Play("Attack");
         await attackIntent_Action3.Trigger(gameObject, _player.gameObject, _player.TokenSource.Token);
         defendIntent_Action3._gainShield.Trigger(gameObject, gameObject);
         await _animatorComplete.AwaitCurrentAnimatorComplete();
+        Debug.Log(Time.time);
     }
 }

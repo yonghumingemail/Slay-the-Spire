@@ -116,8 +116,6 @@ namespace CardCrawlGame.Map
 
         /// <summary>
         /// 按概率生成房间类型列表
-        /// 参考 Java AbstractDungeon.generateRoomTypes()
-        /// 
         /// 计算逻辑：
         /// 1. 用总有效节点数乘以各概率并四舍五入取整，得到各类房间的期望数量。
         /// 2. 普通战斗房间数量 = 总节点数 - 其他所有类型房间数之和。
@@ -160,13 +158,11 @@ namespace CardCrawlGame.Map
 
         /// <summary>
         /// 强制固定某些行的房间类型（首行、末行、第8行）
-        /// 参考 Java AbstractDungeon.generateMap() 中的 assignRowAsRoomType 调用。
         /// 
         /// 固定规则：
         /// - 首行（y == 0）：全部为普通战斗房间（MonsterRoom）
         /// - 末行（y == height-1）：全部为休息房间（RestRoom）
         /// - 第8行（y == 8）：全部为宝箱房间（TreasureRoom）
-        ///   注：原版 Java 中，第8行会根据无尽模式以及是否有“MimicInfestation”灾厄决定是宝箱房还是精英房，
         ///   此处简化为宝箱房；如需更完整实现，可扩展参数控制。
         /// </summary>
         /// <param name="map">地图节点数组</param>

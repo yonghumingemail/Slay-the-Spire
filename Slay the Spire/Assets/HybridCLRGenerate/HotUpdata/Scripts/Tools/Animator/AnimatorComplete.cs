@@ -27,24 +27,23 @@ public class AnimatorComplete : MonoBehaviour
         }
 
         _animator.runtimeAnimatorController = _animatorOverrideController;
-       
     }
 
     public void OnComplete(string clipName)
     {
         _clipName = clipName;
-        // print(clipName+"播放结束："+Time.time);
+       // print(clipName + "播放结束：" + Time.time);
         completionSource?.TrySetResult();
         completionSource = null;
     }
 
     public UniTask AwaitCurrentAnimatorComplete()
     {
-        if (completionSource!=null)
+        if (completionSource != null)
         {
-            onComplete?.Invoke($"Error:{_clipName}动画播放中断,onComplete事件提前执行");   
+            onComplete?.Invoke($"Error:{_clipName}动画播放中断,onComplete事件提前执行");
         }
-        
+
         completionSource = new UniTaskCompletionSource();
         return completionSource.Task;
     }

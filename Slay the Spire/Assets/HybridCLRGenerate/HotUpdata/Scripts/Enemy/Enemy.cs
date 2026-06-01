@@ -36,7 +36,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public abstract EnemyAction GetNextAction();
 
-    protected virtual async UniTask Initialize(Sprite sprite, RuntimeAnimatorController animatorController)
+    public virtual async UniTask Initialize()
     {
         _player = GetObject_GEA<Player>.Fire(this, EventCenter_Singleton.Instance);
 
@@ -53,20 +53,16 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         var roleCoreData =
             await AddressablesMgr.Instance.LoadAssetAsync<RoleCoreData>(
                 "Assets/ScriptableObject/RoleCoreData/Enemy/JawWorm.asset");
-        
+
         UI = transform.Find("UI").gameObject;
         spriteRenderer = UI.GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = sprite;
-
         _animator = UI.GetComponent<Animator>();
-        _animator.runtimeAnimatorController = animatorController;
-
         _animatorComplete = UI.GetComponent<AnimatorComplete>();
         _animatorComplete.Init(_animator);
 
-       _boxCollider2D= FitColliderToRenderer(gameObject,spriteRenderer);
-       
-       
+        _boxCollider2D = FitColliderToRenderer(gameObject, spriteRenderer);
+
+
         intentC = GetComponentInChildren<Intent_C>(true);
         alertBox = GetComponentInChildren<AlertBox>(true);
 
@@ -82,7 +78,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 "Assets/Art/Image/SpriteAtlas/Intent.spriteatlasv2");
     }
 
-    public BoxCollider2D FitColliderToRenderer(GameObject target,Renderer _renderer)
+    public BoxCollider2D FitColliderToRenderer(GameObject target, Renderer _renderer)
     {
         // 2. 获取或添加 BoxCollider2D
         BoxCollider2D _collider = target.AddComponent<BoxCollider2D>();
@@ -105,7 +101,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
         return _collider;
     }
-    
+
     /// <summary>
     /// 在敌人回合结束时的回调,不需要外部调用，执行完意图后执行
     /// </summary>
@@ -113,7 +109,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     protected virtual async UniTask OnRoundEnd(int roundCount)
     {
         //通知事件，回合结束
-        await Action_Int_Async.Fire<OnRoundEnd_EventName>(roundCount, this, _priorityEventCenter);
+        await Action_Int_Async.Fire<OnRoundEnd_EN>(roundCount, this, _priorityEventCenter);
     }
 
 
@@ -124,7 +120,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public virtual async UniTask OnRoundStart(int roundCount)
     {
         //通知事件，回合开始
-        await Action_Int_Async.Fire<OnRoundStart_EventName>(roundCount, this, _priorityEventCenter);
+        await Action_Int_Async.Fire<OnRoundStart_EN>(roundCount, this, _priorityEventCenter);
 
         await currentAction.Execute.Invoke();
         actionList.Add(currentAction);
@@ -162,7 +158,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     private void OnDestroy()
     {
-        _priorityEventCenter.Fire<OnDestroy_EA>(this, null);
+        _priorityEventCenter.Fire<OnDestroy_EN>(this, null);
         _priorityEventCenter.Clear();
     }
 }

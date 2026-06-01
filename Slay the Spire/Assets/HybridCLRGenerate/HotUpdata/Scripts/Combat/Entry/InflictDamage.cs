@@ -27,8 +27,8 @@ public class InflictDamage : IEntry
             return;
         }
         IEventCenterObject<GameEventArgs> eventCenter_Sender = sender.GetComponent<IEventCenterObject<GameEventArgs>>();
-        IEventCenterObject<GameEventArgs> eventCenter_Receiver =
-            receiver.GetComponent<IEventCenterObject<GameEventArgs>>();
+        IEventCenterObject<GameEventArgs> eventCenter_Receiver = receiver.GetComponent<IEventCenterObject<GameEventArgs>>();
+        
   
         IBuffList buffList_Sender = GetObject_GEA<IBuffList>.Fire(this, eventCenter_Sender.EventManage);
         IHealth health = GetObject_GEA<IHealth>.Fire(this, eventCenter_Receiver.EventManage);
@@ -42,7 +42,7 @@ public class InflictDamage : IEntry
         }
         else
         {
-            Args_T_EA<OnAttack_EA>.Fire(info, this, buffList_Sender._priorityEventCenter);
+            OnAttack_EA.Fire(info, this, buffList_Sender._priorityEventCenter);
         }
 
         if (health == null)
@@ -66,8 +66,8 @@ public class InflictDamage : IEntry
       //  Debug.Log($"计算前的伤害：{calculated_damage}");
         var info = ReferencePool.Acquire<ChangeValueInfo>();
         info.value = calculated_damage;
-        Args_T_EA<DamageCalculation_Attack_EventArgs>.Fire(info, this, send);
-        Args_T_EA<DamageCalculation_BeAttacked_EventArgs>.Fire(info, this, receive);
+        DamageCalculation_Attack_EN.Fire(info, this, send);
+        DamageCalculation_BeAttacked_EN.Fire(info, this, receive);
         calculated_damage = info.value;
 
         ReferencePool.Release(info);

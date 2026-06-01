@@ -11,31 +11,53 @@ public class EnemySpawner : MonoBehaviour
     public EventManage eventCenter { get; private set; } = new EventManage();
     private CombatManage _combatManage;
     private GameObject enemyPrefab;
+    [SerializeField] private Vector2 startPos;
+    private BoxCollider2D boxCollider2D;
 
     private void Awake()
     {
         _combatManage = transform.GetComponentInParent<CombatManage>();
-        
-        EventCenter_Singleton.Instance.Subscribe<GetObject_GEA<EnemySpawner>>( Get);
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundStart_EventName>( OnRoundStart, 5);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundEnd_EventName>(OnRoundEnd, 0);
+        EventCenter_Singleton.Instance.Subscribe<GetObject_GEA<EnemySpawner>>(Get);
+
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundStart_EN>(OnRoundStart, 5);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundEnd_EN>(OnRoundEnd, 0);
 
         for (int i = 0; i < transform.childCount; i++)
         {
             enemyList.Add(transform.GetChild(i).GetComponent<Enemy>());
         }
+
         Init().Forget();
     }
 
     private async UniTask Init()
     {
-        enemyPrefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/Enemy/Enemy.prefab");
-        var obj = Instantiate(enemyPrefab,transform);
-        var jawWorm = obj.AddComponent<JawWorm>();
-        await jawWorm.Init();
-        enemyList.Add(jawWorm);
+        boxCollider2D = GetComponent<BoxCollider2D>();
+        startPos = boxCollider2D.offset;
+        startPos.x += boxCollider2D.size.x / 2;
+
+        enemyPrefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/Enemy/JawWorm.prefab");
+        await InstantiateObj(new[] { enemyPrefab });
     }
+
+    private async UniTask InstantiateObj(GameObject[] prefabs)
+    {
+        foreach (var VARIABLE in prefabs)
+        {
+            var obj = Instantiate(VARIABLE, transform);
+            var enemy = obj.GetComponent<Enemy>();
+            if (!enemy) continue;
+            obj.SetActive(false);
+            await enemy.Initialize();
+            enemyList.Add(enemy);
+            startPos.x -= enemy.spriteRenderer.bounds.size.x / 2;
+            enemy.transform.localPosition = startPos;
+            obj.SetActive(true);
+
+        }
+    }
+
     private void Get(object send, GameEventArgs gameEventHandler)
     {
         if (gameEventHandler is Args_T args)
@@ -53,20 +75,18 @@ public class EnemySpawner : MonoBehaviour
         if (args is not Action_Int_Async _args) return;
         foreach (var VARIABLE in enemyList)
         {
-          await  VARIABLE.OnRoundStart(_args.args_int);
+            await VARIABLE.OnRoundStart(_args.args_int);
         }
-
     }
 
     private async UniTask OnRoundStart(object sender, GameEventArgs args)
     {
         if (args is not Action_Int_Async _args) return;
-        
+
         //通知所有敌人玩家回合开始（显示意图）
         foreach (var VARIABLE in enemyList)
         {
             await VARIABLE.OnPlayerRoundStart(_combatManage.RoundCount);
         }
-
     }
 }

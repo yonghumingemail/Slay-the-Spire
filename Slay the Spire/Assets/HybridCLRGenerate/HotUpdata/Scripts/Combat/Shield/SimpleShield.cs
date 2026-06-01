@@ -28,9 +28,9 @@ public class SimpleShield : IShield
 
         _priorityEventCenter = priorityEventCenter;
 
-        _priorityEventCenter.SubscribeAsync<OnRoundStart_EventName>(OnRoundStart, -1);
+        _priorityEventCenter.SubscribeAsync<OnRoundStart_EN>(OnRoundStart, -1);
         _priorityEventCenter.Subscribe<OnBeAttacked_EA>(ShieldTrigger, -1);
-        _priorityEventCenter.Subscribe<OnDestroy_EA>(OnDestroy, -1);
+        _priorityEventCenter.Subscribe<OnDestroy_EN>(OnDestroy, -1);
     }
 
     public void AddShieldValue(ChangeValueInfo info)

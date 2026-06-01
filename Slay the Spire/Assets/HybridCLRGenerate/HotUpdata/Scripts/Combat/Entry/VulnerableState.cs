@@ -48,10 +48,10 @@ public class VulnerableState : IEntry
         {
             buff = new VulnerableState_BuffObj(stack, maxStack, receiver);
             buffListObj.AddBuff(buff);
-            buff.OnRemove += (_) => { buffListObj._priorityEventCenter.Fire<DamageValueChange_BeAttacked_EA>(this, null); };
+            buff.OnRemove += (_) => { buffListObj._priorityEventCenter.Fire<DamageValueChange_BeAttacked_EN>(this, null); };
         }
 
-        buffListObj._priorityEventCenter.Fire<DamageValueChange_BeAttacked_EA>(this,null);
+        buffListObj._priorityEventCenter.Fire<DamageValueChange_BeAttacked_EN>(this,null);
         Buff_EventArgs.Fire<OnGainBuff_EventArgs>(buff,stack,this, buffListObj._priorityEventCenter);
 
     }

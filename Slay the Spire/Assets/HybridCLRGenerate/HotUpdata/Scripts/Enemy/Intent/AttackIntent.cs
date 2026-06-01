@@ -39,8 +39,8 @@ public class AttackIntent : IIntent
         _receive = receive;
         _send = send;
 
-        _receive.Subscribe<DamageValueChange_BeAttacked_EA>(DamageValueChange,0);
-        _send.Subscribe<DamageValueChange_Attack_EA>(DamageValueChange,0);
+        _receive.Subscribe<DamageValueChange_BeAttacked_EN>(DamageValueChange,0);
+        _send.Subscribe<DamageValueChange_Attack_EN>(DamageValueChange,0);
 
     }
 

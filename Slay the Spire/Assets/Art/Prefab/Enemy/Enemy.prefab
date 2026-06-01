@@ -107,7 +107,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2823206937891906161
 Transform:
   m_ObjectHideFlags: 0
@@ -673,6 +673,7 @@ MonoBehaviour:
   rowMaxCount: 5
   intervalX: 0.45
   intervalY: 0.45
+  buffObjs: []
 --- !u!1001 &2465504294334406456
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -747,6 +748,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 70002250633906797}
     m_Modifications:
+    - target: {fileID: 1931996046341876449, guid: 346023484da343640ac7e1fdc843b9eb, type: 3}
+      propertyPath: scale_X
+      value: 0.85
+      objectReference: {fileID: 0}
     - target: {fileID: 2040865799398658816, guid: 346023484da343640ac7e1fdc843b9eb, type: 3}
       propertyPath: m_Name
       value: HP

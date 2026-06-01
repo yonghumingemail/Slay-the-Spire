@@ -3,33 +3,39 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Z_Tools;
 
 public class DirectionalArrowLine : MonoBehaviour
 {
-    public GameObject[] lines;
+    // 直接缓存 Transform，消除每帧的 .transform 访问
+    private Transform[] lineTransforms;
     public SpriteRenderer[] sprites;
 
-    public Color triggerColor = new Color(1, 100.0f / 255, 100.0f / 255, 1);
+    public Color triggerColor = new Color(1, 100f / 255, 100f / 255, 1);
     public Color defaultColor = new Color(1, 1, 1, 1);
     private Camera mainCamera;
+
+    private CancellationTokenSource _tokenSource;
+    private float inverseScaleX; // 预计算的深度缩放因子
 
     public void Init(Camera camera_)
     {
         mainCamera = camera_;
-        lines = new GameObject[transform.childCount];
-        sprites = new SpriteRenderer[transform.childCount];
-        for (int i = 0; i < transform.childCount; i++)
+        int childCount = transform.childCount;
+        lineTransforms = new Transform[childCount];
+        sprites = new SpriteRenderer[childCount];
+
+        for (int i = 0; i < childCount; i++)
         {
-            var child = transform.GetChild(i);
-            child.transform.localPosition = Vector3.zero;
-            lines[i] = child.gameObject;
-            sprites[i] = transform.GetChild(i).GetComponent<SpriteRenderer>();
+            Transform child = transform.GetChild(i);
+            child.localPosition = Vector3.zero;
+            lineTransforms[i] = child;
+            sprites[i] = child.GetComponent<SpriteRenderer>();
         }
 
+        // 预计算深度偏移，假设 localScale 在运行时不变
+        inverseScaleX = 1f / transform.localScale.x;
         gameObject.SetActive(false);
     }
-
 
     public void Interrupt()
     {
@@ -38,98 +44,94 @@ public class DirectionalArrowLine : MonoBehaviour
 
     public void Enable(PointerEventData data)
     {
-        _tokenSource?.Cancel();
-        gameObject.SetActive(true);
+        // 正确释放旧的 CancellationTokenSource
+        if (_tokenSource != null)
+        {
+            _tokenSource.Cancel();
+            _tokenSource.Dispose();
+        }
 
+        gameObject.SetActive(true);
         transform.position = mainCamera.ScreenToWorldPoint(data.position);
-        Trigger(data).Forget();
+        Trigger(data.pointerEnter).Forget();
     }
 
-    private CancellationTokenSource _tokenSource;
-
-
-    private async UniTaskVoid Trigger(PointerEventData _data)
+    private async UniTaskVoid Trigger(GameObject target)
     {
-        float inverseLinesLength = 1f / lines.Length;
-        // 缓存常用向量计算
-        Vector2 startPoint = _data.pointerEnter.transform.position;
-        Vector2 endPoint = mainCamera.ScreenToWorldPoint(_data.position);
-        Vector2 midPoint = new Vector2(startPoint.x, (startPoint.y + endPoint.y) * 0.5f); // 优化：直接计算中点
-
-        Vector3 pointPosition;
-        Vector3 lastPoint;
-        Vector3 direction;
-
         _tokenSource = new CancellationTokenSource();
-        CancellationToken _token = _tokenSource.Token;
+        CancellationToken token = _tokenSource.Token;
 
-        while (!_token.IsCancellationRequested)
+        int lineCount = lineTransforms.Length;
+        float inverseLineLength = 1f / lineCount;
+        // 最终线段索引
+        int lastIdx = lineCount - 1;
+
+        // 缓存局部变量，避免循环内多次访问
+        Transform[] transforms = lineTransforms;
+        float depthOffset = -inverseScaleX; 
+
+        while (!token.IsCancellationRequested)
         {
-            endPoint = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            midPoint.y = (startPoint.y + endPoint.y) * 0.5f;
-            // 优化：减少循环中的计算量
-            for (int i = lines.Length - 2; i > -1; i--)
+            // 1. 计算控制点
+            Vector2 startPoint = target.transform.position;
+            Vector2 endPoint = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 midPoint = new Vector2(startPoint.x, (startPoint.y + endPoint.y) * 0.5f);
+
+            // 2. 更新中间点（除最末点外）
+            for (int i = lineCount - 2; i >= 0; i--)
             {
-                float t = i * inverseLinesLength; // 使用预计算的倒数
+                float t = i * inverseLineLength;
+                Vector2 pos = GetQuadraticPoint(startPoint, midPoint, endPoint, t);
+                transforms[i].position = new Vector3(pos.x, pos.y, depthOffset);
 
-                pointPosition = GetQuadraticPoint(startPoint, midPoint, endPoint, t);
-                lines[i].transform.position = pointPosition + Vector3.back * (1 / transform.localScale.x);
-
-
-                direction = lines[i + 1].transform.position - pointPosition;
-                float angle = FastAtan2(direction.y, direction.x);
-                lines[i].transform.eulerAngles = new Vector3(0, 0, angle - 90f);
+                // 计算方向
+                Vector3 dir = transforms[i + 1].position - transforms[i].position;
+                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                transforms[i].eulerAngles = new Vector3(0, 0, angle - 90f);
             }
 
-            lastPoint = GetQuadraticPoint(startPoint, midPoint, endPoint, (lines.Length - 1f) * inverseLinesLength);
-            lines[^1].transform.position = lastPoint + Vector3.back;
-            lines[^1].transform.eulerAngles = lines[^2].transform.eulerAngles;
+            // 3. 更新最末点（位置在曲线终点，旋转跟随倒数第二点）
+            Vector2 lastPos = GetQuadraticPoint(startPoint, midPoint, endPoint, lastIdx * inverseLineLength);
+            transforms[lastIdx].position = new Vector3(lastPos.x, lastPos.y, depthOffset);
+            transforms[lastIdx].eulerAngles = transforms[lastIdx - 1].eulerAngles;
+
             await UniTask.Yield(PlayerLoopTiming.PreLateUpdate);
         }
 
+        // 结束后隐藏并重置
         gameObject.SetActive(false);
-        foreach (var t in sprites)
+        foreach (var sprite in sprites)
         {
-            t.color = defaultColor;
-            t.transform.localPosition = Vector3.zero;
+            sprite.color = defaultColor;
+            sprite.transform.localPosition = Vector3.zero;
         }
     }
 
     public void TriggerEnter()
     {
-        foreach (var VARIABLE in sprites)
-        {
-            VARIABLE.color = triggerColor;
-        }
+        foreach (var sprite in sprites)
+            sprite.color = triggerColor;
     }
 
     public void TriggerExit()
     {
-        foreach (var VARIABLE in sprites)
-        {
-            VARIABLE.color = defaultColor;
-        }
+        foreach (var sprite in sprites)
+            sprite.color = defaultColor;
     }
 
-    private static float FastAtan2(float y, float x)
-    {
-        if (x == 0f) return y > 0f ? 90f : -90f;
-
-        float atan = Mathf.Atan(y / x) * Mathf.Rad2Deg;
-        if (x < 0f) atan += 180f;
-        return atan;
-    }
-
-    // 二阶贝塞尔曲线公式实现
+    // 二阶贝塞尔曲线（保持原有实现）
     private static Vector2 GetQuadraticPoint(Vector2 p0, Vector2 p1, Vector2 p2, float t)
     {
-        var u = 1 - t;
+        float u = 1 - t;
         return u * u * p0 + 2 * u * t * p1 + t * t * p2;
     }
 
     private void OnDestroy()
     {
-        _tokenSource?.Cancel();
-        _tokenSource?.Dispose();
+        if (_tokenSource != null)
+        {
+            _tokenSource.Cancel();
+            _tokenSource.Dispose();
+        }
     }
 }

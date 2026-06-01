@@ -38,9 +38,9 @@ public class Player : MonoBehaviour, IEventCenterObject<GameEventArgs>
         animator = GetComponent<Animator>();
 
         EventCenter_Singleton.Instance.Subscribe<GetObject_GEA<Player>>(Get);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundEnd_EventName>(OnRoundEnd,0);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundStart_EventName>(OnRoundStart,0);
-        
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundEnd_EN>(OnRoundEnd, 0);
+        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundStart_EN>(OnRoundStart, 0);
+
 
         var initArray = GetComponentsInChildren<INeedToInitialize>(true);
         var tasks = new UniTask[initArray.Length];
@@ -78,22 +78,24 @@ public class Player : MonoBehaviour, IEventCenterObject<GameEventArgs>
     {
         if (gameEventArgs is Action_Int_Async args)
         {
-            await Action_Int_Async.Fire<OnRoundEnd_EventName>(args.args_int, this,
+            await Action_Int_Async.Fire<OnRoundEnd_EN>(args.args_int, this,
                 _priorityEventCenter);
         }
     }
+
     private async UniTask OnRoundStart(object sender, GameEventArgs gameEventArgs)
     {
         if (gameEventArgs is Action_Int_Async args)
         {
-            await Action_Int_Async.Fire<OnRoundStart_EventName>(args.args_int, this,
+            await Action_Int_Async.Fire<OnRoundStart_EN>(args.args_int, this,
                 _priorityEventCenter);
         }
     }
+
     private void OnDestroy()
     {
         EventManage.Clear();
-        _priorityEventCenter.Fire<OnDestroy_EA>(this, null);
+        _priorityEventCenter.Fire<OnDestroy_EN>(this, null);
         _priorityEventCenter.Clear();
     }
 }

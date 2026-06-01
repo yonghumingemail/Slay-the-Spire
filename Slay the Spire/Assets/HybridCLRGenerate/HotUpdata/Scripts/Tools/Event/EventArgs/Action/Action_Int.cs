@@ -29,13 +29,7 @@ namespace HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs
             value_Int = 0;
         }
     }
-    public class DamageCalculation_Attack_EventArgs : Action_Int
-    {
-    }
 
-    public class DamageCalculation_BeAttacked_EventArgs : Action_Int
-    {
-    }
 }
 
 
