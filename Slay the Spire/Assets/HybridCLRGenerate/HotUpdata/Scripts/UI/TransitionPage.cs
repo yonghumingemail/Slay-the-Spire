@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TransitionPage : MonoBehaviour
+public class TransitionPage : UIFormLogic
 {
     [Tooltip("动画时长（秒）")] public float animatorSpeed = 0.5f;
 
@@ -24,18 +24,22 @@ public class TransitionPage : MonoBehaviour
         _currentAnimationCts?.Dispose();
     }
 
-    [ContextMenu("Show")]
-    public UniTask Show()
+    protected internal override void OnOpen(object userData)
     {
-        return _image == null ? UniTask.CompletedTask : AnimateAlpha(1f);
+        base.OnOpen(userData);
+        AnimateAlpha(1).Forget();
     }
 
-    [ContextMenu("Close")]
-    public UniTask Close()
+    protected internal override void OnClose(object userData)
     {
-        return _image == null ? UniTask.CompletedTask : AnimateAlpha(0f);
+        Close(userData).Forget();
     }
 
+    private async UniTaskVoid Close(object userData)
+    {
+        await AnimateAlpha(0);
+        base.OnClose(userData);
+    }
     private async UniTask AnimateAlpha(float targetAlpha)
     {
         _currentAnimationCts?.Cancel();

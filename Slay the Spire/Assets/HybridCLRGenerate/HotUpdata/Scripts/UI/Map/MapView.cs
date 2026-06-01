@@ -1,5 +1,3 @@
-
-
 public class MapView : UIFormLogic
 {
     private MouseInteraction maskInteraction;
@@ -7,8 +5,9 @@ public class MapView : UIFormLogic
     private void Awake()
     {
         maskInteraction = transform.GetComponentInChildren<MouseInteraction>();
-        maskInteraction.OnMouseDownDelegate += data => {  OnClose(null); };
+        maskInteraction.OnMouseDownDelegate += data =>
+        {
+           UIManager.Instance.CloseUIForm(UIMapID.ID);
+        };
     }
-
-
 }

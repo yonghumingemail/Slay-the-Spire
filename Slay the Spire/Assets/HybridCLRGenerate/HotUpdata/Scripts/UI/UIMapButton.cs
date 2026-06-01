@@ -26,8 +26,8 @@ public class UIMapButton : MonoBehaviour
     {
         var mapObjPrefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/Map.prefab");
         await UIManager.Instance.onComplete.Task;
-        UIManager.Instance.AddUIForm(0, UIMapID.ID, mapObjPrefab, gameObject);
-        _button.onClick.AddListener(() => { UIManager.Instance.OpenUIForm(UIMapID.ID, true); } );
+        UIManager.Instance.CreateUIForm(1, UIMapID.ID, mapObjPrefab, gameObject);
+        _button.onClick.AddListener(() => { UIManager.Instance.OpenUIForm(UIMapID.ID); } );
     }
 
     private void OnDestroy()

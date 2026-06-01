@@ -11,16 +11,17 @@ using Z_Tools;
 public class UIManager : SingletonBaseMono<UIManager>
 {
     //缺乏调用链
-    
+
     //id字典
     private readonly Dictionary<int, UIFormLogic> _uiFormLogics = new();
+
     //深度UI组
     private readonly Dictionary<int, UIGroup> _uiGroups = new();
     private readonly List<UIGroup> _groupList = new(5);
 
     private GameObject _uiGroupPrefab;
 
-    public UniTaskCompletionSource onComplete { get; private set; } = new ();
+    public UniTaskCompletionSource onComplete { get; private set; } = new();
 
     protected override void Awake()
     {
@@ -43,11 +44,9 @@ public class UIManager : SingletonBaseMono<UIManager>
         for (int i = 0; i < transform.childCount; i++)
         {
             // 计算深度：例如第一个子节点索引0 → 深度 -999
-            int deep = i - 999;
             if (!transform.GetChild(i).TryGetComponent<UIGroup>(out var group)) continue;
-            group.gameObject.name = $"UIGroup_Depth_{deep}";
-            group.deep = deep;
-            _uiGroups.Add(deep, group);
+            group.OnInit(group.deep, $"UIGroup_Depth_{group.deep}");
+            _uiGroups.Add(group.deep, group);
             _groupList.Add(group);
         }
 
@@ -60,7 +59,7 @@ public class UIManager : SingletonBaseMono<UIManager>
     /// 如果该深度已有 UIGroup，则将 obj 设置为它的子物体；
     /// 否则实例化一个新的 UIGroup，并将 obj 挂载到其下，之后重新排序所有层级。
     /// </summary>
-    public void AddUIForm(int deep, int id, GameObject objPrefab, object data = null)
+    public void CreateUIForm(int deep, int id, GameObject objPrefab, object data = null)
     {
         // 如果该深度没有对应的 UIGroup 节点
         if (!_uiGroups.TryGetValue(deep, out var group))
@@ -71,7 +70,7 @@ public class UIManager : SingletonBaseMono<UIManager>
             _uiGroups.Add(deep, group);
             _groupList.Add(group);
         }
-        
+
         var obj = Instantiate(objPrefab, group.transform);
         var uiFormLogic = obj.GetComponent<UIFormLogic>();
         uiFormLogic.uiGroup = group;
@@ -79,7 +78,13 @@ public class UIManager : SingletonBaseMono<UIManager>
         _uiFormLogics.TryAdd(id, uiFormLogic);
         Sort();
     }
-    
+
+    public void RemoveUIForm(int id, object data = null)
+    {
+        if (!_uiFormLogics.Remove(id, out var uiFormLogic)) return;
+        Destroy(uiFormLogic.gameObject);
+    }
+
     public void OpenUIForm(int id, object data = null)
     {
         if (_uiFormLogics.TryGetValue(id, out var uiFormLogic))
@@ -89,6 +94,7 @@ public class UIManager : SingletonBaseMono<UIManager>
                 uiFormLogic.uiGroup.deep = _groupList[^1].deep + 1;
                 Sort();
             }
+
             uiFormLogic.OnOpen(data);
         }
         else
@@ -96,12 +102,12 @@ public class UIManager : SingletonBaseMono<UIManager>
             Debug.Log("No UI Form Logic Found");
         }
     }
-    
+
     public void CloseUIForm(int id, object data = null)
     {
         if (_uiFormLogics.TryGetValue(id, out var uiFormLogic))
         {
-            if (_groupList.Count > 1 && uiFormLogic.uiGroup._defaultDeep < _groupList[^1]._defaultDeep)
+            if (_groupList.Count > 1 && uiFormLogic.uiGroup._defaultDeep < _groupList[^2]._defaultDeep)
             {
                 uiFormLogic.uiGroup.deep = uiFormLogic.uiGroup._defaultDeep;
                 Sort();
@@ -115,33 +121,6 @@ public class UIManager : SingletonBaseMono<UIManager>
         }
     }
 
-    /// <summary>
-    /// 从指定深度移除一个 UI 对象。
-    /// 如果移除后该深度的 UIGroup 下再无子物体，则会销毁该 UIGroup 并重新排序。
-    /// </summary>
-    /// <param name="deep">对象所在的深度</param>
-    /// <param name="obj">要移除的 UI 游戏对象</param>
-    public void RemoveUIInterface(int deep, int obj)
-    {
-        if (_uiGroups.TryGetValue(deep, out var group))
-        {
-            Destroy(_uiFormLogics[obj].gameObject);
-            _uiFormLogics.Remove(obj);
-        
-            // 如果该 Group 下已经没有子物体，则销毁该 Group 并从字典中移除
-            if (group.transform.childCount != 0) return;
-            Destroy(group);
-            _uiGroups.Remove(deep);
-            _groupList.Remove(group);
-            Sort();
-        }
-        else
-        {
-            Debug.Log("没有该深度组");
-        }
-        
-       
-    }
 
     /// <summary>
     /// 根据深度值对所有 UIGroup 节点进行排序
