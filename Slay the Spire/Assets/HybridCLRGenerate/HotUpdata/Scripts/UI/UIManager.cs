@@ -13,47 +13,32 @@ public class UIManager : SingletonBaseMono<UIManager>
     private readonly Dictionary<int, UIFormLogic> _uiFormLogics = new();
     private readonly Dictionary<int, UIGroup> _uiGroups = new();
     private readonly List<UIGroup> _groupList = new(5);
-
-    private GameObject _uiGroupPrefab;
-    private UniTaskCompletionSource _onComplete = new();
+    private readonly LinkedList<UIFormLogic>  _uiFormLogicList = new();
     
+    private GameObject _uiGroupPrefab;
+
     protected override void Awake()
     {
         base.Awake();
-        Initialize().Forget(e => Debug.LogException(e));
+        Initialize();
     }
 
     /// <summary>
     /// 异步初始化：加载 UIGroup 预制体，并扫描当前已存在的子节点作为已有层级。
     /// </summary>
-    private async UniTask Initialize()
+    private void Initialize()
     {
-        try
+        // 遍历现有子节点，注册已存在的 UIGroup
+        for (int i = 0; i < transform.childCount; i++)
         {
-            // 从 Addressables 异步加载 UIGroup 预制体
-            _uiGroupPrefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>(
-                "Assets/Art/Prefab/UI/UIGroup.prefab");
-
-            // 遍历现有子节点，注册已存在的 UIGroup
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                if (transform.GetChild(i).TryGetComponent<UIGroup>(out var group))
-                {
-                    group.OnInit(group.deep, $"UIGroup_Depth_{group.deep}");
-                    _uiGroups.Add(group.deep, group);
-                    _groupList.Add(group);
-                }
-            }
-
-            Sort();
-            _onComplete.TrySetResult();
+            if (!transform.GetChild(i).TryGetComponent<UIGroup>(out var group)) continue;
+            group.OnInit(group.deep);
+            _uiGroups.Add(group.deep, group);
+            _groupList.Add(group);
         }
-        catch (Exception ex)
-        {
-            Debug.LogError($"UIManager 初始化失败: {ex}");
-            _onComplete.TrySetException(ex);
-            throw;
-        }
+
+        Sort();
+
     }
 
 
@@ -62,14 +47,19 @@ public class UIManager : SingletonBaseMono<UIManager>
     /// </summary>
     private UIGroup GetOrCreateUIGroup(int deep)
     {
-        
         if (_uiGroups.TryGetValue(deep, out var group))
             return group;
 
         // 实例化新的 UIGroup
-        var groupObj = Instantiate(_uiGroupPrefab, transform);
-        group = groupObj.GetComponent<UIGroup>();
-        group.OnInit(deep, $"UIGroup_Depth_{deep}");
+        var groupObj =new GameObject($"UIGroup_{deep}");
+        var rect = groupObj.AddComponent<RectTransform>();
+        rect.sizeDelta = Vector2.zero;
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+       
+        groupObj.transform.SetParent(transform,false);
+        group = groupObj.AddComponent<UIGroup>();
+        group.OnInit(deep);
 
         _uiGroups.Add(deep, group);
         _groupList.Add(group);
@@ -89,7 +79,7 @@ public class UIManager : SingletonBaseMono<UIManager>
             return;
         }
 
-        var group =  GetOrCreateUIGroup(deep);
+        var group = GetOrCreateUIGroup(deep);
         var obj = Instantiate(objPrefab, group.transform);
         var uiFormLogic = obj.GetComponent<UIFormLogic>();
         if (uiFormLogic == null)
@@ -111,36 +101,6 @@ public class UIManager : SingletonBaseMono<UIManager>
         Sort();
     }
 
-    /// <summary>
-    /// 注册一个已存在的 GameObject 作为 UI 界面。
-    /// </summary>
-    public void RegisterUIForm(int deep, int id, GameObject obj, object data = null)
-    {
-        if (obj == null)
-        {
-            Debug.LogError("RegisterUIForm 失败: obj 为空");
-            return;
-        }
-
-        var group =  GetOrCreateUIGroup(deep);
-        var uiFormLogic = obj.GetComponent<UIFormLogic>();
-        if (uiFormLogic == null)
-        {
-            Debug.LogError($"对象 {obj.name} 缺少 UIFormLogic 组件");
-            return;
-        }
-
-        uiFormLogic.uiGroup = group;
-        uiFormLogic.OnInit(data);
-
-        if (!_uiFormLogics.TryAdd(id, uiFormLogic))
-        {
-            Debug.LogWarning($"UIFormLogic ID {id} 已存在，将被覆盖");
-            _uiFormLogics[id] = uiFormLogic;
-        }
-
-        Sort();
-    }
 
     /// <summary>
     /// 移除并销毁指定 ID 的 UI。
@@ -152,7 +112,6 @@ public class UIManager : SingletonBaseMono<UIManager>
 
         if (uiFormLogic != null && uiFormLogic.gameObject != null)
             Destroy(uiFormLogic.gameObject);
-        // 注意：UIGroup 可能变为空，但保留以便后续使用。如有需要可增加清理空组的逻辑
     }
 
     /// <summary>
@@ -160,13 +119,12 @@ public class UIManager : SingletonBaseMono<UIManager>
     /// </summary>
     public void OpenUIForm(int id, object data = null)
     {
-
         if (!_uiFormLogics.TryGetValue(id, out var uiFormLogic))
         {
             Debug.LogError($"OpenUIForm 失败: 未找到 ID {id} 的 UIFormLogic");
             return;
         }
-
+        
         // 获取当前最大深度
         int maxDeep = _groupList.Count > 0 ? _groupList[^1].deep : 0;
         var group = uiFormLogic.uiGroup;
@@ -186,7 +144,6 @@ public class UIManager : SingletonBaseMono<UIManager>
     /// </summary>
     public void CloseUIForm(int id, object data = null)
     {
-
         if (!_uiFormLogics.TryGetValue(id, out var uiFormLogic))
         {
             Debug.LogError($"CloseUIForm 失败: 未找到 ID {id} 的 UIFormLogic");

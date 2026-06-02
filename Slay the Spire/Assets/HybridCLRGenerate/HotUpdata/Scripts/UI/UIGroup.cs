@@ -7,11 +7,10 @@ public class UIGroup : MonoBehaviour, IComparable<UIGroup>
    public int _defaultDeep { get;private set; }
    public int deep;
 
-   public void OnInit(int defaultDeep,string name_)
+   public void OnInit(int defaultDeep)
    {
       _defaultDeep = defaultDeep;
       deep=_defaultDeep;
-      gameObject.name = name_;
    }
    public int CompareTo(UIGroup other)
    {
