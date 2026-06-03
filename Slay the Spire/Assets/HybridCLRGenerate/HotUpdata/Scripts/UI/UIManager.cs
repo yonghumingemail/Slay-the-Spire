@@ -20,15 +20,6 @@ public class UIManager : SingletonBaseMono<UIManager>
     protected override void Awake()
     {
         base.Awake();
-        Initialize();
-    }
-
-    /// <summary>
-    /// 异步初始化：加载 UIGroup 预制体，并扫描当前已存在的子节点作为已有层级。
-    /// </summary>
-    private void Initialize()
-    {
-        // 遍历现有子节点，注册已存在的 UIGroup
         for (int i = 0; i < transform.childCount; i++)
         {
             if (!transform.GetChild(i).TryGetComponent<UIGroup>(out var group)) continue;
@@ -38,9 +29,8 @@ public class UIManager : SingletonBaseMono<UIManager>
         }
 
         Sort();
-
     }
-
+    
 
     /// <summary>
     /// 获取或创建指定深度的 UIGroup。
