@@ -4,18 +4,24 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TransitionPage : UIFormLogic
+public class TransitionPage : UIFormLogic, INeedToInitialize
 {
+    public abstract class ID : ClassID<ID>
+    {
+    }
+
     [Tooltip("动画时长（秒）")] public float animatorSpeed = 0.5f;
 
     private Image _image;
     private CancellationTokenSource _currentAnimationCts;
 
-    private void Awake()
+    public UniTask Initialize()
     {
         _image = GetComponent<Image>();
         if (_image == null)
             Debug.LogError($"{name}: 未找到 Image 组件！", this);
+        UIManager.Instance.RegisterUIForm(1,ID.ID, this);
+        return UniTask.CompletedTask;
     }
 
     private void OnDestroy()
@@ -40,6 +46,7 @@ public class TransitionPage : UIFormLogic
         await AnimateAlpha(0);
         base.OnClose(userData);
     }
+
     private async UniTask AnimateAlpha(float targetAlpha)
     {
         _currentAnimationCts?.Cancel();

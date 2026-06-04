@@ -12,7 +12,7 @@ public abstract class AbstractRoom
 
     public virtual void OnPointClicked(PointerEventData data)
     {
-        UIManager.Instance.CloseUIForm(UIMapID.ID, false);
+        UIManager.Instance.CloseUIForm(MapView.ID.ID, false);
         OnEnterRoom_EN.Fire(this,this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
     }
 

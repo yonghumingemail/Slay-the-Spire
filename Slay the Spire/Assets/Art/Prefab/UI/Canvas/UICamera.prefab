@@ -1011,7 +1011,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1631150830354998088}
-  - component: {fileID: 8602103387404440636}
   m_Layer: 5
   m_Name: UI_999
   m_TagString: Untagged
@@ -1039,19 +1038,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &8602103387404440636
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1466803774022101228}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27958568df64eab45bdb4729fa27976d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: HotUpdate::UIGroup
-  deep: 999
 --- !u!1 &1695971182100115454
 GameObject:
   m_ObjectHideFlags: 0
@@ -2584,6 +2570,7 @@ GameObject:
   - component: {fileID: 8938703412921511067}
   - component: {fileID: 1494093153936456246}
   - component: {fileID: 3177030512777577350}
+  - component: {fileID: 772573813080297311}
   m_Layer: 5
   m_Name: UICanvas_Active
   m_TagString: Untagged
@@ -2676,6 +2663,18 @@ MonoBehaviour:
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 0
+--- !u!114 &772573813080297311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2977339827536730582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27958568df64eab45bdb4729fa27976d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HotUpdate::UIGroup
 --- !u!1 &3032487442492014673
 GameObject:
   m_ObjectHideFlags: 0
@@ -3315,7 +3314,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3060661458481341147}
-  - component: {fileID: 7914871842815239702}
   m_Layer: 5
   m_Name: UI_0
   m_TagString: Untagged
@@ -3344,19 +3342,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &7914871842815239702
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5064634750125820045}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27958568df64eab45bdb4729fa27976d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  deep: 0
 --- !u!1 &5437573398612734570
 GameObject:
   m_ObjectHideFlags: 0
@@ -4820,7 +4805,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7692163535620942750}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

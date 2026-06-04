@@ -4,16 +4,14 @@ using UnityEngine;
 
 public class UIGroup : MonoBehaviour, IComparable<UIGroup>
 {
-   public int _defaultDeep { get;private set; }
-   public int deep;
-
-   public void OnInit(int defaultDeep)
+   public Canvas Canvas{get; private set;}
+   
+   public void OnInit( )
    {
-      _defaultDeep = defaultDeep;
-      deep=_defaultDeep;
+      Canvas=transform.GetComponent<Canvas>();
    }
    public int CompareTo(UIGroup other)
    {
-      return !other ? 1 : deep.CompareTo(other.deep);
+      return !other ? 1 : Canvas.sortingOrder.CompareTo(other.Canvas.sortingOrder);
    }
 }

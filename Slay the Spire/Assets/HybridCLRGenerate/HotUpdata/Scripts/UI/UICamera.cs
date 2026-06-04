@@ -12,10 +12,7 @@ public class UICamera : MonoBehaviour
     
     public async UniTask Initialize()
     {
-        float time = Time.realtimeSinceStartup;
-       // Debug.Log(Time.realtimeSinceStartup);
         var inits = transform.GetComponentsInChildren<INeedToInitialize>();
-       // Debug.Log(Time.realtimeSinceStartup + $"找到{inits.Length}个，任务使用时间：{Time.realtimeSinceStartup - time}");
         var tasks = new List<UniTask>(inits.Length);
         foreach (var t in inits)
         {
