@@ -9,7 +9,7 @@ public class MapView : UIFormLogic
     private void Awake()
     {
         maskInteraction = transform.GetComponentInChildren<MouseInteraction>();
-        UIManager.Instance.RegisterUIForm(1, ID.ID, this);
+        UIManager.Instance.RegisterUIForm(100, ID.ID, this);
         maskInteraction.OnMouseDownDelegate += data => { UIManager.Instance.CloseUIForm(ID.ID); };
     }
 }

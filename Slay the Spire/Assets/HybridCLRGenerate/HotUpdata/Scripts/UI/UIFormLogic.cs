@@ -15,7 +15,7 @@ public abstract class UIFormLogic : MonoBehaviour
     
     protected CanvasGroup m_Group = null;
 
-    public UIGroup uiGroup { get; set; }
+
     /// <summary>
     /// 获取或设置界面名称。
     /// </summary>

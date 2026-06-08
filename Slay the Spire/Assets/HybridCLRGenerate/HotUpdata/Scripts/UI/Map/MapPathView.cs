@@ -56,8 +56,8 @@ public class MapPathView : MonoBehaviour
 
     public async UniTaskVoid Initialized()
     {
-        lineSpritePrefab = await LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/Line.prefab");
-        roomViewPrefab = await LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/MapRoomNode.prefab");
+        lineSpritePrefab = await LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/Map/Line.prefab");
+        roomViewPrefab = await LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/Map/MapRoomNode.prefab");
         _atlas = await LoadAssetAsync<SpriteAtlas>("Assets/Art/Image/SpriteAtlas/MapUI.spriteatlasv2");
 
         Image nodeUI = roomViewPrefab.GetComponentInChildren<Image>();

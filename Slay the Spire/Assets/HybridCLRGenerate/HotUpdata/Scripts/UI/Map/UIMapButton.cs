@@ -16,6 +16,6 @@ public class UIMapButton : MonoBehaviour
 
     private void OnDestroy()
     {
-        AddressablesMgr.Instance.Release("Assets/Art/Prefab/UI/Map.prefab");
+        
     }
 }

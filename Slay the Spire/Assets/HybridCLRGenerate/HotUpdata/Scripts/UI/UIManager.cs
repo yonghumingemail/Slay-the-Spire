@@ -11,9 +11,11 @@ using Z_Tools;
 public class UIManager : SingletonBaseMono<UIManager>
 {
     private readonly Dictionary<int, UIFormLogic> _uiFormLogics = new();
+
+    //改
     private readonly Dictionary<int, UIGroup> _uiGroups = new();
 
-  [SerializeField]  private List<UIGroup> _groupList = new(5);
+    [SerializeField] private List<UIGroup> _groupList = new(5);
 
     //存储已经打开的UI
     private readonly LinkedList<UIFormLogic> _uiFormLogicList = new();
@@ -23,22 +25,25 @@ public class UIManager : SingletonBaseMono<UIManager>
     protected override void Awake()
     {
         base.Awake();
-        var components =transform.GetComponentsInChildren<UIGroup>(true);
-        foreach (var group in components)
-        {
-            group.OnInit();
-            _uiGroups.Add(group.Canvas.sortingOrder, group);
-            _groupList.Add(group);
-        }
+    
     }
 
+    public async UniTask Initialize(IEnumerable<string> resourceLabels)
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        { 
+            Destroy(transform.GetChild(i));
+        }
+
+    }
+    
     /// <summary>
     /// 创建一个新的 UI 实例并注册。
     /// </summary>
     public void CreateUIForm(int deep, int id, GameObject objPrefab, object data = null)
     {
         if (!_uiGroups.TryGetValue(deep, out var group)) return;
-        
+
         var obj = Instantiate(objPrefab, group.transform);
         var uiFormLogic = obj.GetComponent<UIFormLogic>();
         if (uiFormLogic == null)
@@ -47,7 +52,7 @@ public class UIManager : SingletonBaseMono<UIManager>
             Destroy(obj);
             return;
         }
-        uiFormLogic.uiGroup = group;
+
         uiFormLogic.OnInit(data);
 
         if (!_uiFormLogics.TryAdd(id, uiFormLogic))
@@ -55,25 +60,24 @@ public class UIManager : SingletonBaseMono<UIManager>
             Debug.LogWarning($"UIFormLogic ID {id} 已存在，将被覆盖");
             _uiFormLogics[id] = uiFormLogic;
         }
-
     }
 
     public void RegisterUIForm(int deep, int id, UIFormLogic uiFormLogic, object data = null)
     {
         if (!_uiGroups.TryGetValue(deep, out var group)) return;
-        
+
         if (uiFormLogic == null)
         {
             Debug.LogError($"UIFormLogic 组件为空");
             return;
         }
-        uiFormLogic.uiGroup = group;
+
+        uiFormLogic.transform.SetParent(group.transform);
         uiFormLogic.OnInit(data);
 
         if (_uiFormLogics.TryAdd(id, uiFormLogic)) return;
         Debug.LogWarning($"UIFormLogic ID {id} 已存在，将被覆盖");
         _uiFormLogics[id] = uiFormLogic;
-
     }
 
     /// <summary>
@@ -96,7 +100,7 @@ public class UIManager : SingletonBaseMono<UIManager>
         var node = _uiFormLogicList.Find(ui);
         if (node != null)
             _uiFormLogicList.Remove(node);
-        
+
         // 添加到链表末尾
         _uiFormLogicList.AddLast(ui);
         ui.OnOpen(data);

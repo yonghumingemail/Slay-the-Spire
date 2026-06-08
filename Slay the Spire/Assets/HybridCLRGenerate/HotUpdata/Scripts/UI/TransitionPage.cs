@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TransitionPage : UIFormLogic, INeedToInitialize
+public class TransitionPage : UIFormLogic
 {
     public abstract class ID : ClassID<ID>
     {
@@ -15,14 +15,14 @@ public class TransitionPage : UIFormLogic, INeedToInitialize
     private Image _image;
     private CancellationTokenSource _currentAnimationCts;
 
-    public UniTask Initialize()
+    private void Awake()
     {
         _image = GetComponent<Image>();
         if (_image == null)
             Debug.LogError($"{name}: 未找到 Image 组件！", this);
-        UIManager.Instance.RegisterUIForm(1,ID.ID, this);
-        return UniTask.CompletedTask;
+        UIManager.Instance.RegisterUIForm(1000,ID.ID, this);
     }
+    
 
     private void OnDestroy()
     {

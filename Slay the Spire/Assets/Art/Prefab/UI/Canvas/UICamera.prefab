@@ -4789,7 +4789,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1029017715820960890}
   - component: {fileID: 8165841098071054937}
-  - component: {fileID: 7370475246829864144}
   m_Layer: 0
   m_Name: UICamera
   m_TagString: Untagged
@@ -4865,18 +4864,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &7370475246829864144
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7692163535620942750}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccc1db2016e4cb54093a7ac3adc24ed1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: HotUpdate::UICamera
 --- !u!1 &8009331932207082333
 GameObject:
   m_ObjectHideFlags: 0

@@ -36,7 +36,7 @@ public class BuffList_V : MonoBehaviour, IBuffList_V,INeedToInitialize
             AddressablesMgr.Instance.LoadAssetAsync<object>("Assets/Art/Image/SpriteAtlas/Powers.spriteatlasv2"),
 
             // 加载Buff UI预设体
-            AddressablesMgr.Instance.LoadAssetAsync<object>("Assets/Art/Prefab/UI/Buff.prefab"),
+            AddressablesMgr.Instance.LoadAssetAsync<object>("Assets/Art/Prefab/UI/Combat/Buff.prefab"),
         };
 
         // 等待所有资源加载完成
