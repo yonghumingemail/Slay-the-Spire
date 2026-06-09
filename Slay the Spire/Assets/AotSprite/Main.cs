@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using Cysharp.Threading.Tasks;
 using HybridCLR;
@@ -47,8 +46,13 @@ public class Main : MonoBehaviour
 #if !UNITY_EDITOR
         Assembly hotUpdateAss = Assembly.Load(File.ReadAllBytes($"{Application.streamingAssetsPath}/HotUpdate.dll.bytes"));
 #else
-            // Editor下无需加载，直接查找获得HotUpdate程序集
-            Assembly hotUpdateAss = System.AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "HotUpdate");
+            Assembly hotUpdateAss;
+            foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (assembly.GetName().Name != "HotUpdate") continue;
+                hotUpdateAss = assembly;
+                break;
+            }
 #endif
             // 4. 加载热更场景
             await Addressables.LoadSceneAsync("Assets/Scenes/Test.unity"); // 请使用你实际配置的场景地址

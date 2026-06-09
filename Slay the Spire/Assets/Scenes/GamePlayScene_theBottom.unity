@@ -937,7 +937,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2190526952966001769}
+  - {fileID: 8488080903495676519}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &953074255
@@ -2063,7 +2065,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5852867239436556554}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 601984132}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2198279505758609820
 GameObject:
@@ -2361,6 +2363,10 @@ PrefabInstance:
     - target: {fileID: 1776911438325207708, guid: c8e30e00d9b97e84e9e1348ebf33504a, type: 3}
       propertyPath: m_Name
       value: Combat
+      objectReference: {fileID: 0}
+    - target: {fileID: 1776911438325207708, guid: c8e30e00d9b97e84e9e1348ebf33504a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2316415599263704130, guid: c8e30e00d9b97e84e9e1348ebf33504a, type: 3}
       propertyPath: m_Pivot.x
@@ -2888,7 +2894,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3892987244622534523}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 601984132}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &8579472720029924539
 RectTransform:
@@ -3029,8 +3035,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 1430063737}
   - {fileID: 519420032}
-  - {fileID: 2190526952966001769}
-  - {fileID: 8488080903495676519}
   - {fileID: 601984132}
   - {fileID: 1192209100}
   - {fileID: 1734707292}
