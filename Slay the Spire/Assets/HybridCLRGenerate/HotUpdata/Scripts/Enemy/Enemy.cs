@@ -40,12 +40,12 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     {
         _player = GetObject_GEA<Player>.Fire(this, EventCenter_Singleton.Instance);
 
-        var initArray = GetComponentsInChildren<INeedToInitialize>(true);
+        var initArray = GetComponentsInChildren<INeedToInitializeAsync>(true);
         var tasks = new UniTask[initArray.Length];
         int i = 0;
         foreach (var VARIABLE in initArray)
         {
-            tasks[i] = VARIABLE.Initialize();
+            tasks[i] = VARIABLE.Init();
         }
 
         await tasks;

@@ -3,7 +3,7 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class Intent_C : MonoBehaviour, INeedToInitialize
+public class Intent_C : MonoBehaviour, INeedToInitializeAsync
 {
     public List<Intent_V> intentsViewArray;
     private IIntent[] displayedIntents;
@@ -11,7 +11,7 @@ public class Intent_C : MonoBehaviour, INeedToInitialize
     public GameObject prefab;
     public float intentSpacing;
 
-    public async UniTask Initialize()
+    public async UniTask Init()
     {
         prefab = await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/Enemy/Intent.prefab");
 

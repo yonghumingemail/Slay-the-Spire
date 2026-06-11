@@ -55,6 +55,7 @@ public class Main : MonoBehaviour
             }
 #endif
             // 4. 加载热更场景
+
             await Addressables.LoadSceneAsync("Assets/Scenes/Test.unity"); // 请使用你实际配置的场景地址
         }
         catch (System.Exception e)

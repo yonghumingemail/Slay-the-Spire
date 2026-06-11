@@ -4,7 +4,7 @@ using DG.Tweening;
 using UnityEngine;
 using Z_Tools;
 
-public class AlertBox : MonoBehaviour,INeedToInitialize
+public class AlertBox : MonoBehaviour,INeedToInitializeAsync
 {
     private EnemySpawner enemySpawner;
 
@@ -19,7 +19,7 @@ public class AlertBox : MonoBehaviour,INeedToInitialize
     private float speed;
     public Vector3 offset;
 
-    public UniTask Initialize()
+    public UniTask Init()
     {
         gameObject.SetActive(false);
         LeftUp = transform.Find("LeftUp").GetComponent<SpriteRenderer>();

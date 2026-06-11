@@ -7,7 +7,7 @@ using UnityEngine.U2D;
 /// Buff列表视图控制器
 /// 负责管理Buff的UI显示、对象池和生命周期
 /// </summary>
-public class BuffList_V : MonoBehaviour, IBuffList_V,INeedToInitialize
+public class BuffList_V : MonoBehaviour, IBuffList_V,INeedToInitializeAsync
 {
     public int rowMaxCount = 5;
     public float intervalX;
@@ -27,7 +27,7 @@ public class BuffList_V : MonoBehaviour, IBuffList_V,INeedToInitialize
     /// <summary>Buff UI预设体（用于实例化新的Buff UI）</summary>
     private GameObject buffVPrefab;
     
-    public async UniTask Initialize()
+    public async UniTask Init()
     {
         // 并行加载多个资源，提高加载效率
         var taskList = new[]

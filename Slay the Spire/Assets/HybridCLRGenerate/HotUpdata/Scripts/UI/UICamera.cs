@@ -12,11 +12,11 @@ public class UICamera : MonoBehaviour
     
     public async UniTask Initialize()
     {
-        var inits = transform.GetComponentsInChildren<INeedToInitialize>();
+        var inits = transform.GetComponentsInChildren<INeedToInitializeAsync>();
         var tasks = new List<UniTask>(inits.Length);
         foreach (var t in inits)
         {
-            tasks.Add(t.Initialize());
+            tasks.Add(t.Init());
         }
         await UniTask.WhenAll(tasks);
     }

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityGameFramework.Runtime;
 
 public class CombatUI : UIFormLogic
 {
@@ -9,6 +10,7 @@ public class CombatUI : UIFormLogic
     
     private void Awake()
     {
-        UIManager.Instance.RegisterUIForm(1, ID.ID, this);
+        UIComponent uiComponent = GameEntry.GetManagerComponent<UIComponent>();
+        uiComponent.RegisterUIForm(nameof(UIGroupEnum.Game), ID.ID, this);
     }
 }

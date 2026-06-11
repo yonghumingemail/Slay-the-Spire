@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.U2D;
+using UnityGameFramework.Runtime;
 using Z_Tools;
 
 public abstract class AbstractRoom
@@ -12,7 +13,8 @@ public abstract class AbstractRoom
 
     public virtual void OnPointClicked(PointerEventData data)
     {
-        UIManager.Instance.CloseUIForm(MapView.ID.ID, false);
+        UIComponent uiComponent = GameEntry.GetManagerComponent<UIComponent>();
+        uiComponent.CloseUIForm(MapView.ID.ID, false);
         OnEnterRoom_EN.Fire(this,this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
     }
 

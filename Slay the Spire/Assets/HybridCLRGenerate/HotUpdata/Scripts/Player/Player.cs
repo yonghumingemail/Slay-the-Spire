@@ -42,12 +42,12 @@ public class Player : MonoBehaviour, IEventCenterObject<GameEventArgs>
         EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundStart_EN>(OnRoundStart, 0);
 
 
-        var initArray = GetComponentsInChildren<INeedToInitialize>(true);
+        var initArray = GetComponentsInChildren<INeedToInitializeAsync>(true);
         var tasks = new UniTask[initArray.Length];
         int i = 0;
         foreach (var VARIABLE in initArray)
         {
-            tasks[i] = VARIABLE.Initialize();
+            tasks[i] = VARIABLE.Init();
         }
 
         await tasks;

@@ -3,6 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityGameFramework.Runtime;
 
 public class TransitionPage : UIFormLogic
 {
@@ -20,7 +21,8 @@ public class TransitionPage : UIFormLogic
         _image = GetComponent<Image>();
         if (_image == null)
             Debug.LogError($"{name}: 未找到 Image 组件！", this);
-        UIManager.Instance.RegisterUIForm(1000,ID.ID, this);
+        UIComponent uiComponent = GameEntry.GetManagerComponent<UIComponent>();
+        uiComponent.RegisterUIForm(nameof(UIGroupEnum.Mask),ID.ID, this);
     }
     
 
