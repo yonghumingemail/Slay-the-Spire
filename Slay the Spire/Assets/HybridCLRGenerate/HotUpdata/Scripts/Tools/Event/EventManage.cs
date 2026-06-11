@@ -1,72 +1,77 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Z_Tools;
 
+/// <summary>
+/// 基于泛型事件参数的事件管理器，实现 IEventManage
+/// 使用类型作为事件键，不支持优先级与异步（可后续扩展）
+/// </summary>
 public class EventManage : IEventManage<GameEventArgs>
 {
-    private readonly Dictionary<Type, GameEventHandler<GameEventArgs>> Event_Dic =
-        new();
-    
-    
-    public void UnSubscribe<EventName>(GameEventHandler<GameEventArgs> _delegate)
+    private readonly Dictionary<Type, GameEventHandler<GameEventArgs>> eventHandlers = new();
+
+    public void Subscribe<EventName>(GameEventHandler<GameEventArgs> handler)
     {
-        var eventName = typeof(EventName);
-        if (Event_Dic.TryGetValue(eventName, out var action))
+        if (handler == null) throw new ArgumentNullException(nameof(handler));
+
+        var eventType = typeof(EventName);
+        if (eventHandlers.TryGetValue(eventType, out var existingHandler))
         {
-            foreach (var VARIABLE in action.GetInvocationList())
-            {
-                if (!VARIABLE.Equals(_delegate)) continue;
-                action -= _delegate;
-                Event_Dic[eventName] = action;
-            }
+            eventHandlers[eventType] = existingHandler + handler;
         }
         else
         {
-            Debug.Log($"事件{eventName}不存在");
+            eventHandlers.Add(eventType, handler);
+        }
+    }
+
+    public void UnSubscribe<EventName>(GameEventHandler<GameEventArgs> handler)
+    {
+        if (handler == null) throw new ArgumentNullException(nameof(handler));
+
+        var eventType = typeof(EventName);
+        if (eventHandlers.TryGetValue(eventType, out var existingHandler))
+        {
+            // 删除所有匹配的委托实例，并将新链存回（或移除整个条目）
+            var newHandler = existingHandler - handler;
+            if (newHandler == null)
+                eventHandlers.Remove(eventType);
+            else
+                eventHandlers[eventType] = newHandler;
+        }
+        else
+        {
+            Debug.LogWarning($"事件 {eventType.Name} 不存在，无法取消订阅");
         }
     }
 
     public void UnSubscribeAll<EventName>()
     {
-        var eventName = typeof(EventName);
-        if (!Event_Dic.Remove(eventName, out var action))
+        var eventType = typeof(EventName);
+        if (!eventHandlers.Remove(eventType))
         {
-            Debug.Log($"事件{eventName}不存在");
+            Debug.LogWarning($"事件 {eventType.Name} 不存在，无法清空订阅");
         }
     }
 
-    public void Fire<EventName>(object send, GameEventArgs args)
+    public void Fire<EventName>(object sender, GameEventArgs args)
     {
-        var eventName = typeof(EventName);
-        if (Event_Dic.TryGetValue(eventName, out var eventHandler))
+        if (args == null) throw new ArgumentNullException(nameof(args));
+
+        var eventType = typeof(EventName);
+        if (eventHandlers.TryGetValue(eventType, out var handler))
         {
-            eventHandler?.Invoke(send, args);
+            handler?.Invoke(sender, args);
         }
         else
         {
-            Debug.Log($"事件{eventName}不存在");
+            Debug.LogWarning($"事件 {eventType.Name} 不存在，触发无效");
         }
     }
 
     public void Clear()
     {
-        Event_Dic.Clear();
+        eventHandlers.Clear();
     }
 
-    public void Show()
-    {
-    }
-
-    public void Subscribe<EventName>(GameEventHandler<GameEventArgs> _delegate)
-    {
-        var eventName = typeof(EventName);
-        if (!Event_Dic.TryGetValue(eventName, out var action))
-        {
-            Event_Dic.Add(eventName, _delegate);
-        }
-
-        Event_Dic[eventName] += _delegate;
-    }
 }
-

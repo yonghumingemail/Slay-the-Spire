@@ -10,7 +10,6 @@ public class CombatUI : UIFormLogic
     
     private void Awake()
     {
-        UIComponent uiComponent = GameEntry.GetManagerComponent<UIComponent>();
-        uiComponent.RegisterUIForm(nameof(UIGroupEnum.Game), ID.ID, this);
+       
     }
 }

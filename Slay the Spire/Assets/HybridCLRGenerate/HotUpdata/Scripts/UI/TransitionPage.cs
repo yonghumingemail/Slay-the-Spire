@@ -21,8 +21,8 @@ public class TransitionPage : UIFormLogic
         _image = GetComponent<Image>();
         if (_image == null)
             Debug.LogError($"{name}: 未找到 Image 组件！", this);
-        UIComponent uiComponent = GameEntry.GetManagerComponent<UIComponent>();
-        uiComponent.RegisterUIForm(nameof(UIGroupEnum.Mask),ID.ID, this);
+
+        GameEntry.UI.RegisterUIForm(nameof(UIGroupEnum.Mask),ID.ID, this);
     }
     
 

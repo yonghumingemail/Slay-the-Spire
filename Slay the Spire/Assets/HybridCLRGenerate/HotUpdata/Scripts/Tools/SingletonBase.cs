@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Z_Tools
 {
-    public class SingletonBase<T> where T : SingletonBase<T>, new()
+    public abstract class SingletonBase<T> where T : SingletonBase<T>, new()
     {
 
         private static T instance;
@@ -21,12 +21,12 @@ namespace Z_Tools
     }
 
 
-    public class SingletonBaseMono<T> : MonoBehaviour where T : SingletonBaseMono<T>, new()
+    public abstract class SingletonBaseMono<T> : MonoBehaviour where T : SingletonBaseMono<T>
     {
         private static T instance;
         public static T Instance => instance;
 
-        protected virtual void Awake()
+        protected virtual void Initialize()
         {
             if (instance == null)
             {

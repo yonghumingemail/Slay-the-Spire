@@ -13,8 +13,7 @@ public abstract class AbstractRoom
 
     public virtual void OnPointClicked(PointerEventData data)
     {
-        UIComponent uiComponent = GameEntry.GetManagerComponent<UIComponent>();
-        uiComponent.CloseUIForm(MapView.ID.ID, false);
+        GameEntry.UI.CloseUIForm(MapView.ID.ID, false);
         OnEnterRoom_EN.Fire(this,this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
     }
 

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Z_Tools
 {
@@ -14,16 +11,13 @@ namespace Z_Tools
 
         public void Subscribe<EventName>( GameEventHandler<GameEventArgs> _delegate)
         {
-            // Debug.Log(eventKey);
             EventManage.Subscribe<EventName>(_delegate);
         }
-
-
+        
         public void Fire<EventName>(object send,GameEventArgs args)
         {
             EventManage.Fire<EventName>(send,args);
         }
-
         
         public void UnSubscribe<EventName>( GameEventHandler<GameEventArgs> _delegate)
         {

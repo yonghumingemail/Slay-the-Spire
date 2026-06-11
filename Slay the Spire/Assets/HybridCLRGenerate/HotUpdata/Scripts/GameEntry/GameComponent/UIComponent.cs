@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityGameFramework.Runtime;
+using Z_Tools;
 
-public class UIComponent : MonoBehaviour, INeedToInitialize
+public class UIComponent : MonoBehaviour, IGameModuleComponent
 {
     private UIManage _uiManage;
 

@@ -10,8 +10,8 @@ public class MapView : UIFormLogic
     private void Awake()
     {
         maskInteraction = transform.GetComponentInChildren<MouseInteraction>();
-        UIComponent uiComponent = GameEntry.GetManagerComponent<UIComponent>();
-        uiComponent.RegisterUIForm(nameof(UIGroupEnum.Panel),ID.ID, this);
-        maskInteraction.OnMouseDownDelegate += data => { uiComponent.CloseUIForm(ID.ID); };
+
+        // GameEntry.UI.RegisterUIForm(nameof(UIGroupEnum.Panel),ID.ID, this);
+        // maskInteraction.OnMouseDownDelegate += data => {  GameEntry.UI.CloseUIForm(ID.ID); };
     }
 }
