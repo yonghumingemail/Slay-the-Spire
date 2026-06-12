@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using GameFramework;
 using UnityEngine;
 
 
@@ -11,15 +11,15 @@ using UnityEngine;
 /// 保证遍历安全且零GC分配。
 /// 实现了 IPriorityEventManageAsync 接口。
 /// </summary>
-public partial class PriorityQueueEventCenter : IPriorityEventManageAsync<GameEventArgs>
+public partial class PriorityEventManager : GameFrameworkModule, IPriorityEventManagerAsync<GameEventArgs>
 {
     // ---------- 通道实例 ----------
 
     // 同步事件通道
-    private readonly EventChannel<PriorityEvent, GameEventHandler<GameEventArgs>> syncChannel = new();
+    public readonly EventChannel<GameEventHandler<GameEventArgs>> syncChannel = new();
 
     // 异步事件通道
-    private readonly EventChannel<PriorityEventAsync, GameEventHandlerAsync<GameEventArgs>> asyncChannel = new();
+    public readonly EventChannel<GameEventHandlerAsync<GameEventArgs>> asyncChannel = new();
 
     #region 公共API
 
@@ -140,7 +140,8 @@ public partial class PriorityQueueEventCenter : IPriorityEventManageAsync<GameEv
     public virtual void Clear()
     {
         if (syncChannel.IsExecuting || asyncChannel.IsExecuting)
-            throw new InvalidOperationException("Cannot clear PriorityQueueEventCenter while events are being executed.");
+            throw new InvalidOperationException(
+                "Cannot clear PriorityQueueEventCenter while events are being executed.");
 
         syncChannel.events.Clear();
         syncChannel.executingCounts.Clear();

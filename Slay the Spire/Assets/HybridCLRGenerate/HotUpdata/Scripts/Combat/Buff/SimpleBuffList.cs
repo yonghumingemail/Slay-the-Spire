@@ -8,7 +8,7 @@ using UnityEngine;
 public class SimpleBuffList : IBuffList
 {
     // 优先级事件中心，用于处理Buff相关事件（如添加、移除）并按优先级排序
-    public PriorityQueueEventCenter _priorityEventCenter { get; private set; }
+    public PriorityEventManager PriorityEventManager { get; private set; }
 
     // Buff列表的视图接口，用于更新Buff的显示
     private IBuffList_V _buffListV;
@@ -16,16 +16,16 @@ public class SimpleBuffList : IBuffList
     // 存储所有BuffObj对象的列表
     [SerializeField] private List<BuffObj> _buffListObj;
 
-    public SimpleBuffList(IBuffList_V buffListV, PriorityQueueEventCenter priorityEventCenter)
+    public SimpleBuffList(IBuffList_V buffListV, PriorityEventManager priorityEventManager)
     {
         // 设置事件中心
-        _priorityEventCenter = priorityEventCenter;
+        PriorityEventManager = priorityEventManager;
         // 设置视图接口
         _buffListV = buffListV;
         // 初始化Buff对象列表
         _buffListObj = new List<BuffObj>();
 
-     priorityEventCenter.Subscribe<OnDestroy_EN>(OnDestroy,0);
+     priorityEventManager.Subscribe<OnDestroy_EN>(OnDestroy,0);
 
     }
 
@@ -35,7 +35,7 @@ public class SimpleBuffList : IBuffList
     {
         buffObj.OnDataUpdate += UpdateView;
         buffObj.OnRemove+= RemoveBuff;
-        buffObj.OnAddBuff(_priorityEventCenter);
+        buffObj.OnAddBuff(PriorityEventManager);
         
         _buffListObj.Add(buffObj);
         _buffListV.AddBuff(buffObj);
@@ -49,7 +49,7 @@ public class SimpleBuffList : IBuffList
         // 通知视图更新，移除对应Buff的显示
         _buffListV.RemoveBuff(buffObj);
         // 触发Buff对象的移除事件，传入事件中心
-        buffObj.OnRemoveBuff(_priorityEventCenter);
+        buffObj.OnRemoveBuff(PriorityEventManager);
     }
 
     // 更新指定Buff对象的视图显示
@@ -76,7 +76,7 @@ public class SimpleBuffList : IBuffList
     {
         foreach (var VARIABLE in _buffListObj)
         {
-            VARIABLE.OnRemoveBuff(_priorityEventCenter);
+            VARIABLE.OnRemoveBuff(PriorityEventManager);
         }
 
         _buffListObj.Clear();

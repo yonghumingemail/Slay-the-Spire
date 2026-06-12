@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
+using UnityGameFramework.Runtime;
 using Z_Tools;
 
 public class EnemySpawner : MonoBehaviour
 {
     public List<Enemy> enemyList = new List<Enemy>();
-    public EventManage eventCenter { get; private set; } = new EventManage();
+    public EventManager eventCenter { get; private set; } = new EventManager();
     private CombatManage _combatManage;
     private GameObject enemyPrefab;
     [SerializeField] private Vector2 startPos;
@@ -18,10 +19,10 @@ public class EnemySpawner : MonoBehaviour
     {
         _combatManage = transform.GetComponentInParent<CombatManage>();
 
-        EventCenter_Singleton.Instance.Subscribe<GetObject_GEA<EnemySpawner>>(Get);
+         GameEntry.Event.Subscribe<GetObject_GEA<EnemySpawner>>(Get);
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundStart_EN>(OnRoundStart, 5);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundEnd_EN>(OnRoundEnd, 0);
+         GameEntry.Event.SubscribeAsync<OnRoundStart_EN>(OnRoundStart, 5);
+         GameEntry.Event.SubscribeAsync<OnRoundEnd_EN>(OnRoundEnd);
 
         for (int i = 0; i < transform.childCount; i++)
         {

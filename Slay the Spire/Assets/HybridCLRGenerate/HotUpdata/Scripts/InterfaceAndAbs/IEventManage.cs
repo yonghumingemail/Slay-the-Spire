@@ -1,7 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 
-public interface IBaseEventManage<TEventArgs> where TEventArgs : GameEventArgs
+public interface IBaseEventManager<TEventArgs> where TEventArgs : GameEventArgs
 {
     void UnSubscribe<EventName>(GameEventHandler<TEventArgs> _delegate);
     void UnSubscribeAll<EventName>();
@@ -9,19 +9,19 @@ public interface IBaseEventManage<TEventArgs> where TEventArgs : GameEventArgs
     void Clear();
 }
 
-public interface IEventManage<TEventArgs> : IBaseEventManage<TEventArgs>
+public interface IEventManager<TEventArgs> : IBaseEventManager<TEventArgs>
     where TEventArgs : GameEventArgs
 {
     void Subscribe<EventName>(GameEventHandler<TEventArgs> _delegate);
 }
 
-public interface IPriorityEventManage<TEventArgs> : IBaseEventManage<TEventArgs>
+public interface IPriorityEventManager<TEventArgs> : IBaseEventManager<TEventArgs>
     where TEventArgs : GameEventArgs
 {
     void Subscribe<EventName>(GameEventHandler<TEventArgs> _delegate, int priority);
 }
 
-public interface IPriorityEventManageAsync<TEventArgs> : IPriorityEventManage<TEventArgs>
+public interface IPriorityEventManagerAsync<TEventArgs> : IPriorityEventManager<TEventArgs>
     where TEventArgs : GameEventArgs
 {
     void SubscribeAsync<EventName>(GameEventHandlerAsync<GameEventArgs> _delegate, int priority);

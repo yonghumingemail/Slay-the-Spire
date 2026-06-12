@@ -51,7 +51,7 @@ public class CardInteraction : MouseInteraction
     {
         cardAnimator = animator;
         _view = GetComponent<CardView>();
-        var handPile = GetObject_GEA<HandPile>.Fire(this, EventCenter_Singleton.Instance);
+        var handPile = GetObject_GEA<HandPile>.Fire(this);
 
         scale = transform.localScale;
         mouseOverScale = scale * magnification;

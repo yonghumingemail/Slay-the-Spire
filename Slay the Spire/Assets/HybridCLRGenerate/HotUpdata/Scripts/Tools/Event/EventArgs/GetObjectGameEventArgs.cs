@@ -1,12 +1,13 @@
 using GameFramework;
 using UnityEngine;
+using UnityGameFramework.Runtime;
 
 public class GetObject_GEA<ObjType> : Args_T where ObjType : class
 {
     
-    public static void Subscribe(ObjType instance, IEventManage<GameEventArgs> EventManage)
+    public static void Subscribe(ObjType instance, IEventManager<GameEventArgs> eventManager)
     {
-        EventManage.Subscribe<GetObject_GEA<ObjType>>((send, handler) =>
+        eventManager.Subscribe<GetObject_GEA<ObjType>>((send, handler) =>
         {
             if (handler is Args_T args)
             {
@@ -15,10 +16,24 @@ public class GetObject_GEA<ObjType> : Args_T where ObjType : class
         });
     }
     
-    public static ObjType Fire(object sender, IEventManage<GameEventArgs> eventManage)
+    public static ObjType Fire(object sender, IEventManager<GameEventArgs> eventManager)
     {
         var args = ReferencePool.Acquire<Args_T>();
-        eventManage.Fire<GetObject_GEA<ObjType>>(sender, args);
+        eventManager.Fire<GetObject_GEA<ObjType>>(sender, args);
+        var returnValue = args.value;
+        ReferencePool.Release(args);
+        if (returnValue is ObjType value)
+        {
+            return value;
+        }
+
+        Debug.Log($"参数类型不一致，返回空值\n所需类型为：{typeof(ObjType)},实际参数类型：{returnValue.GetType()}");
+        return null;
+    }
+    public static ObjType Fire(object sender)
+    {
+        var args = ReferencePool.Acquire<Args_T>();
+        GameEntry.Event.Fire<GetObject_GEA<ObjType>>(sender, args);
         var returnValue = args.value;
         ReferencePool.Release(args);
         if (returnValue is ObjType value)

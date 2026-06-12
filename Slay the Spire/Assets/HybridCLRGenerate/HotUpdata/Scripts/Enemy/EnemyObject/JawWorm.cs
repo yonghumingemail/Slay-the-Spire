@@ -26,7 +26,7 @@ public class JawWorm : Enemy
         IIntent[] action1IntentArray =
         {
             attackIntent_Action1 =
-                new AttackIntent(11, 1, _spriteAtlas, _priorityEventCenter, _player._priorityEventCenter)
+                new AttackIntent(11, 1, _spriteAtlas, PriorityEventManager, _player.PriorityEventManager)
         };
         IIntent[] action2IntentArray =
         {
@@ -36,7 +36,7 @@ public class JawWorm : Enemy
         IIntent[] action3IntentArray =
         {
             attackIntent_Action3 =
-                new AttackIntent(7, 1, _spriteAtlas, _priorityEventCenter, _player._priorityEventCenter),
+                new AttackIntent(7, 1, _spriteAtlas, PriorityEventManager, _player.PriorityEventManager),
             defendIntent_Action3 = new DeFendIntent(5, _spriteAtlas)
         };
 

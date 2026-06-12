@@ -1,12 +1,13 @@
 using GameFramework;
 using UnityEngine;
+using UnityGameFramework.Runtime;
 
 public class Args_T_EA<EventName> : Args_T where EventName : class
 {
     public static void Fire<ArgsType>(ArgsType value, object sender,
-        IPriorityEventManage<GameEventArgs> eventManage)
+        IPriorityEventManager<GameEventArgs> eventManager)
     {
-        if (eventManage == null)
+        if (eventManager == null)
         {
             Debug.Log($"sender:{sender}调用Fire函数的事件参数为空");
             return;
@@ -14,8 +15,16 @@ public class Args_T_EA<EventName> : Args_T where EventName : class
 
         var args = ReferencePool.Acquire<Args_T>();
         args.value = value;
-        eventManage.Fire<EventName>(sender, args);
+        eventManager.Fire<EventName>(sender, args);
         ReferencePool.Release(args);
+    }
+    public static void Fire<ArgsType>(ArgsType value, object sender)
+    {
+        var args = ReferencePool.Acquire<Args_T>();
+        args.value = value;
+        GameEntry.Event.Fire<EventName>(sender, args);
+        ReferencePool.Release(args);
+
     }
 }
 

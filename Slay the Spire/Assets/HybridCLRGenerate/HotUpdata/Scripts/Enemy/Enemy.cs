@@ -13,10 +13,10 @@ using Z_Tools;
 public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectableObject,
     IEventCenterObject<GameEventArgs>
 {
-    public IEventManage<GameEventArgs> EventManage { get; } = new EventManage(); //用于提供接口对象
+    public IEventManager<GameEventArgs> EventManager { get; } = new EventManager(); //用于提供接口对象
     public CancellationTokenSource TokenSource { get; } = new();
 
-    public PriorityQueueEventCenter _priorityEventCenter = new(); //用于记录和触发buff事件
+    public PriorityEventManager PriorityEventManager = new(); //用于记录和触发buff事件
 
     public SpriteRenderer spriteRenderer { get; protected set; }
 
@@ -38,7 +38,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public virtual async UniTask Initialize()
     {
-        _player = GetObject_GEA<Player>.Fire(this, EventCenter_Singleton.Instance);
+        _player = GetObject_GEA<Player>.Fire(this);
 
         var initArray = GetComponentsInChildren<INeedToInitializeAsync>(true);
         var tasks = new UniTask[initArray.Length];
@@ -66,10 +66,10 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         intentC = GetComponentInChildren<Intent_C>(true);
         alertBox = GetComponentInChildren<AlertBox>(true);
 
-        roleCore = new RoleCore(gameObject, spriteRenderer, roleCoreData, _priorityEventCenter);
-        roleCore.InterfaceRegistration(EventManage);
+        roleCore = new RoleCore(gameObject, spriteRenderer, roleCoreData, PriorityEventManager);
+        roleCore.InterfaceRegistration(EventManager);
 
-        GetObject_GEA<PriorityQueueEventCenter>.Subscribe(_priorityEventCenter, EventManage);
+        GetObject_GEA<PriorityEventManager>.Subscribe(PriorityEventManager, EventManager);
 
         UI.gameObject.SetActive(true);
         //改，不应该由enemy加载
@@ -109,7 +109,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     protected virtual async UniTask OnRoundEnd(int roundCount)
     {
         //通知事件，回合结束
-        await Action_Int_Async.Fire<OnRoundEnd_EN>(roundCount, this, _priorityEventCenter);
+        await Action_Int_Async.Fire<OnRoundEnd_EN>(roundCount, this, PriorityEventManager);
     }
 
 
@@ -120,7 +120,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public virtual async UniTask OnRoundStart(int roundCount)
     {
         //通知事件，回合开始
-        await Action_Int_Async.Fire<OnRoundStart_EN>(roundCount, this, _priorityEventCenter);
+        await Action_Int_Async.Fire<OnRoundStart_EN>(roundCount, this, PriorityEventManager);
 
         await currentAction.Execute.Invoke();
         actionList.Add(currentAction);
@@ -138,12 +138,12 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
-        Args_T_EA<OnMouseEnterEnemy_EA>.Fire(this, this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
+        Args_T_EA<OnMouseEnterEnemy_EA>.Fire(this, this);
     }
 
     public virtual void OnPointerExit(PointerEventData eventData)
     {
-        Args_T_EA<OnMouseExitEnemy_EA>.Fire(this, this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
+        Args_T_EA<OnMouseExitEnemy_EA>.Fire(this, this);
     }
 
     public virtual void OnSelect()
@@ -158,7 +158,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     private void OnDestroy()
     {
-        _priorityEventCenter.Fire<OnDestroy_EN>(this, null);
-        _priorityEventCenter.Clear();
+        PriorityEventManager.Fire<OnDestroy_EN>(this, null);
+        PriorityEventManager.Clear();
     }
 }

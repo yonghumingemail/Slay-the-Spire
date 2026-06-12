@@ -3,6 +3,6 @@ using Z_Tools;
 
 public interface IEventCenterObject<T> where T : GameEventArgs
 {
-    IEventManage<T>  EventManage { get; }
+    IEventManager<T>  EventManager { get; }
 }
 

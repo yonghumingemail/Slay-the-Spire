@@ -1,20 +1,19 @@
 using System;
 using System.Collections.Generic;
+using GameFramework;
 
-public partial class PriorityQueueEventCenter
+public partial class PriorityEventManager
 {
     /// <summary>
     /// 内部泛型事件通道，封装同一类型（同步或异步）事件的所有管理逻辑。
     /// 包括列表存储、执行计数、延迟操作队列以及相关操作。
     /// </summary>
-    /// <typeparam name="TNode">事件节点类型，必须实现 IPriorityEventNode 和 IComparable</typeparam>
     /// <typeparam name="THandler">委托类型</typeparam>
-    private class EventChannel<TNode, THandler>
-        where TNode : class, IPriorityEventNode<THandler>, IComparable<TNode>, new()
+    public class EventChannel<THandler>
         where THandler : Delegate
     {
         /// <summary>事件类型到按优先级排序的节点列表的映射</summary>
-        public Dictionary<Type, List<TNode>> events = new();
+        public Dictionary<Type, List<PriorityEventNode<THandler>>> events = new();
 
         /// <summary>正在执行的事件类型及其重入次数（支持递归触发）</summary>
         public Dictionary<Type, int> executingCounts = new();
@@ -25,31 +24,41 @@ public partial class PriorityQueueEventCenter
         /// </summary>
         public List<(Type type, THandler handler, int priority, bool isAdd)> pendingOps = new(4);
         
-        private List<int> _indicesCache = new List<int>();
-        private List<(THandler handler, int priority, bool isAdd)> _opsCache = new List<(THandler handler, int priority, bool isAdd)>();
+        private List<int> _indicesCache = new ();
+        private List<(THandler handler, int priority, bool isAdd)> _opsCache = new ();
 
         /// <summary>
-        /// 静态方法：按优先级降序将节点插入到已排序的列表中。
+        /// 按优先级降序将节点插入到已排序的列表中。
         /// 使用二分查找定位插入位置。
         /// </summary>
-        public void InsertSorted(List<TNode> list, TNode node)
+        private void InsertSorted(List<PriorityEventNode<THandler>> list, PriorityEventNode<THandler> node)
         {
             int index = list.BinarySearch(node);
-            if (index < 0) index = ~index; // 转换为插入位置
+            if (index < 0) index = ~index; // 转换为插入位置,~x 等价于 -(x+1)
             list.Insert(index, node);
         }
 
         /// <summary>
-        /// 静态方法：从列表中移除第一个匹配的委托对应的节点。
+        /// 从列表中移除第一个匹配的委托对应的节点。
         /// </summary>
-        public void RemoveFromList(List<TNode> list, THandler handler)
+        private void RemoveFromList(List<PriorityEventNode<THandler>> list, THandler handler)
         {
             for (int i = 0; i < list.Count; i++)
             {
                 if (list[i].Handler != handler) continue;
+                ReferencePool.Release(list[i]);
                 list.RemoveAt(i);
                 return;
             }
+        }
+
+        private PriorityEventNode<THandler> GetNode(int priority, THandler handler)
+        {
+            var node = ReferencePool.Acquire<PriorityEventNode<THandler>>();
+            node.Priority = priority;
+            node.Handler = handler;
+            node.sendName = handler.Method.DeclaringType?.Name;
+            return node;
         }
 
         /// <summary>
@@ -62,7 +71,7 @@ public partial class PriorityQueueEventCenter
 
             if (!events.TryGetValue(type, out var list))
             {
-                list = new List<TNode>();
+                list = new List<PriorityEventNode<THandler>>();
                 events[type] = list;
             }
 
@@ -72,12 +81,8 @@ public partial class PriorityQueueEventCenter
                 pendingOps.Add((type, handler, priority, true));
                 return;
             }
-
-            var node = new TNode()
-            {
-                Priority = priority,
-                Handler = handler,
-            };
+            
+            var node = GetNode(priority, handler);
             InsertSorted(list, node);
         }
 
@@ -175,14 +180,10 @@ public partial class PriorityQueueEventCenter
                 {
                     if (!events.TryGetValue(type, out var list))
                     {
-                        list = new List<TNode>();
+                        list = new List<PriorityEventNode<THandler>>();
                         events[type] = list;
                     }
-                    var node = new TNode()
-                    {
-                        Priority = priority,
-                        Handler = handler,
-                    };
+                    var node = GetNode(priority, handler);
                     InsertSorted(list, node);
                 }
                 else
@@ -204,7 +205,7 @@ public partial class PriorityQueueEventCenter
         /// <summary>
         /// 获取指定事件类型的监听列表，可能为 null。
         /// </summary>
-        public List<TNode> GetList(Type type) => events.GetValueOrDefault(type);
+        public List<PriorityEventNode<THandler>> GetList(Type type) => events.GetValueOrDefault(type);
 
         /// <summary>
         /// 检查是否有任何事件正在执行。

@@ -14,7 +14,7 @@ public abstract class AbstractRoom
     public virtual void OnPointClicked(PointerEventData data)
     {
         GameEntry.UI.CloseUIForm(MapView.ID.ID, false);
-        OnEnterRoom_EN.Fire(this,this, EventCenter_Singleton.Instance._priorityQueueEventCenter);
+        OnEnterRoom_EN.Fire(this,this);
     }
 
     public virtual void Init(SpriteAtlas atlas)

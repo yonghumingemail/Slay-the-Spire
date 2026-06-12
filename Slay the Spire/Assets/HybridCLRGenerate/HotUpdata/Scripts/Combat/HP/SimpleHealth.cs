@@ -7,7 +7,7 @@ using UnityEngine;
 public class SimpleHealth : IHealth
 {
     private Action<IHealth> _updateView;
-    private PriorityQueueEventCenter _priorityEventCenter;
+    private PriorityEventManager _priorityEventManager;
 
     public int HealthValue
     {
@@ -37,20 +37,20 @@ public class SimpleHealth : IHealth
     [SerializeField] private int healthValue;
     [SerializeField] private int maxHealthValue;
 
-    public SimpleHealth(Action<IHealth> UpdateView, PriorityQueueEventCenter priorityEventCenter)
+    public SimpleHealth(Action<IHealth> UpdateView, PriorityEventManager priorityEventManager)
     {
-        _priorityEventCenter = priorityEventCenter;
+        _priorityEventManager = priorityEventManager;
         _updateView = UpdateView;
     }
 
     public void AddHealth(ChangeValueInfo info)
     {
-        Args_T_EA<OnBeAttacked_EA>.Fire(info, this, _priorityEventCenter);
+        Args_T_EA<OnBeAttacked_EA>.Fire(info, this, _priorityEventManager);
 
         HealthValue = Mathf.Clamp(HealthValue + info.value, 0, MaxHealth);
         _updateView?.Invoke(this);
 
-        Args_T_EA<OnHealthArgsChangeEa>.Fire(info, this, _priorityEventCenter);
+        Args_T_EA<OnHealthArgsChangeEa>.Fire(info, this, _priorityEventManager);
 
         ReferencePool.Release(info);
         // Debug.Log(HealthValue);

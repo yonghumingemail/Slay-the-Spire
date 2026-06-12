@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using GameFramework;
 using UnityEngine;
+using UnityGameFramework.Runtime;
 
 namespace HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs
 {
@@ -10,9 +11,9 @@ namespace HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs
         public int args_int;
 
         public static async UniTask Fire<EventName>(int args_int, object sender,
-            IPriorityEventManageAsync<GameEventArgs> eventManage)
+            IPriorityEventManagerAsync<GameEventArgs> eventManager)
         {
-            if (eventManage == null)
+            if (eventManager == null)
             {
                 Debug.Log($"sender:{sender}调用Fire函数的事件参数为空");
                 return;
@@ -20,10 +21,17 @@ namespace HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs
 
             var args = ReferencePool.Acquire<Action_Int_Async>();
             args.args_int = args_int;
-            await eventManage.FireAsync<EventName>(sender, args);
+            await eventManager.FireAsync<EventName>(sender, args);
             ReferencePool.Release(args);
         }
+        public static async UniTask Fire<EventName>(int args_int, object sender)
+        {
 
+            var args = ReferencePool.Acquire<Action_Int_Async>();
+            args.args_int = args_int;
+            await GameEntry.Event.FireAsync<EventName>(sender, args);
+            ReferencePool.Release(args);
+        }
         public override void Clear()
         {
             args_int = 0;

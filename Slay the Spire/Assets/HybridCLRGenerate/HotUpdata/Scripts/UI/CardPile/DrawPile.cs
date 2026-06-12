@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityGameFramework.Runtime;
 using Z_Tools;
 
 public class DrawPile : Pile
@@ -10,7 +11,7 @@ public class DrawPile : Pile
     {
         base.Awake();
         _discardPile = transform.parent.Find("DiscardPile").GetComponent<DiscardPile>();
-        EventCenter_Singleton.Instance.Subscribe<GetObject_GEA<DrawPile>>( Get);
+        GameEntry.Event.Subscribe<GetObject_GEA<DrawPile>>( Get);
     }
     private void Get(object send, GameEventArgs gameEventHandler)
     {

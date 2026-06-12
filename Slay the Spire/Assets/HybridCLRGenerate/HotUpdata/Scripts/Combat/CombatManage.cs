@@ -3,6 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
+using UnityGameFramework.Runtime;
 using Z_Tools;
 
 public class CombatManage : MonoBehaviour
@@ -17,7 +18,7 @@ public class CombatManage : MonoBehaviour
 
     private void Awake()
     {
-        EventCenter_Singleton.Instance.Subscribe<GetObject_GEA<CombatManage>>(Get);
+        GameEntry.Event.Subscribe<GetObject_GEA<CombatManage>>(Get);
     }
 
     private void Update()
@@ -63,7 +64,6 @@ public class CombatManage : MonoBehaviour
     public async UniTask OnRoundStart()
     {
         roundCount++;
-        await Action_Int_Async.Fire<OnRoundStart_EN>(roundCount, this,
-            EventCenter_Singleton.Instance._priorityQueueEventCenter);
+        await Action_Int_Async.Fire<OnRoundStart_EN>(roundCount, this);
     }
 }

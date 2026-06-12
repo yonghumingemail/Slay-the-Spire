@@ -6,9 +6,9 @@ public class Buff_EventArgs : GameEventArgs
     public int stack;
 
     public static void Fire<EventName>(BuffObj value, int stack, object sender,
-        IPriorityEventManage<GameEventArgs> eventManage)
+        IPriorityEventManager<GameEventArgs> eventManager)
     {
-        if (eventManage == null)
+        if (eventManager == null)
         {
             Debug.Log($"sender:{sender}调用Fire函数的事件参数为空");
             return;
@@ -17,7 +17,7 @@ public class Buff_EventArgs : GameEventArgs
         var args = ReferencePool.Acquire<Buff_EventArgs>();
         args.value = value;
         args.stack = stack;
-        eventManage.Fire<EventName>(sender, args);
+        eventManager.Fire<EventName>(sender, args);
         ReferencePool.Release(args);
     }
 

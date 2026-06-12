@@ -15,7 +15,7 @@ public abstract class Card : MonoBehaviour
 
 
     //用于监听和触发子类实现的特殊事件
-    public PriorityQueueEventCenter priorityEventCenter { get; private set; }
+    public PriorityEventManager PriorityEventManager { get; private set; }
 
     protected CardView cardView;
     [SerializeField] protected CardAnimator cardAnimator;
@@ -123,7 +123,7 @@ public abstract class Card : MonoBehaviour
 
     public virtual async UniTask Initialized()
     {
-        priorityEventCenter = new PriorityQueueEventCenter();
+        PriorityEventManager = new PriorityEventManager();
         cardEntries = new List<IEntry>();
         detectLayer = 1 << LayerMask.NameToLayer("Enemy");
         
@@ -135,10 +135,10 @@ public abstract class Card : MonoBehaviour
         
         exteriorInfo = (await AddressablesMgr.Instance.LoadAssetAsync<CardExteriorInfo>(defaultDataPtah)).Copy();
 
-        _player = GetObject_GEA<Player>.Fire(this, EventCenter_Singleton.Instance);
-        _combatManage = GetObject_GEA<CombatManage>.Fire(this, EventCenter_Singleton.Instance);
-        _energy = GetObject_GEA<Energy>.Fire(this, EventCenter_Singleton.Instance);
-        _discardPile = GetObject_GEA<DiscardPile>.Fire(this, EventCenter_Singleton.Instance);
+        _player = GetObject_GEA<Player>.Fire(this);
+        _combatManage = GetObject_GEA<CombatManage>.Fire(this);
+        _energy = GetObject_GEA<Energy>.Fire(this);
+        _discardPile = GetObject_GEA<DiscardPile>.Fire(this);
         
         cardInteraction.OnMouseDownDelegate += (data) => { OnSelectCard?.Invoke(this); };
 

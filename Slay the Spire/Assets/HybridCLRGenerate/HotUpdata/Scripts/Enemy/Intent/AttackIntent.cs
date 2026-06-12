@@ -9,8 +9,8 @@ public class AttackIntent : IIntent
 {
     private Sprite[] _sprites;
 
-    private PriorityQueueEventCenter _send;
-    private PriorityQueueEventCenter _receive;
+    private PriorityEventManager _send;
+    private PriorityEventManager _receive;
     public Sprite _sprite { get; private set; }
     public string _text { get; private set; }
     public Intent_V _intentV { get; set; }
@@ -19,7 +19,7 @@ public class AttackIntent : IIntent
     public int number { get; private set; } //次数
     public InflictDamage _inflictDamage { get; private set; }
 
-    public AttackIntent(int value, int number, SpriteAtlas sprites, PriorityQueueEventCenter send, PriorityQueueEventCenter receive)
+    public AttackIntent(int value, int number, SpriteAtlas sprites, PriorityEventManager send, PriorityEventManager receive)
     {
         _sprites = new[]
         {

@@ -8,13 +8,13 @@ namespace HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs
     {
         public int value_Int;
 
-        public static int Fire<EventName>(int value, object sender, IPriorityEventManage<GameEventArgs> eventManage)
+        public static int Fire<EventName>(int value, object sender, IPriorityEventManager<GameEventArgs> eventManager)
         {
-            if (eventManage != null)
+            if (eventManager != null)
             {
                 var args = ReferencePool.Acquire<Action_Int>();
                 args.value_Int = value;
-                eventManage.Fire<EventName>(sender, args);
+                eventManager.Fire<EventName>(sender, args);
                 var returnValue = args.value_Int;
                 ReferencePool.Release(args);
                 return returnValue;

@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Splines;
 using UnityEngine.Sprites;
+using UnityGameFramework.Runtime;
 using Z_Tools;
 
 public class HandPile : MonoBehaviour, IPointerEnterHandler
@@ -29,15 +30,13 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler
         cardArrangement = new CardArrangement(maxHandCount);
         spline = transform.Find("Spline").GetComponent<SplineContainer>();
 
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundStart_EN>(OnRoundStart,
-            0);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.SubscribeAsync<OnRoundEnd_EN>(OnRoundEnd, 0);
-
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe<OnMouseEnterEnemy_EA>(
-            OnMouseEnterEnemy, 0);
-        EventCenter_Singleton.Instance._priorityQueueEventCenter.Subscribe<OnMouseExitEnemy_EA>(
-            OnMouseExitEnemy, 0);
-        EventCenter_Singleton.Instance.Subscribe<GetObject_GEA<HandPile>>(Get);
+        GameEntry.Event.SubscribeAsync<OnRoundStart_EN>(OnRoundStart);
+        GameEntry.Event.SubscribeAsync<OnRoundEnd_EN>(OnRoundEnd);
+        
+        GameEntry.Event.Subscribe<OnMouseEnterEnemy_EA>(OnMouseEnterEnemy);
+        GameEntry.Event.Subscribe<OnMouseExitEnemy_EA>( OnMouseExitEnemy);
+        
+        GameEntry.Event.Subscribe<GetObject_GEA<HandPile>>(Get);
     }
 
     private void Get(object send, GameEventArgs gameEventHandler)
@@ -64,13 +63,13 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler
     private void OnMouseEnterEnemy(object sender, GameEventArgs args)
     {
         if (!SelectedCard || !(args is Args_T _args)) return;
-        Args_T_EA<OnMouseEnterEnemy_EA>.Fire(_args.value, this, SelectedCard.priorityEventCenter);
+        Args_T_EA<OnMouseEnterEnemy_EA>.Fire(_args.value, this, SelectedCard.PriorityEventManager);
     }
 
     private void OnMouseExitEnemy(object sender, GameEventArgs args)
     {
         if (!SelectedCard || !(args is Args_T _args)) return;
-        Args_T_EA<OnMouseExitEnemy_EA>.Fire(_args.value, this, SelectedCard.priorityEventCenter);
+        Args_T_EA<OnMouseExitEnemy_EA>.Fire(_args.value, this, SelectedCard.PriorityEventManager);
     }
 
     public void SetSelectedCard(Card card)
@@ -86,7 +85,7 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler
 
     public async UniTaskVoid Test11()
     {
-        drawPile = GetObject_GEA<DrawPile>.Fire(this, EventCenter_Singleton.Instance);
+        drawPile = GetObject_GEA<DrawPile>.Fire(this);
 
         GameObject prefab =
             await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/Card/Card.prefab");

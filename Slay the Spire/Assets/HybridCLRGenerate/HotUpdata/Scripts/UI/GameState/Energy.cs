@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityGameFramework.Runtime;
 using Z_Tools;
 
 public class Energy : MonoBehaviour
@@ -22,7 +23,7 @@ public class Energy : MonoBehaviour
         image4 = transform.GetChild(0).GetChild(3).GetComponent<RectTransform>();
         _text = transform.Find("Text").GetComponent<TextMeshProUGUI>();
         UpdateUIInfo();
-        EventCenter_Singleton.Instance.Subscribe<GetObject_GEA<Energy>>( Get);
+        GameEntry.Event.Subscribe<GetObject_GEA<Energy>>( Get);
     }
 
     private void Get(object send, GameEventArgs gameEventHandler)

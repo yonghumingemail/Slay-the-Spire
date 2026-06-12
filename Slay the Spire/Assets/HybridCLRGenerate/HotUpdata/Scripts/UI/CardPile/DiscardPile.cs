@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityGameFramework.Runtime;
 using Z_Tools;
 
 public class DiscardPile : Pile
@@ -7,7 +8,7 @@ public class DiscardPile : Pile
     protected override void Awake()
     {
         base.Awake();
-        EventCenter_Singleton.Instance.Subscribe<GetObject_GEA<DiscardPile>>(Get);
+        GameEntry.Event.Subscribe<GetObject_GEA<DiscardPile>>(Get);
     }
 
     private void Get(object send, GameEventArgs gameEventHandler)

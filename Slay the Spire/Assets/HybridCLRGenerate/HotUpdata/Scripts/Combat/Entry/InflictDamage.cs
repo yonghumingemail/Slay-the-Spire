@@ -30,8 +30,8 @@ public class InflictDamage : IEntry
         IEventCenterObject<GameEventArgs> eventCenter_Receiver = receiver.GetComponent<IEventCenterObject<GameEventArgs>>();
         
   
-        IBuffList buffList_Sender = GetObject_GEA<IBuffList>.Fire(this, eventCenter_Sender.EventManage);
-        IHealth health = GetObject_GEA<IHealth>.Fire(this, eventCenter_Receiver.EventManage);
+        IBuffList buffList_Sender = GetObject_GEA<IBuffList>.Fire(this, eventCenter_Sender.EventManager);
+        IHealth health = GetObject_GEA<IHealth>.Fire(this, eventCenter_Receiver.EventManager);
 
 
         ChangeValueInfo info = ChangeValueInfo.GetInstance(sender,receiver,-damage);
@@ -42,7 +42,7 @@ public class InflictDamage : IEntry
         }
         else
         {
-            OnAttack_EA.Fire(info, this, buffList_Sender._priorityEventCenter);
+            OnAttack_EA.Fire(info, this, buffList_Sender.PriorityEventManager);
         }
 
         if (health == null)
@@ -59,7 +59,7 @@ public class InflictDamage : IEntry
         return $"造成{calculated_damage}点伤害\n";
     }
 
-    public void DamageCalculation(PriorityQueueEventCenter send, PriorityQueueEventCenter receive)
+    public void DamageCalculation(PriorityEventManager send, PriorityEventManager receive)
     {
         calculated_damage = damage;
 

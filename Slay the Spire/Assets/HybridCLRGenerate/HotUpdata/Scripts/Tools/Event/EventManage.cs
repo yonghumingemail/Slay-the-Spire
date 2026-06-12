@@ -6,7 +6,7 @@ using UnityEngine;
 /// 基于泛型事件参数的事件管理器，实现 IEventManage
 /// 使用类型作为事件键，不支持优先级与异步（可后续扩展）
 /// </summary>
-public class EventManage : IEventManage<GameEventArgs>
+public class EventManager : IEventManager<GameEventArgs>
 {
     private readonly Dictionary<Type, GameEventHandler<GameEventArgs>> eventHandlers = new();
 

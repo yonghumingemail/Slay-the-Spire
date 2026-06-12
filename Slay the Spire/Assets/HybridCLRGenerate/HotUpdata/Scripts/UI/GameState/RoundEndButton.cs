@@ -21,7 +21,7 @@ public class RoundEndButton : MonoBehaviour
 
     private void Start()
     {
-        _combatManage = GetObject_GEA<CombatManage>.Fire(this,EventCenter_Singleton.Instance);
+        _combatManage = GetObject_GEA<CombatManage>.Fire(this);
     }
 
     private void OnClick()
@@ -37,8 +37,7 @@ public class RoundEndButton : MonoBehaviour
         }
         _text.SetText("敌方回合");
         _button.interactable = false;
-       await Action_Int_Async.Fire<OnRoundEnd_EN>(_combatManage.RoundCount, this,
-            EventCenter_Singleton.Instance._priorityQueueEventCenter);
+       await Action_Int_Async.Fire<OnRoundEnd_EN>(_combatManage.RoundCount, this);
        
         _text.SetText("结束回合");
         _button.interactable = true;

@@ -11,6 +11,8 @@ namespace UnityGameFramework.Runtime
        #region 静态实例
 
        public static UIComponent UI => GetManagerComponent<UIComponent>();
+       public static EventManagerComponent Event => GetManagerComponent<EventManagerComponent>();
+       
 
        #endregion
         private void Awake()
