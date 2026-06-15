@@ -1,6 +1,6 @@
+using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-using Z_Tools;
 
 public class UIComponent : MonoBehaviour, IGameModuleComponent
 {
@@ -38,6 +38,7 @@ public class UIComponent : MonoBehaviour, IGameModuleComponent
         _uiManage.RegisterUIForm(groupName, id, uiFormLogic, data);
     }
 
+
     /// <summary>
     /// 移除并销毁指定 ID 的 UI。
     /// </summary>
@@ -45,6 +46,12 @@ public class UIComponent : MonoBehaviour, IGameModuleComponent
     {
         _uiManage.RemoveUIForm(id, data);
     }
+
+    public void OverturnUIForm(int id, object data = null)
+    {
+        _uiManage.OverturnUIForm(id, data);
+    }
+
 
     public void OpenUIForm(int id, object data = null)
     {

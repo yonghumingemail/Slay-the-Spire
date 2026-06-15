@@ -24,11 +24,11 @@ public class BuffObj
     }
 
 
-    public virtual void OnAddBuff(PriorityEventManager eventCent)
+    public virtual void OnAddBuff(IPriorityEventManager eventCent)
     {
     }
 
-    public virtual void OnRemoveBuff(PriorityEventManager eventCent)
+    public virtual void OnRemoveBuff(IPriorityEventManager eventCent)
     {
         view = null;
         _carrier = null;

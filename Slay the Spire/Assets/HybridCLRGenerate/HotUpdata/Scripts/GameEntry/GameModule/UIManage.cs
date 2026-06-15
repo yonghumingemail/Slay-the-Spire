@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using GameFramework;
 using UnityEngine;
 
-public class UIManage : GameFrameworkModule
+namespace GameFramework
+{
+    public class UIManage : IGameFrameworkModule
 {
     private readonly Dictionary<int, UIFormLogic> _uiFormLogics = new();
     private readonly Dictionary<string, UIGroup> _uiGroups = new();
@@ -41,6 +43,7 @@ public class UIManage : GameFrameworkModule
         }
     }
 
+    
     public void RegisterUIForm(string groupName, int id, UIFormLogic uiFormLogic, object data = null)
     {
         if (!_uiGroups.TryGetValue(groupName, out var group)) return;
@@ -71,6 +74,21 @@ public class UIManage : GameFrameworkModule
             Object.Destroy(uiFormLogic.gameObject);
     }
 
+
+    public void OverturnUIForm(int id, object data = null)
+    {
+        if (!_uiFormLogics.TryGetValue(id, out var ui)) return;
+        if (ui.Available)
+        {
+            CloseUIForm(id, data);
+        }
+        else
+        {
+            OpenUIForm(id, data);
+        }
+    }
+
+    
     public void OpenUIForm(int id, object data = null)
     {
         if (!_uiFormLogics.TryGetValue(id, out var ui)) return;
@@ -96,4 +114,5 @@ public class UIManage : GameFrameworkModule
 
         ui.OnClose(data);
     }
+}
 }

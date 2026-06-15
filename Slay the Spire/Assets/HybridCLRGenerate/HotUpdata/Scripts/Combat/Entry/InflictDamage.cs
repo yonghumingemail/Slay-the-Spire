@@ -26,12 +26,12 @@ public class InflictDamage : IEntry
             Debug.Log("接收者为空");
             return;
         }
-        IEventCenterObject<GameEventArgs> eventCenter_Sender = sender.GetComponent<IEventCenterObject<GameEventArgs>>();
-        IEventCenterObject<GameEventArgs> eventCenter_Receiver = receiver.GetComponent<IEventCenterObject<GameEventArgs>>();
+        IEventCenterObject eventCenter_Sender = sender.GetComponent<IEventCenterObject>();
+        IEventCenterObject eventCenter_Receiver = receiver.GetComponent<IEventCenterObject>();
         
   
-        IBuffList buffList_Sender = GetObject_GEA<IBuffList>.Fire(this, eventCenter_Sender.EventManager);
-        IHealth health = GetObject_GEA<IHealth>.Fire(this, eventCenter_Receiver.EventManager);
+        IBuffList buffList_Sender = GetObject_EventArgs<IBuffList>.Fire(this, eventCenter_Sender.EventManager);
+        IHealth health = GetObject_EventArgs<IHealth>.Fire(this, eventCenter_Receiver.EventManager);
 
 
         ChangeValueInfo info = ChangeValueInfo.GetInstance(sender,receiver,-damage);
@@ -59,7 +59,7 @@ public class InflictDamage : IEntry
         return $"造成{calculated_damage}点伤害\n";
     }
 
-    public void DamageCalculation(PriorityEventManager send, PriorityEventManager receive)
+    public void DamageCalculation(IEventManager send, IEventManager receive)
     {
         calculated_damage = damage;
 

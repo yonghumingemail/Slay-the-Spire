@@ -19,11 +19,11 @@ public class CardInteraction : MouseInteraction
 
     public float magnification = 1.1f;
     [Header("位置信息")] [SerializeField] private Vector3 position;
-    [SerializeField] public Quaternion rotation;
+    [SerializeField] private Quaternion rotation;
 
-    public Vector3 scale { get; private set; }
-    public Vector3 mouseOverPosition { get; private set; }
-    public Vector3 mouseOverScale { get; private set; }
+    public Vector3 scale;
+    public Vector3 mouseOverPosition;
+    public Vector3 mouseOverScale;
 
     [SerializeField] private bool isMouseEnter;
     [SerializeField] private bool isDragging;
@@ -51,7 +51,7 @@ public class CardInteraction : MouseInteraction
     {
         cardAnimator = animator;
         _view = GetComponent<CardView>();
-        var handPile = GetObject_GEA<HandPile>.Fire(this);
+        var handPile = GetObject_EventArgs<HandPile>.Fire(this);
 
         scale = transform.localScale;
         mouseOverScale = scale * magnification;

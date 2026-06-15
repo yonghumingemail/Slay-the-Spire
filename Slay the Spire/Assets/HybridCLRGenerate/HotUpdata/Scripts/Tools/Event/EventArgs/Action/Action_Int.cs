@@ -8,7 +8,7 @@ namespace HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs
     {
         public int value_Int;
 
-        public static int Fire<EventName>(int value, object sender, IPriorityEventManager<GameEventArgs> eventManager)
+        public static int Fire<EventName>(int value, object sender, IPriorityEventManager eventManager)
         {
             if (eventManager != null)
             {

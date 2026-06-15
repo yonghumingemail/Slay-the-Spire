@@ -18,7 +18,7 @@ public class CombatManage : MonoBehaviour
 
     private void Awake()
     {
-        GameEntry.Event.Subscribe<GetObject_GEA<CombatManage>>(Get);
+        GameEntry.Event.Subscribe<GetObject_EventArgs<CombatManage>>(Get);
     }
 
     private void Update()

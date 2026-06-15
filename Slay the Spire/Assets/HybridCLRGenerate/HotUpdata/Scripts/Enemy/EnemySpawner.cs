@@ -19,7 +19,7 @@ public class EnemySpawner : MonoBehaviour
     {
         _combatManage = transform.GetComponentInParent<CombatManage>();
 
-         GameEntry.Event.Subscribe<GetObject_GEA<EnemySpawner>>(Get);
+         GameEntry.Event.Subscribe<GetObject_EventArgs<EnemySpawner>>(Get);
 
          GameEntry.Event.SubscribeAsync<OnRoundStart_EN>(OnRoundStart, 5);
          GameEntry.Event.SubscribeAsync<OnRoundEnd_EN>(OnRoundEnd);

@@ -1,5 +1,4 @@
 using GameFramework;
-
 public abstract class GameEventArgs : IReference
 {
     public abstract void Clear();

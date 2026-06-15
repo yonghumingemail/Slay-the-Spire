@@ -11,7 +11,7 @@ namespace HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs
         public int args_int;
 
         public static async UniTask Fire<EventName>(int args_int, object sender,
-            IPriorityEventManagerAsync<GameEventArgs> eventManager)
+            IPriorityEventManager eventManager)
         {
             if (eventManager == null)
             {

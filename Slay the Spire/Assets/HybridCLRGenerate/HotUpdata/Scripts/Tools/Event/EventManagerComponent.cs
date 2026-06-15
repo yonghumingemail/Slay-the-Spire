@@ -5,65 +5,58 @@ using UnityGameFramework.Runtime;
 
 public class EventManagerComponent : MonoBehaviour, IGameModuleComponent
 {
-    private PriorityEventManager _priorityEventManager;
-    public Action OnSubscribe;
-    public Action OnUnSubscribe;
 
+    private PriorityEventManagerView _priorityEventManagerView;
     public void Init()
     {
         GameEntry.RegisterManagerComponent(this);
-        _priorityEventManager = GameFrameworkEntry.GetModule<PriorityEventManager>();
+        _priorityEventManagerView=GetComponent<PriorityEventManagerView>();
+        _priorityEventManagerView.SetEventManager(GameFrameworkEntry.GetModule<IPriorityEventManager>());
     }
 
     public void UnSubscribe<EventName>(GameEventHandler<GameEventArgs> _delegate)
     {
-        _priorityEventManager.UnSubscribe<EventName>(_delegate);
-        OnUnSubscribe?.Invoke();
+        _priorityEventManagerView.UnSubscribe<EventName>(_delegate);
     }
 
     public void UnSubscribeAll<EventName>()
     {
-        _priorityEventManager.UnSubscribeAll<EventName>();
-        OnUnSubscribe?.Invoke();
+        _priorityEventManagerView.UnSubscribeAll<EventName>();
     }
 
     public void Fire<EventName>(object send, GameEventArgs args)
     {
-        _priorityEventManager.Fire<EventName>(send, args);
+        _priorityEventManagerView.Fire<EventName>(send, args);
     }
 
     public UniTask FireAsync<EventName>(object send, GameEventArgs args)
     {
-        return _priorityEventManager.FireAsync<EventName>(send, args);
+        return _priorityEventManagerView.FireAsync<EventName>(send, args);
     }
 
 
-    public void Subscribe<EventName>(GameEventHandler<GameEventArgs> _delegate, int priority=0)
+    public void Subscribe<EventName>(GameEventHandler<GameEventArgs> _delegate, int priority = 0)
     {
-        _priorityEventManager.Subscribe<EventName>(_delegate, priority);
-        OnSubscribe?.Invoke();
+        _priorityEventManagerView.Subscribe<EventName>(_delegate, priority);
     }
 
-    public void SubscribeAsync<EventName>(GameEventHandlerAsync<GameEventArgs> _delegate, int priority=0)
+    public void SubscribeAsync<EventName>(GameEventHandlerAsync<GameEventArgs> _delegate, int priority = 0)
     {
-        _priorityEventManager.SubscribeAsync<EventName>(_delegate, priority);
-        OnSubscribe?.Invoke();
+        _priorityEventManagerView.SubscribeAsync<EventName>(_delegate, priority);
     }
 
     public void UnSubscribeAsync<EventName>(GameEventHandlerAsync<GameEventArgs> _delegate)
     {
-        _priorityEventManager.UnSubscribeAsync<EventName>(_delegate);
-        OnUnSubscribe?.Invoke();
+        _priorityEventManagerView.UnSubscribeAsync<EventName>(_delegate);
     }
 
     public void UnSubscribeAllAsync<EventName>()
     {
-        _priorityEventManager.UnSubscribeAllAsync<EventName>();
-        OnUnSubscribe?.Invoke();
+        _priorityEventManagerView.UnSubscribeAllAsync<EventName>();
     }
 
     public void Clear()
     {
-        _priorityEventManager.Clear();
+        _priorityEventManagerView.Clear();
     }
 }

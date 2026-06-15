@@ -18,9 +18,9 @@ public class Card_Ironclad_Strike : DirectionalCard
     {
         await base.Initialized();
         
-        _player.PriorityEventManager.Subscribe<DamageValueChange_Attack_EN>(DamageValueChange_Attack, 0);
-        PriorityEventManager.Subscribe<OnMouseEnterEnemy_EA>(OnMouseEnterEnemy, 0);
-        PriorityEventManager.Subscribe<OnMouseExitEnemy_EA>(OnMouseExitEnemy, 0);
+        _player.priorityEventManager.Subscribe<DamageValueChange_Attack_EN>(DamageValueChange_Attack, 0);
+        priorityEventManager.Subscribe<OnMouseEnterEnemy_EA>(OnMouseEnterEnemy, 0);
+        priorityEventManager.Subscribe<OnMouseExitEnemy_EA>(OnMouseExitEnemy, 0);
         
 
         _inflictDamage = new InflictDamage(6,UpdateDescribe);
@@ -28,20 +28,20 @@ public class Card_Ironclad_Strike : DirectionalCard
     }
     public void DamageValueChange_Attack(object send,GameEventArgs args)
     {
-        _inflictDamage.DamageCalculation(_player.PriorityEventManager, null);
+        _inflictDamage.DamageCalculation(_player.priorityEventManager, null);
     }
     
     public void OnMouseEnterEnemy(object send,GameEventArgs args)
     {
         var enemy = Args_T.Check<Enemy>(args);
-        _inflictDamage.DamageCalculation(_player.PriorityEventManager, enemy.PriorityEventManager);
+        _inflictDamage.DamageCalculation(_player.priorityEventManager, enemy.PriorityEventManager);
         OnMouseEnterSelectableObject(enemy);
 
     }
     public void OnMouseExitEnemy(object send,GameEventArgs args)
     {
         var enemy = Args_T.Check<Enemy>(args);
-        _inflictDamage.DamageCalculation(_player.PriorityEventManager, null);
+        _inflictDamage.DamageCalculation(_player.priorityEventManager, null);
         OnMouseExitSelectableObject(enemy);
 
     }

@@ -1,16 +1,14 @@
-using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-using Z_Tools;
 
 
-public class Player : MonoBehaviour, IEventCenterObject<GameEventArgs>
+public class Player : MonoBehaviour, IEventCenterObject
 {
-    public IEventManager<GameEventArgs> EventManager { get; } = new EventManager(); //用于提供接口对象
-    public PriorityEventManager PriorityEventManager { get; } = new(); //用于记录buff事件
+    public IEventManager EventManager { get; } = new EventManager(); //用于提供接口对象
+    public IPriorityEventManager priorityEventManager { get; private set; }//用于记录buff事件
     public CancellationTokenSource TokenSource { get; } = new();
 
     private Animator animator;
@@ -37,8 +35,9 @@ public class Player : MonoBehaviour, IEventCenterObject<GameEventArgs>
     private async UniTaskVoid Initialize()
     {
         animator = GetComponent<Animator>();
+        priorityEventManager = GetComponent<IPriorityEventManager>();
 
-        GameEntry.Event.Subscribe<GetObject_GEA<Player>>(Get);
+        GameEntry.Event.Subscribe<GetObject_EventArgs<Player>>(Get);
         GameEntry.Event.SubscribeAsync<OnRoundEnd_EN>(OnRoundEnd, 0);
         GameEntry.Event.SubscribeAsync<OnRoundStart_EN>(OnRoundStart, 0);
 
@@ -57,11 +56,11 @@ public class Player : MonoBehaviour, IEventCenterObject<GameEventArgs>
                 "Assets/ScriptableObject/RoleCoreData/Player/Player.asset");
 
         _spriteRenderer = transform.Find("UI").GetComponent<SpriteRenderer>();
-        roleCore = new RoleCore(gameObject, _spriteRenderer, roleCoreData, PriorityEventManager);
+        roleCore = new RoleCore(gameObject, _spriteRenderer, roleCoreData, priorityEventManager);
         roleCore.InterfaceRegistration(EventManager);
 
 
-        GetObject_GEA<PriorityEventManager>.Subscribe(PriorityEventManager, EventManager);
+        GetObject_EventArgs<IPriorityEventManager>.Subscribe(priorityEventManager, EventManager);
 
         //监听玩家死亡，将token设置为取消
     }
@@ -80,7 +79,7 @@ public class Player : MonoBehaviour, IEventCenterObject<GameEventArgs>
         if (gameEventArgs is Action_Int_Async args)
         {
             await Action_Int_Async.Fire<OnRoundEnd_EN>(args.args_int, this,
-                PriorityEventManager);
+                priorityEventManager);
         }
     }
 
@@ -89,14 +88,14 @@ public class Player : MonoBehaviour, IEventCenterObject<GameEventArgs>
         if (gameEventArgs is Action_Int_Async args)
         {
             await Action_Int_Async.Fire<OnRoundStart_EN>(args.args_int, this,
-                PriorityEventManager);
+                priorityEventManager);
         }
     }
 
     private void OnDestroy()
     {
         EventManager.Clear();
-        PriorityEventManager.Fire<OnDestroy_EN>(this, null);
-        PriorityEventManager.Clear();
+        priorityEventManager.Fire<OnDestroy_EN>(this, null);
+        priorityEventManager.Clear();
     }
 }

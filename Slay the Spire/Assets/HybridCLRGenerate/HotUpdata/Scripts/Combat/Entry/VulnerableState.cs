@@ -21,8 +21,8 @@ public class VulnerableState : IEntry
             return;
         }
         
-        IEventCenterObject<GameEventArgs> eventCenter_receiver = receiver.GetComponent<IEventCenterObject<GameEventArgs>>();
-        IBuffList buffListObj = GetObject_GEA<IBuffList>.Fire(this,eventCenter_receiver.EventManager);
+        IEventCenterObject eventCenter_receiver = receiver.GetComponent<IEventCenterObject>();
+        IBuffList buffListObj = GetObject_EventArgs<IBuffList>.Fire(this,eventCenter_receiver.EventManager);
         
 
         if (buffListObj == null)

@@ -6,7 +6,7 @@ public class Buff_EventArgs : GameEventArgs
     public int stack;
 
     public static void Fire<EventName>(BuffObj value, int stack, object sender,
-        IPriorityEventManager<GameEventArgs> eventManager)
+        IPriorityEventManager eventManager)
     {
         if (eventManager == null)
         {

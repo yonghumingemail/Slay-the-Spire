@@ -1,4 +1,5 @@
 using System;
+using GameFramework;
 using UnityEngine;
 
 [Serializable]
@@ -27,16 +28,12 @@ public class RoleCore
 
     [SerializeField] private SimpleBuffList _buffList;
     private IBuffList_V buffList_V;
-
-    private PriorityEventManager _priorityEventManager;
-
+    
     #endregion
 
     public RoleCore(GameObject gameObject, Renderer renderer, RoleCoreData data,
-        PriorityEventManager priorityEventManager)
+        IPriorityEventManager priorityEventManager)
     {
-        _priorityEventManager = priorityEventManager;
-
         health_V = gameObject.GetComponentInChildren<IHealth_V>(true);
         health_V.InitializeView(renderer);
 
@@ -58,10 +55,10 @@ public class RoleCore
         shield_V.UpdateView(_shield);
     }
 
-    public void InterfaceRegistration(IEventManager<GameEventArgs> eventManager)
+    public void InterfaceRegistration(IEventManager eventManager)
     {
-        GetObject_GEA<IBuffList>.Subscribe(_buffList, eventManager);
-        GetObject_GEA<IHealth>.Subscribe(_health, eventManager);
-        GetObject_GEA<IShield>.Subscribe(_shield, eventManager);
+        GetObject_EventArgs<IBuffList>.Subscribe(_buffList, eventManager);
+        GetObject_EventArgs<IHealth>.Subscribe(_health, eventManager);
+        GetObject_EventArgs<IShield>.Subscribe(_shield, eventManager);
     }
 }

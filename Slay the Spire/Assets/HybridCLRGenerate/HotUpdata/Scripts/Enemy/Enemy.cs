@@ -2,18 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using GameFramework;
 using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.U2D;
-using Z_Tools;
 
 
 [Serializable]
 public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectableObject,
-    IEventCenterObject<GameEventArgs>
+    IEventCenterObject
 {
-    public IEventManager<GameEventArgs> EventManager { get; } = new EventManager(); //用于提供接口对象
+    public IEventManager EventManager { get; } = new EventManager(); //用于提供接口对象
     public CancellationTokenSource TokenSource { get; } = new();
 
     public PriorityEventManager PriorityEventManager = new(); //用于记录和触发buff事件
@@ -38,7 +38,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public virtual async UniTask Initialize()
     {
-        _player = GetObject_GEA<Player>.Fire(this);
+        _player = GetObject_EventArgs<Player>.Fire(this);
 
         var initArray = GetComponentsInChildren<INeedToInitializeAsync>(true);
         var tasks = new UniTask[initArray.Length];
@@ -69,7 +69,7 @@ public abstract class Enemy : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         roleCore = new RoleCore(gameObject, spriteRenderer, roleCoreData, PriorityEventManager);
         roleCore.InterfaceRegistration(EventManager);
 
-        GetObject_GEA<PriorityEventManager>.Subscribe(PriorityEventManager, EventManager);
+        GetObject_EventArgs<PriorityEventManager>.Subscribe(PriorityEventManager, EventManager);
 
         UI.gameObject.SetActive(true);
         //改，不应该由enemy加载

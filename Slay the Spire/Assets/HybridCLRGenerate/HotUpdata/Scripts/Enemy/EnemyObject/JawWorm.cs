@@ -26,7 +26,7 @@ public class JawWorm : Enemy
         IIntent[] action1IntentArray =
         {
             attackIntent_Action1 =
-                new AttackIntent(11, 1, _spriteAtlas, PriorityEventManager, _player.PriorityEventManager)
+                new AttackIntent(11, 1, _spriteAtlas, PriorityEventManager, _player.priorityEventManager)
         };
         IIntent[] action2IntentArray =
         {
@@ -36,7 +36,7 @@ public class JawWorm : Enemy
         IIntent[] action3IntentArray =
         {
             attackIntent_Action3 =
-                new AttackIntent(7, 1, _spriteAtlas, PriorityEventManager, _player.PriorityEventManager),
+                new AttackIntent(7, 1, _spriteAtlas, PriorityEventManager, _player.priorityEventManager),
             defendIntent_Action3 = new DeFendIntent(5, _spriteAtlas)
         };
 
@@ -99,7 +99,7 @@ public class JawWorm : Enemy
         _animator.Play("Attack");
         await attackIntent_Action1.Trigger(gameObject, _player.gameObject, _player.TokenSource.Token);
         await _animatorComplete.AwaitCurrentAnimatorComplete();
-        Debug.Log(Time.time);
+       // Debug.Log(Time.time);
     }
 
     private async UniTask Action2()
@@ -109,7 +109,7 @@ public class JawWorm : Enemy
         _gainPower_Action2.Trigger(gameObject, gameObject);
         defendIntent_Action2._gainShield.Trigger(gameObject, gameObject);
         await _animatorComplete.AwaitCurrentAnimatorComplete();
-        Debug.Log(Time.time);
+       // Debug.Log(Time.time);
     }
 
     private async UniTask Action3()
@@ -119,6 +119,6 @@ public class JawWorm : Enemy
         await attackIntent_Action3.Trigger(gameObject, _player.gameObject, _player.TokenSource.Token);
         defendIntent_Action3._gainShield.Trigger(gameObject, gameObject);
         await _animatorComplete.AwaitCurrentAnimatorComplete();
-        Debug.Log(Time.time);
+      //  Debug.Log(Time.time);
     }
 }

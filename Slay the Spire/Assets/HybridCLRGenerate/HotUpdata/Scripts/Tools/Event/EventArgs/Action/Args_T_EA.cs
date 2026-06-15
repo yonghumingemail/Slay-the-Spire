@@ -5,7 +5,7 @@ using UnityGameFramework.Runtime;
 public class Args_T_EA<EventName> : Args_T where EventName : class
 {
     public static void Fire<ArgsType>(ArgsType value, object sender,
-        IPriorityEventManager<GameEventArgs> eventManager)
+        IEventManager eventManager)
     {
         if (eventManager == null)
         {

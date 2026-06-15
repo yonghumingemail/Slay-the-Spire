@@ -7,6 +7,10 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
+public interface Itest
+{
+    
+}
 public class Main : MonoBehaviour
 {
     private async void Start()

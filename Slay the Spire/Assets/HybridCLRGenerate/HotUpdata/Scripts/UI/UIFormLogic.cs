@@ -88,7 +88,7 @@ public abstract class UIFormLogic : MonoBehaviour
     /// <param name="userData">用户自定义数据。</param>
     protected internal virtual void OnOpen(object userData)
     {
-        transform.SetAsFirstSibling();
+        transform.SetAsLastSibling();
         m_Available = true;
         Visible = true;
     }

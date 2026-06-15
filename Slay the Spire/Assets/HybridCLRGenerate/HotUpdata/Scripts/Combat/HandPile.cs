@@ -36,7 +36,7 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler
         GameEntry.Event.Subscribe<OnMouseEnterEnemy_EA>(OnMouseEnterEnemy);
         GameEntry.Event.Subscribe<OnMouseExitEnemy_EA>( OnMouseExitEnemy);
         
-        GameEntry.Event.Subscribe<GetObject_GEA<HandPile>>(Get);
+        GameEntry.Event.Subscribe<GetObject_EventArgs<HandPile>>(Get);
     }
 
     private void Get(object send, GameEventArgs gameEventHandler)
@@ -63,13 +63,13 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler
     private void OnMouseEnterEnemy(object sender, GameEventArgs args)
     {
         if (!SelectedCard || !(args is Args_T _args)) return;
-        Args_T_EA<OnMouseEnterEnemy_EA>.Fire(_args.value, this, SelectedCard.PriorityEventManager);
+        Args_T_EA<OnMouseEnterEnemy_EA>.Fire(_args.value, this, SelectedCard.priorityEventManager);
     }
 
     private void OnMouseExitEnemy(object sender, GameEventArgs args)
     {
         if (!SelectedCard || !(args is Args_T _args)) return;
-        Args_T_EA<OnMouseExitEnemy_EA>.Fire(_args.value, this, SelectedCard.PriorityEventManager);
+        Args_T_EA<OnMouseExitEnemy_EA>.Fire(_args.value, this, SelectedCard.priorityEventManager);
     }
 
     public void SetSelectedCard(Card card)
@@ -85,7 +85,7 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler
 
     public async UniTaskVoid Test11()
     {
-        drawPile = GetObject_GEA<DrawPile>.Fire(this);
+        drawPile = GetObject_EventArgs<DrawPile>.Fire(this);
 
         GameObject prefab =
             await AddressablesMgr.Instance.LoadAssetAsync<GameObject>("Assets/Art/Prefab/Card/Card.prefab");

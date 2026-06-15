@@ -11,7 +11,7 @@ public class DrawPile : Pile
     {
         base.Awake();
         _discardPile = transform.parent.Find("DiscardPile").GetComponent<DiscardPile>();
-        GameEntry.Event.Subscribe<GetObject_GEA<DrawPile>>( Get);
+        GameEntry.Event.Subscribe<GetObject_EventArgs<DrawPile>>( Get);
     }
     private void Get(object send, GameEventArgs gameEventHandler)
     {

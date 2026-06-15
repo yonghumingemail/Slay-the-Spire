@@ -23,7 +23,7 @@ public class Energy : MonoBehaviour
         image4 = transform.GetChild(0).GetChild(3).GetComponent<RectTransform>();
         _text = transform.Find("Text").GetComponent<TextMeshProUGUI>();
         UpdateUIInfo();
-        GameEntry.Event.Subscribe<GetObject_GEA<Energy>>( Get);
+        GameEntry.Event.Subscribe<GetObject_EventArgs<Energy>>( Get);
     }
 
     private void Get(object send, GameEventArgs gameEventHandler)

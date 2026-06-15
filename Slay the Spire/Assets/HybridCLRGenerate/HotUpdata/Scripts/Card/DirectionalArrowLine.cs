@@ -15,7 +15,6 @@ public class DirectionalArrowLine : MonoBehaviour
     private Camera mainCamera;
 
     private CancellationTokenSource _tokenSource;
-    private float inverseScaleX; // 预计算的深度缩放因子
 
     public void Init(Camera camera_)
     {
@@ -32,8 +31,6 @@ public class DirectionalArrowLine : MonoBehaviour
             sprites[i] = child.GetComponent<SpriteRenderer>();
         }
 
-        // 预计算深度偏移，假设 localScale 在运行时不变
-        inverseScaleX = 1f / transform.localScale.x;
         gameObject.SetActive(false);
     }
 
@@ -44,15 +41,11 @@ public class DirectionalArrowLine : MonoBehaviour
 
     public void Enable(PointerEventData data)
     {
-        // 正确释放旧的 CancellationTokenSource
-        if (_tokenSource != null)
-        {
-            _tokenSource.Cancel();
-            _tokenSource.Dispose();
-        }
+        _tokenSource?.Cancel();
+        _tokenSource?.Dispose();
 
         gameObject.SetActive(true);
-        transform.position = mainCamera.ScreenToWorldPoint(data.position);
+        transform.localPosition = Vector3.zero;
         Trigger(data.pointerEnter).Forget();
     }
 
@@ -66,10 +59,6 @@ public class DirectionalArrowLine : MonoBehaviour
         // 最终线段索引
         int lastIdx = lineCount - 1;
 
-        // 缓存局部变量，避免循环内多次访问
-        Transform[] transforms = lineTransforms;
-        float depthOffset = -inverseScaleX; 
-
         while (!token.IsCancellationRequested)
         {
             // 1. 计算控制点
@@ -82,18 +71,18 @@ public class DirectionalArrowLine : MonoBehaviour
             {
                 float t = i * inverseLineLength;
                 Vector2 pos = GetQuadraticPoint(startPoint, midPoint, endPoint, t);
-                transforms[i].position = new Vector3(pos.x, pos.y, depthOffset);
+                lineTransforms[i].position = new Vector3(pos.x, pos.y, target.transform.position.z - 0.1f);
 
                 // 计算方向
-                Vector3 dir = transforms[i + 1].position - transforms[i].position;
+                Vector3 dir = lineTransforms[i + 1].position - lineTransforms[i].position;
                 float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-                transforms[i].eulerAngles = new Vector3(0, 0, angle - 90f);
+                lineTransforms[i].eulerAngles = new Vector3(0, 0, angle - 90f);
             }
 
             // 3. 更新最末点（位置在曲线终点，旋转跟随倒数第二点）
             Vector2 lastPos = GetQuadraticPoint(startPoint, midPoint, endPoint, lastIdx * inverseLineLength);
-            transforms[lastIdx].position = new Vector3(lastPos.x, lastPos.y, depthOffset);
-            transforms[lastIdx].eulerAngles = transforms[lastIdx - 1].eulerAngles;
+            lineTransforms[lastIdx].position = new Vector3(lastPos.x, lastPos.y, target.transform.position.z - 0.1f);
+            lineTransforms[lastIdx].eulerAngles = lineTransforms[lastIdx - 1].eulerAngles;
 
             await UniTask.Yield(PlayerLoopTiming.PreLateUpdate);
         }

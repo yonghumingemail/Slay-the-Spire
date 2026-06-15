@@ -4,18 +4,16 @@ using System.Text;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using Z_Tools;
 
 public abstract class Card : MonoBehaviour
 {
-    
     public CardView View => cardView;
     public CardInteraction CardInteraction => cardInteraction;
     public CardExteriorInfo ExteriorInfo => exteriorInfo;
 
 
     //用于监听和触发子类实现的特殊事件
-    public PriorityEventManager PriorityEventManager { get; private set; }
+    public IPriorityEventManager priorityEventManager { get; private set; }
 
     protected CardView cardView;
     [SerializeField] protected CardAnimator cardAnimator;
@@ -64,7 +62,7 @@ public abstract class Card : MonoBehaviour
         cardEntries.Add(entry);
         UpdateDescribe();
     }
-    
+
     public virtual void Enable()
     {
         gameObject.SetActive(true);
@@ -123,23 +121,24 @@ public abstract class Card : MonoBehaviour
 
     public virtual async UniTask Initialized()
     {
-        PriorityEventManager = new PriorityEventManager();
         cardEntries = new List<IEntry>();
         detectLayer = 1 << LayerMask.NameToLayer("Enemy");
-        
+
+        priorityEventManager = GetComponent<IPriorityEventManager>();
+
         mainCamera = Camera.main;
         cardAnimator = new CardAnimator(mainCamera);
         cardView = GetComponent<CardView>();
         cardInteraction = GetComponent<CardInteraction>();
         cardInteraction.Init(cardAnimator);
-        
+
         exteriorInfo = (await AddressablesMgr.Instance.LoadAssetAsync<CardExteriorInfo>(defaultDataPtah)).Copy();
 
-        _player = GetObject_GEA<Player>.Fire(this);
-        _combatManage = GetObject_GEA<CombatManage>.Fire(this);
-        _energy = GetObject_GEA<Energy>.Fire(this);
-        _discardPile = GetObject_GEA<DiscardPile>.Fire(this);
-        
+        _player = GetObject_EventArgs<Player>.Fire(this);
+        _combatManage = GetObject_EventArgs<CombatManage>.Fire(this);
+        _energy = GetObject_EventArgs<Energy>.Fire(this);
+        _discardPile = GetObject_EventArgs<DiscardPile>.Fire(this);
+
         cardInteraction.OnMouseDownDelegate += (data) => { OnSelectCard?.Invoke(this); };
 
         cardView.UpdateCardUI(this);

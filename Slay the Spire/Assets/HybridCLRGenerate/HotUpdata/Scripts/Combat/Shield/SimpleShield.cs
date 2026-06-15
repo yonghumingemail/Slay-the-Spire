@@ -6,7 +6,7 @@ using UnityEngine;
 [Serializable]
 public class SimpleShield : IShield
 {
-    private PriorityEventManager _priorityEventManager;
+    private  IPriorityEventManager _priorityEventManager;
     private Action<IShield> _updateView;
     public int MaxValue;
 
@@ -22,7 +22,7 @@ public class SimpleShield : IShield
 
    [SerializeField] private int shieldValue;
 
-    public SimpleShield(Action<IShield> updateView, PriorityEventManager priorityEventManager)
+    public SimpleShield(Action<IShield> updateView,  IPriorityEventManager priorityEventManager)
     {
         _updateView = updateView;
 

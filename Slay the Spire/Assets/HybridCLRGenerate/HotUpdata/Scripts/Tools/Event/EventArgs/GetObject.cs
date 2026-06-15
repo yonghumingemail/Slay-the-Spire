@@ -2,12 +2,12 @@ using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
-public class GetObject_GEA<ObjType> : Args_T where ObjType : class
+public class GetObject_EventArgs<ObjType> : Args_T where ObjType : class
 {
     
-    public static void Subscribe(ObjType instance, IEventManager<GameEventArgs> eventManager)
+    public static void Subscribe(ObjType instance, IEventManager eventManager)
     {
-        eventManager.Subscribe<GetObject_GEA<ObjType>>((send, handler) =>
+        eventManager.Subscribe<GetObject_EventArgs<ObjType>>((send, handler) =>
         {
             if (handler is Args_T args)
             {
@@ -16,10 +16,10 @@ public class GetObject_GEA<ObjType> : Args_T where ObjType : class
         });
     }
     
-    public static ObjType Fire(object sender, IEventManager<GameEventArgs> eventManager)
+    public static ObjType Fire(object sender, IEventManager eventManager)
     {
         var args = ReferencePool.Acquire<Args_T>();
-        eventManager.Fire<GetObject_GEA<ObjType>>(sender, args);
+        eventManager.Fire<GetObject_EventArgs<ObjType>>(sender, args);
         var returnValue = args.value;
         ReferencePool.Release(args);
         if (returnValue is ObjType value)
@@ -33,7 +33,7 @@ public class GetObject_GEA<ObjType> : Args_T where ObjType : class
     public static ObjType Fire(object sender)
     {
         var args = ReferencePool.Acquire<Args_T>();
-        GameEntry.Event.Fire<GetObject_GEA<ObjType>>(sender, args);
+        GameEntry.Event.Fire<GetObject_EventArgs<ObjType>>(sender, args);
         var returnValue = args.value;
         ReferencePool.Release(args);
         if (returnValue is ObjType value)

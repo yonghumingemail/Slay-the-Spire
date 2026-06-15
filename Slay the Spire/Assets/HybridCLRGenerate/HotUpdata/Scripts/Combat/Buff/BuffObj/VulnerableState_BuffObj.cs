@@ -51,7 +51,7 @@ public class VulnerableState_BuffObj : BuffObj
         }
     }
 
-    public override void OnAddBuff(PriorityEventManager eventCent)
+    public override void OnAddBuff(IPriorityEventManager eventCent)
     {
         base.OnAddBuff(eventCent);
         eventCent.Subscribe<OnBeAttacked_EA>(Effect, priority);
@@ -59,7 +59,7 @@ public class VulnerableState_BuffObj : BuffObj
         eventCent.SubscribeAsync<OnRoundEnd_EN>(OnRoundEnd, priority);
     }
 
-    public override void OnRemoveBuff(PriorityEventManager eventCent)
+    public override void OnRemoveBuff(IPriorityEventManager eventCent)
     {
         base.OnRemoveBuff(eventCent);
         eventCent.UnSubscribe<OnBeAttacked_EA>(Effect);

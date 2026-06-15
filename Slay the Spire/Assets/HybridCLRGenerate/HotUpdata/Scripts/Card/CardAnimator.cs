@@ -52,11 +52,12 @@ public class CardAnimator
     {
         _sequence.Kill();
         var seq = DOTween.Sequence();
-        seq.Insert(0, target.transform.DOMove(targetPosition, animatorSpeed));
-        seq.Insert(0, target.transform.DORotateQuaternion(targetRotation, animatorSpeed));
+        seq.Insert(0, target.transform.DOLocalMove(targetPosition, animatorSpeed));
+        seq.Insert(0, target.transform.DOLocalRotateQuaternion(targetRotation, animatorSpeed));
         seq.Insert(0, target.transform.DOScale(targetScale, animatorSpeed));
         seq.onComplete += () => callback?.Invoke();
         _sequence = seq;
+
     }
 
     /// 相对旋转（旋转指定角度,有方向）
@@ -66,8 +67,8 @@ public class CardAnimator
     {
         _sequence.Kill();
         var seq = DOTween.Sequence();
-        seq.Insert(0, target.transform.DOMove(targetPosition, animatorSpeed));
-        seq.Insert(0, target.transform.DORotate(rotateAngle, animatorSpeed, rotateMode));
+        seq.Insert(0, target.transform.DOLocalMove(targetPosition, animatorSpeed));
+        seq.Insert(0, target.transform.DOLocalRotate(rotateAngle, animatorSpeed, rotateMode));
         seq.Insert(0, target.transform.DOScale(targetScale, animatorSpeed));
         seq.onComplete += () => callback?.Invoke();
         _sequence = seq;

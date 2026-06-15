@@ -7,7 +7,7 @@ using UnityEngine;
 public class SimpleHealth : IHealth
 {
     private Action<IHealth> _updateView;
-    private PriorityEventManager _priorityEventManager;
+    private  IPriorityEventManager _priorityEventManager;
 
     public int HealthValue
     {
@@ -37,7 +37,7 @@ public class SimpleHealth : IHealth
     [SerializeField] private int healthValue;
     [SerializeField] private int maxHealthValue;
 
-    public SimpleHealth(Action<IHealth> UpdateView, PriorityEventManager priorityEventManager)
+    public SimpleHealth(Action<IHealth> UpdateView,  IPriorityEventManager priorityEventManager)
     {
         _priorityEventManager = priorityEventManager;
         _updateView = UpdateView;

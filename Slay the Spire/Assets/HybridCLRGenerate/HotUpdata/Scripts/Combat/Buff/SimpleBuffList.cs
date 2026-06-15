@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
+using GameFramework;
 using UnityEngine;
 
 // 可序列化属性，允许此类实例被序列化存储
@@ -8,7 +8,7 @@ using UnityEngine;
 public class SimpleBuffList : IBuffList
 {
     // 优先级事件中心，用于处理Buff相关事件（如添加、移除）并按优先级排序
-    public PriorityEventManager PriorityEventManager { get; private set; }
+    public IPriorityEventManager PriorityEventManager { get; private set; }
 
     // Buff列表的视图接口，用于更新Buff的显示
     private IBuffList_V _buffListV;
@@ -16,7 +16,7 @@ public class SimpleBuffList : IBuffList
     // 存储所有BuffObj对象的列表
     [SerializeField] private List<BuffObj> _buffListObj;
 
-    public SimpleBuffList(IBuffList_V buffListV, PriorityEventManager priorityEventManager)
+    public SimpleBuffList(IBuffList_V buffListV, IPriorityEventManager priorityEventManager)
     {
         // 设置事件中心
         PriorityEventManager = priorityEventManager;

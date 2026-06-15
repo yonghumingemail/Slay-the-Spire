@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using GameFramework;
 using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 
@@ -22,10 +23,10 @@ public class GainShield : IEntry
             return;
         }
 
-        IEventCenterObject<GameEventArgs> eventCenter = receiver.GetComponent<IEventCenterObject<GameEventArgs>>();
+        IEventCenterObject eventCenter = receiver.GetComponent<IEventCenterObject>();
 
-        IShield shield  = GetObject_GEA<IShield>.Fire(this,eventCenter.EventManager);
-        var priorityEventCenter = GetObject_GEA<PriorityEventManager>.Fire(this,eventCenter.EventManager);
+        IShield shield  = GetObject_EventArgs<IShield>.Fire(this,eventCenter.EventManager);
+        var priorityEventCenter = GetObject_EventArgs<PriorityEventManager>.Fire(this,eventCenter.EventManager);
        
         
         ChangeValueInfo info = ChangeValueInfo.GetInstance(sender,receiver,value);

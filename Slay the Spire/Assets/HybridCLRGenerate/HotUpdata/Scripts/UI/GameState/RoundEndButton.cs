@@ -21,7 +21,7 @@ public class RoundEndButton : MonoBehaviour
 
     private void Start()
     {
-        _combatManage = GetObject_GEA<CombatManage>.Fire(this);
+        _combatManage = GetObject_EventArgs<CombatManage>.Fire(this);
     }
 
     private void OnClick()

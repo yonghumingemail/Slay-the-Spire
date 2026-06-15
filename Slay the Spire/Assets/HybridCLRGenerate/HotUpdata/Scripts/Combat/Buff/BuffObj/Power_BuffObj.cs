@@ -40,14 +40,14 @@ public class Power_BuffObj : BuffObj
         }
     }
 
-    public override void OnAddBuff(PriorityEventManager eventCent)
+    public override void OnAddBuff(IPriorityEventManager eventCent)
     {
         base.OnAddBuff(eventCent);
         eventCent.Subscribe<OnAttack_EA>(Effect, priority);
         eventCent.Subscribe<DamageCalculation_Attack_EN>(DamageCalculation, priority);
     }
 
-    public override void OnRemoveBuff(PriorityEventManager eventCent)
+    public override void OnRemoveBuff(IPriorityEventManager eventCent)
     {
         base.OnRemoveBuff(eventCent);
         eventCent.UnSubscribe<OnAttack_EA>(Effect);
