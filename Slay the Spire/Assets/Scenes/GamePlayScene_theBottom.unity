@@ -800,7 +800,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &575840129
 Transform:
   m_ObjectHideFlags: 0
@@ -828,6 +828,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bdfe8722e29c974fb0bfe59b216f467, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: Assets/Scenes/Test.unity
 --- !u!114 &575840131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3136,6 +3137,6 @@ SceneRoots:
   - {fileID: 1430063737}
   - {fileID: 519420032}
   - {fileID: 1192209100}
-  - {fileID: 1734707292}
   - {fileID: 1256086263}
+  - {fileID: 1734707292}
   - {fileID: 575840129}

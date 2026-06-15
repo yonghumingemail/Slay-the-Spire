@@ -35,6 +35,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5e6c7ed3dc029044bad4fea5f0f616c7
+    m_Address: Assets/Scenes/Main.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8f38bff17528d8f4f9e0629014532ce8
     m_Address: Assets/HybridCLRGenerate/HotUpdata/MataDataDll
     m_ReadOnly: 0
