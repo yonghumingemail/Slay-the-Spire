@@ -12,6 +12,7 @@ public class UIRebuildDebugger : MonoBehaviour
     {
         System.Type type = typeof(CanvasUpdateRegistry);
         FieldInfo field = type.GetField("m_GraphicRebuildQueue", BindingFlags.NonPublic | BindingFlags.Instance);
+        FieldInfo field2 = type.GetField("m_LayoutRebuildQueue ", BindingFlags.NonPublic | BindingFlags.Instance);
         if (field != null)
         {
             m_GraphicRebuildQueue = (IList<ICanvasElement>)field.GetValue(CanvasUpdateRegistry.instance);
