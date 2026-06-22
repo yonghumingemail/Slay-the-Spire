@@ -11,35 +11,24 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
   m_Name: Art
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
   m_GroupName: Art
-  m_GUID: 07cdf7cb463a74442b06117616179c58
+  m_GUID: b8c05736529a36943aa2972c54d1f5e5
   m_SerializeEntries:
-  - m_GUID: 131a6b21c8605f84396be9f6751fb6e3
-    m_Address: Assets/Scenes
+  - m_GUID: 7e6e35dc69c54ff48835c83142c8e383
+    m_Address: Assets/Art/Fonts
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 33b4154e36dae7548866dd2c5af972e5
-    m_Address: Assets/ScriptableObject
+  - m_GUID: 82d5729e9b445df4eab57f42013f7100
+    m_Address: Assets/Art/Animation
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 500450912ce960749a80e4906d697182
-    m_Address: Assets/Art/Image/monsters
+  - m_GUID: e7bf0ee07622e6943be0d9b2536c9ba7
+    m_Address: Assets/Art/Image/Scene
     m_ReadOnly: 0
     m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 5e6c7ed3dc029044bad4fea5f0f616c7
-    m_Address: Assets/Scenes/Main.unity
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 8f38bff17528d8f4f9e0629014532ce8
-    m_Address: Assets/HybridCLRGenerate/HotUpdata/MataDataDll
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - MataDataDllText
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e949eb7246157e14ab264bedbab53fb6
     m_Address: Assets/Art/Image/SpriteAtlas
@@ -50,5 +39,5 @@ MonoBehaviour:
   m_Settings: {fileID: 11400000, guid: 94cd96a45e632ec4aad82984c6d1960e, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 23ff16bc81df1d346b799a43bf8ee3d4, type: 2}
-    - {fileID: 11400000, guid: 1a34b81834c69a74485b0c9c3cce771e, type: 2}
+    - {fileID: 11400000, guid: 539b7852c71ba6841848f5caba1fe525, type: 2}
+    - {fileID: 11400000, guid: 55e5f480f85e5e943b7fdd7a25d0c6fb, type: 2}

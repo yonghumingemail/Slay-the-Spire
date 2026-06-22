@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Prefab
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
   m_GroupName: Prefab
-  m_GUID: 905a78fc1b1b3a540bef79dfc89ce222
+  m_GUID: 52f2b72a0b62ffe4ca3037635341fcd0
   m_SerializeEntries:
   - m_GUID: 46f3f4647ad7a624682f66a81c9ec4ef
     m_Address: Assets/Art/Prefab
@@ -24,5 +24,5 @@ MonoBehaviour:
   m_Settings: {fileID: 11400000, guid: 94cd96a45e632ec4aad82984c6d1960e, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 8f51d344c74f9f544a652964919c908d, type: 2}
-    - {fileID: 11400000, guid: c93358630d0c90e4b8721de6f7712d45, type: 2}
+    - {fileID: 11400000, guid: 6f28b966e1051d44cadcd637bb14da41, type: 2}
+    - {fileID: 11400000, guid: 2844d12a9ec8fa34a939c44150713f12, type: 2}
