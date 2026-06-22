@@ -1,0 +1,53 @@
+﻿using GameFramework;
+using UnityEngine;
+/// <summary>
+/// 基础组件。
+/// </summary>
+[DisallowMultipleComponent]
+public sealed class ReferencePoolComponent :MonoBehaviour, IGameModuleComponent
+{
+    [SerializeField] private ReferenceStrictCheckType m_EnableStrictCheck = ReferenceStrictCheckType.AlwaysEnable;
+
+    /// <summary>
+    /// 获取或设置是否开启强制检查。
+    /// </summary>
+    public bool EnableStrictCheck
+    {
+        get => ReferencePool.EnableStrictCheck;
+        set
+        {
+            ReferencePool.EnableStrictCheck = value;
+            if (value)
+            {
+                Debug.Log(
+                    "Strict checking is enabled for the Reference Pool. It will drastically affect the performance.");
+            }
+        }
+    }
+
+    private void Start()
+    {
+        switch (m_EnableStrictCheck)
+        {
+            case ReferenceStrictCheckType.AlwaysEnable:
+                EnableStrictCheck = true;
+                break;
+
+            case ReferenceStrictCheckType.OnlyEnableWhenDevelopment:
+                EnableStrictCheck = Debug.isDebugBuild;
+                break;
+
+            case ReferenceStrictCheckType.OnlyEnableInEditor:
+                EnableStrictCheck = Application.isEditor;
+                break;
+
+            default:
+                EnableStrictCheck = false;
+                break;
+        }
+    }
+
+    public void Init()
+    {
+    }
+}

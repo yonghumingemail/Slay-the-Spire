@@ -25,11 +25,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 46f3f4647ad7a624682f66a81c9ec4ef
-    m_Address: Assets/Art/Prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 500450912ce960749a80e4906d697182
     m_Address: Assets/Art/Image/monsters
     m_ReadOnly: 0
