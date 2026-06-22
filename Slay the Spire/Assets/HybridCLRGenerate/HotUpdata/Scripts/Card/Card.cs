@@ -140,6 +140,7 @@ public abstract class Card : MonoBehaviour
         _discardPile = GetObject_EventArgs<DiscardPile>.Fire(this);
 
         cardInteraction.OnMouseDownDelegate += (data) => { OnSelectCard?.Invoke(this); };
+        cardInteraction.OnMouseUpDelegate += (data) => { OnSelectCard?.Invoke(null); };
 
         cardView.UpdateCardUI(this);
     }
