@@ -1,4 +1,5 @@
-﻿using GameFramework;
+﻿#if UNITY_EDITOR
+using GameFramework;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -200,3 +201,4 @@ internal sealed class ReferencePoolComponentInspector : Editor
         return $"{baseName}<{string.Join(", ", argNames)}>";
     }
 }
+#endif

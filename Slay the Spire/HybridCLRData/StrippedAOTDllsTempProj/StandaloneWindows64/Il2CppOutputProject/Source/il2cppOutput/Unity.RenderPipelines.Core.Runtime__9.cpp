@@ -13472,7 +13472,7 @@ IL_001f:
 		L_7 = String_op_Implicit_m7D7FE0449303AF92D8B2A85A06ADC6933B2ECC3A_inline(L_6, NULL);
 		NullCheck(L_5);
 		int32_t L_8;
-		L_8 = VirtualFuncInvoker1< int32_t, ReadOnlySpan_1_t59614EA6E51A945A32B02AB17FBCBDF9A5C419C1 >::Invoke(37, L_5, L_7);
+		L_8 = VirtualFuncInvoker1< int32_t, ReadOnlySpan_1_t59614EA6E51A945A32B02AB17FBCBDF9A5C419C1 >::Invoke(52, L_5, L_7);
 		G_B6_0 = L_8;
 		G_B6_1 = G_B5_0;
 	}
@@ -26894,7 +26894,7 @@ IL_047c_1:
 				Span_1__ctor_mE18EBB601FBFA01BA29FE353364700952A9091FE_inline((&L_223), (void*)((uint8_t*)il2cpp_codegen_add((intptr_t)L_220, L_221)), L_222, Span_1__ctor_mE18EBB601FBFA01BA29FE353364700952A9091FE_RuntimeMethod_var);
 				NullCheck(L_216);
 				int32_t L_224;
-				L_224 = VirtualFuncInvoker2< int32_t, ReadOnlySpan_1_t59614EA6E51A945A32B02AB17FBCBDF9A5C419C1, Span_1_tDADAC65069DFE6B57C458109115ECD795ED39305 >::Invoke(38, L_216, L_219, L_223);
+				L_224 = VirtualFuncInvoker2< int32_t, ReadOnlySpan_1_t59614EA6E51A945A32B02AB17FBCBDF9A5C419C1, Span_1_tDADAC65069DFE6B57C458109115ECD795ED39305 >::Invoke(53, L_216, L_219, L_223);
 				int32_t L_225 = V_45;
 				int32_t L_226 = V_48;
 				V_45 = ((int32_t)il2cpp_codegen_add(L_225, L_226));

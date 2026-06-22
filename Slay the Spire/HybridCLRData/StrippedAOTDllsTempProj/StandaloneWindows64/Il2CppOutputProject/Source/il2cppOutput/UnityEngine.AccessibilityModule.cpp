@@ -4282,7 +4282,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool AccessibilityHierarchy_TryGetNode_m98DF2
 		AccessibilityNode_t9998B596BE3A0232C1CFE3B2610DF52E0338A49A** L_2 = ___1_node;
 		NullCheck(L_0);
 		bool L_3;
-		L_3 = InterfaceFuncInvoker2< bool, int32_t, AccessibilityNode_t9998B596BE3A0232C1CFE3B2610DF52E0338A49A** >::Invoke(6, IDictionary_2_t32BE5EB8FB339477299955B6732035BC7442094A_il2cpp_TypeInfo_var, L_0, L_1, L_2);
+		L_3 = InterfaceFuncInvoker2< bool, int32_t, AccessibilityNode_t9998B596BE3A0232C1CFE3B2610DF52E0338A49A** >::Invoke(7, IDictionary_2_t32BE5EB8FB339477299955B6732035BC7442094A_il2cpp_TypeInfo_var, L_0, L_1, L_2);
 		return L_3;
 	}
 }

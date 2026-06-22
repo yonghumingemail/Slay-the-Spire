@@ -8814,7 +8814,7 @@ IL_0007:
 		int32_t L_9 = ___1_charsLen;
 		NullCheck(L_7);
 		String_t* L_10;
-		L_10 = VirtualFuncInvoker3< String_t*, ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*, int32_t, int32_t >::Invoke(34, L_7, L_8, 0, L_9);
+		L_10 = VirtualFuncInvoker3< String_t*, ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*, int32_t, int32_t >::Invoke(48, L_7, L_8, 0, L_9);
 		return L_10;
 	}
 }

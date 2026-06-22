@@ -68,6 +68,8 @@
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\DOTween__2.cpp">
     </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Editor.cpp">
+    </ClCompile>
     <ClCompile Include="Source\il2cppOutput\GenericMethods.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\GenericMethods__1.cpp">
@@ -169,6 +171,8 @@
     <ClCompile Include="Source\il2cppOutput\GenericMethods__53.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\GenericMethods__54.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\GenericMethods__55.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\GenericMethods__6.cpp">
     </ClCompile>
@@ -454,7 +458,27 @@
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Generics__221.cpp">
     </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Generics__222.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Generics__223.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Generics__224.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Generics__225.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Generics__226.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Generics__227.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Generics__228.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Generics__229.cpp">
+    </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Generics__23.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Generics__230.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Generics__231.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\Generics__24.cpp">
     </ClCompile>
@@ -683,6 +707,10 @@
     <ClCompile Include="Source\il2cppOutput\mscorlib__19.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\mscorlib__2.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\mscorlib__20.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\mscorlib__21.cpp">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\mscorlib__3.cpp">
     </ClCompile>
@@ -1061,6 +1089,8 @@
     <ClCompile Include="Source\il2cppOutput\Assembly-CSharp_CodeGen.c">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\DOTween_CodeGen.c">
+    </ClCompile>
+    <ClCompile Include="Source\il2cppOutput\Editor_CodeGen.c">
     </ClCompile>
     <ClCompile Include="Source\il2cppOutput\HybridCLR.Runtime_CodeGen.c">
     </ClCompile>

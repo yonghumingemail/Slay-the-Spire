@@ -11936,7 +11936,7 @@ IL_0016:
 		Stream_tF844051B786E8F7F4244DBD218D74E8617B9A2DE* L_2 = ___0_inputStream;
 		NullCheck(L_2);
 		int64_t L_3;
-		L_3 = VirtualFuncInvoker0< int64_t >::Invoke(10, L_2);
+		L_3 = VirtualFuncInvoker0< int64_t >::Invoke(11, L_2);
 		G_B3_0 = L_3;
 	}
 
@@ -11951,7 +11951,7 @@ IL_001c:
 		NullCheck(L_7);
 		NullCheck(L_5);
 		int32_t L_8;
-		L_8 = VirtualFuncInvoker3< int32_t, ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*, int32_t, int32_t >::Invoke(21, L_5, L_6, 0, ((int32_t)(((RuntimeArray*)L_7)->max_length)));
+		L_8 = VirtualFuncInvoker3< int32_t, ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*, int32_t, int32_t >::Invoke(35, L_5, L_6, 0, ((int32_t)(((RuntimeArray*)L_7)->max_length)));
 		ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* L_9 = V_0;
 		int32_t L_10 = ___2_maxCachedObjects;
 		uint32_t L_11 = ___3_minCachedObjSize;
@@ -13196,7 +13196,7 @@ IL_009f:
 		uint32_t L_36 = V_3;
 		NullCheck(L_33);
 		int32_t L_37;
-		L_37 = VirtualFuncInvoker2< int32_t, uint8_t*, int32_t >::Invoke(22, L_33, (uint8_t*)((uintptr_t)((uint8_t*)il2cpp_codegen_add((intptr_t)L_34, (intptr_t)((uintptr_t)L_35)))), L_36);
+		L_37 = VirtualFuncInvoker2< int32_t, uint8_t*, int32_t >::Invoke(33, L_33, (uint8_t*)((uintptr_t)((uint8_t*)il2cpp_codegen_add((intptr_t)L_34, (intptr_t)((uintptr_t)L_35)))), L_36);
 		V_5 = L_37;
 		goto IL_00af;
 	}
@@ -14388,7 +14388,7 @@ IL_000d:
 		String_t* L_3 = ___0_val;
 		NullCheck(L_2);
 		ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* L_4;
-		L_4 = VirtualFuncInvoker1< ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*, String_t* >::Invoke(17, L_2, L_3);
+		L_4 = VirtualFuncInvoker1< ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*, String_t* >::Invoke(27, L_2, L_3);
 		V_0 = L_4;
 		ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* L_5 = V_0;
 		ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* L_6 = L_5;
@@ -14680,7 +14680,7 @@ IL_0010_1:
 				NullCheck(L_6);
 				uint32_t L_7 = L_6->___position;
 				NullCheck(L_3);
-				VirtualActionInvoker3< ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*, int32_t, int32_t >::Invoke(24, L_3, L_5, 0, L_7);
+				VirtualActionInvoker3< ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*, int32_t, int32_t >::Invoke(38, L_3, L_5, 0, L_7);
 			}
 
 IL_002c_1:
@@ -14881,7 +14881,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR uint32_t Writer_ComputeStringSize_mCD7A3364EB
 		String_t* L_7 = ___0_str;
 		NullCheck(L_6);
 		int32_t L_8;
-		L_8 = VirtualFuncInvoker1< int32_t, String_t* >::Invoke(10, L_6, L_7);
+		L_8 = VirtualFuncInvoker1< int32_t, String_t* >::Invoke(20, L_6, L_7);
 		V_2 = L_8;
 		goto IL_002c;
 	}
@@ -14893,7 +14893,7 @@ IL_001e:
 		String_t* L_10 = ___0_str;
 		NullCheck(L_9);
 		int32_t L_11;
-		L_11 = VirtualFuncInvoker1< int32_t, String_t* >::Invoke(10, L_9, L_10);
+		L_11 = VirtualFuncInvoker1< int32_t, String_t* >::Invoke(20, L_9, L_10);
 		V_2 = L_11;
 		goto IL_002c;
 	}

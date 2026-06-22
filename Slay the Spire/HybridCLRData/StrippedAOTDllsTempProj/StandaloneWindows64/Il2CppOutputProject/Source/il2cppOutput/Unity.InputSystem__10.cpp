@@ -727,6 +727,7 @@ struct BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E  : public RuntimeO
 	Encoding_t65CDEF28CF20A7B8C92E85A4E808920C2465F095* ____encoding;
 	Encoder_tAF9067231A76315584BDF4CD27990E2F485A78FA* ____encoder;
 	bool ____leaveOpen;
+	CharU5BU5D_t799905CF001DD5F13F7DBB310181FC4D8B7D0AAB* ____tmpOneCharBuffer;
 	ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* ____largeByteBuffer;
 	int32_t ____maxChars;
 };
@@ -28534,29 +28535,29 @@ IL_0055:
 		int32_t L_15;
 		L_15 = FourCC_op_Implicit_mC296B4E8C4929EACBB7066BB9856C116EE082A7B_inline(L_14, NULL);
 		NullCheck(L_13);
-		VirtualActionInvoker1< int32_t >::Invoke(16, L_13, L_15);
+		VirtualActionInvoker1< int32_t >::Invoke(25, L_13, L_15);
 		BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_16 = V_0;
 		int32_t L_17 = ((InputEventTrace_t1D25547AACA8FD1C1AA974F31EF9BD9478205FBD_StaticFields*)il2cpp_codegen_static_fields_for(InputEventTrace_t1D25547AACA8FD1C1AA974F31EF9BD9478205FBD_il2cpp_TypeInfo_var))->___kFileVersion;
 		NullCheck(L_16);
-		VirtualActionInvoker1< int32_t >::Invoke(16, L_16, L_17);
+		VirtualActionInvoker1< int32_t >::Invoke(25, L_16, L_17);
 		BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_18 = V_0;
 		int32_t L_19 = V_1;
 		NullCheck(L_18);
-		VirtualActionInvoker1< int32_t >::Invoke(16, L_18, L_19);
+		VirtualActionInvoker1< int32_t >::Invoke(25, L_18, L_19);
 		BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_20 = V_0;
 		il2cpp_codegen_runtime_class_init_inline(Application_tDB03BE91CDF0ACA614A5E0B67CFB77C44EB19B21_il2cpp_TypeInfo_var);
 		int32_t L_21;
 		L_21 = Application_get_platform_m59EF7D6155D18891B24767F83F388160B1FF2138(NULL);
 		NullCheck(L_20);
-		VirtualActionInvoker1< int32_t >::Invoke(16, L_20, L_21);
+		VirtualActionInvoker1< int32_t >::Invoke(25, L_20, L_21);
 		BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_22 = V_0;
 		int64_t L_23 = __this->___m_EventCount;
 		NullCheck(L_22);
-		VirtualActionInvoker1< uint64_t >::Invoke(19, L_22, L_23);
+		VirtualActionInvoker1< uint64_t >::Invoke(28, L_22, L_23);
 		BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_24 = V_0;
 		int64_t L_25 = __this->___m_EventSizeInBytes;
 		NullCheck(L_24);
-		VirtualActionInvoker1< uint64_t >::Invoke(19, L_24, L_25);
+		VirtualActionInvoker1< uint64_t >::Invoke(28, L_24, L_25);
 		RuntimeObject* L_26;
 		L_26 = InputEventTrace_GetEnumerator_mEB8437D4B14D194CBA901FB9DD034AB0BD1015E3(__this, NULL);
 		V_8 = L_26;
@@ -28659,7 +28660,7 @@ IL_00e5_2:
 						BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_41 = V_0;
 						ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* L_42 = V_11;
 						NullCheck(L_41);
-						VirtualActionInvoker1< ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* >::Invoke(9, L_41, L_42);
+						VirtualActionInvoker1< ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* >::Invoke(16, L_41, L_42);
 						goto IL_0108_1;
 					}
 				}
@@ -28698,11 +28699,11 @@ IL_0121:
 	{
 		BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_45 = V_0;
 		NullCheck(L_45);
-		VirtualActionInvoker0::Invoke(6, L_45);
+		VirtualActionInvoker0::Invoke(8, L_45);
 		Stream_tF844051B786E8F7F4244DBD218D74E8617B9A2DE* L_46 = ___0_stream;
 		NullCheck(L_46);
 		int64_t L_47;
-		L_47 = VirtualFuncInvoker0< int64_t >::Invoke(11, L_46);
+		L_47 = VirtualFuncInvoker0< int64_t >::Invoke(12, L_46);
 		V_2 = L_47;
 		DeviceInfoU5BU5D_t83A513EC4EB7BD3AA21A9352117520BC63C34E1A* L_48 = __this->___m_DeviceInfos;
 		int32_t L_49;
@@ -28711,7 +28712,7 @@ IL_0121:
 		BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_50 = V_0;
 		int32_t L_51 = V_3;
 		NullCheck(L_50);
-		VirtualActionInvoker1< int32_t >::Invoke(16, L_50, L_51);
+		VirtualActionInvoker1< int32_t >::Invoke(25, L_50, L_51);
 		V_14 = 0;
 		goto IL_01b3;
 	}
@@ -28727,13 +28728,13 @@ IL_0148:
 		int32_t L_56;
 		L_56 = DeviceInfo_get_deviceId_m1F56DCC1850CA1B775C357DA6D521F04EA74F0C6_inline(L_55, NULL);
 		NullCheck(L_54);
-		VirtualActionInvoker1< int32_t >::Invoke(16, L_54, L_56);
+		VirtualActionInvoker1< int32_t >::Invoke(25, L_54, L_56);
 		BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_57 = V_0;
 		DeviceInfo_tAB83FF3BB4996BA68DFDF5D6255C1FEBB452AE52* L_58 = V_15;
 		String_t* L_59;
 		L_59 = DeviceInfo_get_layout_mC531D6400FCF8EE7CCBE96D0DC9328BC0A5AC24C_inline(L_58, NULL);
 		NullCheck(L_57);
-		VirtualActionInvoker1< String_t* >::Invoke(21, L_57, L_59);
+		VirtualActionInvoker1< String_t* >::Invoke(30, L_57, L_59);
 		BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_60 = V_0;
 		DeviceInfo_tAB83FF3BB4996BA68DFDF5D6255C1FEBB452AE52* L_61 = V_15;
 		FourCC_tA6CAA4015BC25A7F1053B6C512202D57A9C994ED L_62;
@@ -28741,13 +28742,13 @@ IL_0148:
 		int32_t L_63;
 		L_63 = FourCC_op_Implicit_mC296B4E8C4929EACBB7066BB9856C116EE082A7B_inline(L_62, NULL);
 		NullCheck(L_60);
-		VirtualActionInvoker1< int32_t >::Invoke(16, L_60, L_63);
+		VirtualActionInvoker1< int32_t >::Invoke(25, L_60, L_63);
 		BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_64 = V_0;
 		DeviceInfo_tAB83FF3BB4996BA68DFDF5D6255C1FEBB452AE52* L_65 = V_15;
 		int32_t L_66;
 		L_66 = DeviceInfo_get_stateSizeInBytes_mD21A7DBF02B25079F7A1F1482AC2EFE5A86F5C9C_inline(L_65, NULL);
 		NullCheck(L_64);
-		VirtualActionInvoker1< int32_t >::Invoke(16, L_64, L_66);
+		VirtualActionInvoker1< int32_t >::Invoke(25, L_64, L_66);
 		BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_67 = V_0;
 		DeviceInfo_tAB83FF3BB4996BA68DFDF5D6255C1FEBB452AE52* L_68 = V_15;
 		String_t* L_69 = L_68->___m_FullLayoutJson;
@@ -28770,7 +28771,7 @@ IL_0148:
 IL_01a6:
 	{
 		NullCheck(G_B24_1);
-		VirtualActionInvoker1< String_t* >::Invoke(21, G_B24_1, G_B24_0);
+		VirtualActionInvoker1< String_t* >::Invoke(30, G_B24_1, G_B24_0);
 		int32_t L_72 = V_14;
 		V_14 = ((int32_t)il2cpp_codegen_add(L_72, 1));
 	}
@@ -28789,17 +28790,17 @@ IL_01b3:
 	{
 		BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_76 = V_0;
 		NullCheck(L_76);
-		VirtualActionInvoker0::Invoke(6, L_76);
+		VirtualActionInvoker0::Invoke(8, L_76);
 		Stream_tF844051B786E8F7F4244DBD218D74E8617B9A2DE* L_77 = ___0_stream;
 		NullCheck(L_77);
 		int64_t L_78;
-		L_78 = VirtualFuncInvoker0< int64_t >::Invoke(11, L_77);
+		L_78 = VirtualFuncInvoker0< int64_t >::Invoke(12, L_77);
 		int64_t L_79 = V_2;
 		V_4 = ((int64_t)il2cpp_codegen_subtract(L_78, L_79));
 		BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_80 = V_0;
 		int64_t L_81 = V_4;
 		NullCheck(L_80);
-		VirtualActionInvoker1< int64_t >::Invoke(18, L_80, L_81);
+		VirtualActionInvoker1< int64_t >::Invoke(27, L_80, L_81);
 		return;
 	}
 }
@@ -28969,7 +28970,7 @@ IL_0035:
 		BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_9 = V_0;
 		NullCheck(L_9);
 		int32_t L_10;
-		L_10 = VirtualFuncInvoker0< int32_t >::Invoke(15, L_9);
+		L_10 = VirtualFuncInvoker0< int32_t >::Invoke(16, L_9);
 		FourCC_tA6CAA4015BC25A7F1053B6C512202D57A9C994ED L_11;
 		L_11 = FourCC_op_Implicit_mFEE14A923AACEE90FAAC5234C718CD1B20690F61_inline(L_10, NULL);
 		il2cpp_codegen_runtime_class_init_inline(InputEventTrace_t1D25547AACA8FD1C1AA974F31EF9BD9478205FBD_il2cpp_TypeInfo_var);
@@ -29002,7 +29003,7 @@ IL_0071:
 		BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_20 = V_0;
 		NullCheck(L_20);
 		int32_t L_21;
-		L_21 = VirtualFuncInvoker0< int32_t >::Invoke(15, L_20);
+		L_21 = VirtualFuncInvoker0< int32_t >::Invoke(16, L_20);
 		il2cpp_codegen_runtime_class_init_inline(InputEventTrace_t1D25547AACA8FD1C1AA974F31EF9BD9478205FBD_il2cpp_TypeInfo_var);
 		int32_t L_22 = ((InputEventTrace_t1D25547AACA8FD1C1AA974F31EF9BD9478205FBD_StaticFields*)il2cpp_codegen_static_fields_for(InputEventTrace_t1D25547AACA8FD1C1AA974F31EF9BD9478205FBD_il2cpp_TypeInfo_var))->___kFileVersion;
 		V_7 = (bool)((((int32_t)L_21) > ((int32_t)L_22))? 1 : 0);
@@ -29029,20 +29030,20 @@ IL_009e:
 		BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_29 = V_0;
 		NullCheck(L_29);
 		int32_t L_30;
-		L_30 = VirtualFuncInvoker0< int32_t >::Invoke(15, L_29);
+		L_30 = VirtualFuncInvoker0< int32_t >::Invoke(16, L_29);
 		BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_31 = V_0;
 		NullCheck(L_31);
 		int32_t L_32;
-		L_32 = VirtualFuncInvoker0< int32_t >::Invoke(15, L_31);
+		L_32 = VirtualFuncInvoker0< int32_t >::Invoke(16, L_31);
 		BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_33 = V_0;
 		NullCheck(L_33);
 		uint64_t L_34;
-		L_34 = VirtualFuncInvoker0< uint64_t >::Invoke(18, L_33);
+		L_34 = VirtualFuncInvoker0< uint64_t >::Invoke(19, L_33);
 		V_1 = L_34;
 		BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_35 = V_0;
 		NullCheck(L_35);
 		uint64_t L_36;
-		L_36 = VirtualFuncInvoker0< uint64_t >::Invoke(18, L_35);
+		L_36 = VirtualFuncInvoker0< uint64_t >::Invoke(19, L_35);
 		V_2 = L_36;
 		uint8_t* L_37;
 		L_37 = InputEventTrace_get_m_EventBuffer_mE0A429C0F9F57F7EF20002FB6DB132137739311B(__this, NULL);
@@ -29140,17 +29141,17 @@ IL_0130_1:
 			BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_52 = V_0;
 			NullCheck(L_52);
 			int32_t L_53;
-			L_53 = VirtualFuncInvoker0< int32_t >::Invoke(15, L_52);
+			L_53 = VirtualFuncInvoker0< int32_t >::Invoke(16, L_52);
 			V_17 = L_53;
 			BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_54 = V_0;
 			NullCheck(L_54);
 			uint16_t L_55;
-			L_55 = VirtualFuncInvoker0< uint16_t >::Invoke(14, L_54);
+			L_55 = VirtualFuncInvoker0< uint16_t >::Invoke(15, L_54);
 			V_18 = L_55;
 			BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_56 = V_0;
 			NullCheck(L_56);
 			uint16_t L_57;
-			L_57 = VirtualFuncInvoker0< uint16_t >::Invoke(14, L_56);
+			L_57 = VirtualFuncInvoker0< uint16_t >::Invoke(15, L_56);
 			V_19 = L_57;
 			uint32_t L_58 = V_18;
 			uint8_t* L_59 = V_12;
@@ -29189,7 +29190,7 @@ IL_0161_1:
 			int32_t L_73 = V_20;
 			NullCheck(L_72);
 			ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* L_74;
-			L_74 = VirtualFuncInvoker1< ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*, int32_t >::Invoke(25, L_72, L_73);
+			L_74 = VirtualFuncInvoker1< ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*, int32_t >::Invoke(29, L_72, L_73);
 			V_21 = L_74;
 		}
 		{
@@ -29298,7 +29299,7 @@ IL_020b_1:
 			BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_95 = V_0;
 			NullCheck(L_95);
 			int32_t L_96;
-			L_96 = VirtualFuncInvoker0< int32_t >::Invoke(15, L_95);
+			L_96 = VirtualFuncInvoker0< int32_t >::Invoke(16, L_95);
 			V_14 = L_96;
 			int32_t L_97 = V_14;
 			DeviceInfoU5BU5D_t83A513EC4EB7BD3AA21A9352117520BC63C34E1A* L_98 = (DeviceInfoU5BU5D_t83A513EC4EB7BD3AA21A9352117520BC63C34E1A*)(DeviceInfoU5BU5D_t83A513EC4EB7BD3AA21A9352117520BC63C34E1A*)SZArrayNew(DeviceInfoU5BU5D_t83A513EC4EB7BD3AA21A9352117520BC63C34E1A_il2cpp_TypeInfo_var, (uint32_t)L_97);
@@ -29315,29 +29316,29 @@ IL_0221_1:
 			BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_101 = V_0;
 			NullCheck(L_101);
 			int32_t L_102;
-			L_102 = VirtualFuncInvoker0< int32_t >::Invoke(15, L_101);
+			L_102 = VirtualFuncInvoker0< int32_t >::Invoke(16, L_101);
 			DeviceInfo_set_deviceId_m76EE4AFBA1FA3FFACF2E017498621E66A819DEBD_inline((&V_28), L_102, NULL);
 			BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_103 = V_0;
 			NullCheck(L_103);
 			String_t* L_104;
-			L_104 = VirtualFuncInvoker0< String_t* >::Invoke(22, L_103);
+			L_104 = VirtualFuncInvoker0< String_t* >::Invoke(23, L_103);
 			DeviceInfo_set_layout_mB0175279434FFE48B744FE2CA4800A1EF24B2D69_inline((&V_28), L_104, NULL);
 			BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_105 = V_0;
 			NullCheck(L_105);
 			int32_t L_106;
-			L_106 = VirtualFuncInvoker0< int32_t >::Invoke(15, L_105);
+			L_106 = VirtualFuncInvoker0< int32_t >::Invoke(16, L_105);
 			FourCC_tA6CAA4015BC25A7F1053B6C512202D57A9C994ED L_107;
 			L_107 = FourCC_op_Implicit_mFEE14A923AACEE90FAAC5234C718CD1B20690F61_inline(L_106, NULL);
 			DeviceInfo_set_stateFormat_mFC8581D56C34FFCBF8264CFD61BA12CE56755478_inline((&V_28), L_107, NULL);
 			BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_108 = V_0;
 			NullCheck(L_108);
 			int32_t L_109;
-			L_109 = VirtualFuncInvoker0< int32_t >::Invoke(15, L_108);
+			L_109 = VirtualFuncInvoker0< int32_t >::Invoke(16, L_108);
 			DeviceInfo_set_stateSizeInBytes_m7D7507BD0D817A86E99E3E44E216B31855ED06B3_inline((&V_28), L_109, NULL);
 			BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_110 = V_0;
 			NullCheck(L_110);
 			String_t* L_111;
-			L_111 = VirtualFuncInvoker0< String_t* >::Invoke(22, L_110);
+			L_111 = VirtualFuncInvoker0< String_t* >::Invoke(23, L_110);
 			(&V_28)->___m_FullLayoutJson = L_111;
 			Il2CppCodeGenWriteBarrier((void**)(&(&V_28)->___m_FullLayoutJson), (void*)L_111);
 			DeviceInfo_tAB83FF3BB4996BA68DFDF5D6255C1FEBB452AE52 L_112 = V_28;

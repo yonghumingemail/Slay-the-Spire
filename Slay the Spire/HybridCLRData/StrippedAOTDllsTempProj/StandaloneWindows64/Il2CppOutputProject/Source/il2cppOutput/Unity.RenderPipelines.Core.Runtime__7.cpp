@@ -1451,6 +1451,7 @@ struct BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E  : public RuntimeO
 	Encoding_t65CDEF28CF20A7B8C92E85A4E808920C2465F095* ____encoding;
 	Encoder_tAF9067231A76315584BDF4CD27990E2F485A78FA* ____encoder;
 	bool ____leaveOpen;
+	CharU5BU5D_t799905CF001DD5F13F7DBB310181FC4D8B7D0AAB* ____tmpOneCharBuffer;
 	ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* ____largeByteBuffer;
 	int32_t ____maxChars;
 };
@@ -26002,7 +26003,7 @@ IL_0109_1:
 						BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_7 = V_1;
 						uint8_t L_8 = ___0_type;
 						NullCheck(L_7);
-						VirtualActionInvoker1< uint8_t >::Invoke(8, L_7, L_8);
+						VirtualActionInvoker1< uint8_t >::Invoke(14, L_7, L_8);
 						uint8_t L_9 = ___0_type;
 						V_2 = (bool)((((int32_t)L_9) == ((int32_t)1))? 1 : 0);
 						bool L_10 = V_2;
@@ -26014,7 +26015,7 @@ IL_0109_1:
 					{
 						BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_11 = V_1;
 						NullCheck(L_11);
-						VirtualActionInvoker1< int32_t >::Invoke(16, L_11, 1);
+						VirtualActionInvoker1< int32_t >::Invoke(25, L_11, 1);
 						IPayload_t623870586E14855228EEC736B1D2476DCFDA4C78* L_12 = ___1_payload;
 						V_3 = ((DebugDataPayload_t7CCA333AC79821F517BA5CE5043DC0927EC934D7*)IsInstClass((RuntimeObject*)L_12, DebugDataPayload_t7CCA333AC79821F517BA5CE5043DC0927EC934D7_il2cpp_TypeInfo_var));
 						DebugDataPayload_t7CCA333AC79821F517BA5CE5043DC0927EC934D7* L_13 = V_3;
@@ -26038,7 +26039,7 @@ IL_0046_2:
 						NullCheck(L_17);
 						String_t* L_18 = L_17->___graphName;
 						NullCheck(L_16);
-						VirtualActionInvoker1< String_t* >::Invoke(21, L_16, L_18);
+						VirtualActionInvoker1< String_t* >::Invoke(30, L_16, L_18);
 						BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_19 = V_1;
 						DebugDataPayload_t7CCA333AC79821F517BA5CE5043DC0927EC934D7* L_20 = V_3;
 						NullCheck(L_20);
@@ -26046,7 +26047,7 @@ IL_0046_2:
 						int32_t L_22;
 						L_22 = EntityId_op_Implicit_m8BA711BFB84CD15A7CB3E88C21442A1FBAF40FC9_inline(L_21, NULL);
 						NullCheck(L_19);
-						VirtualActionInvoker1< int32_t >::Invoke(16, L_19, L_22);
+						VirtualActionInvoker1< int32_t >::Invoke(25, L_19, L_22);
 						BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_23 = V_1;
 						DebugDataPayload_t7CCA333AC79821F517BA5CE5043DC0927EC934D7* L_24 = V_3;
 						NullCheck(L_24);
@@ -26054,7 +26055,7 @@ IL_0046_2:
 						String_t* L_26;
 						L_26 = DebugDataSerialization_ToJson_mA120AA0D835CFE55924C1E3E70AE8717A96833F0(L_25, NULL);
 						NullCheck(L_23);
-						VirtualActionInvoker1< String_t* >::Invoke(21, L_23, L_26);
+						VirtualActionInvoker1< String_t* >::Invoke(30, L_23, L_26);
 						goto IL_00f5_2;
 					}
 
@@ -26071,7 +26072,7 @@ IL_007a_2:
 					{
 						BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_29 = V_1;
 						NullCheck(L_29);
-						VirtualActionInvoker1< int32_t >::Invoke(16, L_29, 1);
+						VirtualActionInvoker1< int32_t >::Invoke(25, L_29, 1);
 						IPayload_t623870586E14855228EEC736B1D2476DCFDA4C78* L_30 = ___1_payload;
 						V_6 = ((AnalyticsPayload_t5E7501FD7E63711F5D1D36008D6AE6B940F467C8*)IsInstClass((RuntimeObject*)L_30, AnalyticsPayload_t5E7501FD7E63711F5D1D36008D6AE6B940F467C8_il2cpp_TypeInfo_var));
 						AnalyticsPayload_t5E7501FD7E63711F5D1D36008D6AE6B940F467C8* L_31 = V_6;
@@ -26095,31 +26096,31 @@ IL_00ae_2:
 						NullCheck(L_35);
 						int32_t L_36 = L_35->___graphicsDeviceType;
 						NullCheck(L_34);
-						VirtualActionInvoker1< int32_t >::Invoke(16, L_34, L_36);
+						VirtualActionInvoker1< int32_t >::Invoke(25, L_34, L_36);
 						BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_37 = V_1;
 						AnalyticsPayload_t5E7501FD7E63711F5D1D36008D6AE6B940F467C8* L_38 = V_6;
 						NullCheck(L_38);
 						int32_t L_39 = L_38->___deviceType;
 						NullCheck(L_37);
-						VirtualActionInvoker1< int32_t >::Invoke(16, L_37, L_39);
+						VirtualActionInvoker1< int32_t >::Invoke(25, L_37, L_39);
 						BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_40 = V_1;
 						AnalyticsPayload_t5E7501FD7E63711F5D1D36008D6AE6B940F467C8* L_41 = V_6;
 						NullCheck(L_41);
 						String_t* L_42 = L_41->___deviceModel;
 						NullCheck(L_40);
-						VirtualActionInvoker1< String_t* >::Invoke(21, L_40, L_42);
+						VirtualActionInvoker1< String_t* >::Invoke(30, L_40, L_42);
 						BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_43 = V_1;
 						AnalyticsPayload_t5E7501FD7E63711F5D1D36008D6AE6B940F467C8* L_44 = V_6;
 						NullCheck(L_44);
 						String_t* L_45 = L_44->___gpuVendor;
 						NullCheck(L_43);
-						VirtualActionInvoker1< String_t* >::Invoke(21, L_43, L_45);
+						VirtualActionInvoker1< String_t* >::Invoke(30, L_43, L_45);
 						BinaryWriter_tFB94D67EDFA3F6A34744A163BDABE287FDF2ED1E* L_46 = V_1;
 						AnalyticsPayload_t5E7501FD7E63711F5D1D36008D6AE6B940F467C8* L_47 = V_6;
 						NullCheck(L_47);
 						String_t* L_48 = L_47->___gpuName;
 						NullCheck(L_46);
-						VirtualActionInvoker1< String_t* >::Invoke(21, L_46, L_48);
+						VirtualActionInvoker1< String_t* >::Invoke(30, L_46, L_48);
 					}
 
 IL_00f5_2:
@@ -26127,7 +26128,7 @@ IL_00f5_2:
 						MemoryStream_tAAED1B42172E3390584E4194308AB878E786AAC2* L_49 = V_0;
 						NullCheck(L_49);
 						ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* L_50;
-						L_50 = VirtualFuncInvoker0< ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* >::Invoke(30, L_49);
+						L_50 = VirtualFuncInvoker0< ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* >::Invoke(47, L_49);
 						V_8 = L_50;
 						goto IL_0115;
 					}
@@ -26246,7 +26247,7 @@ IL_0156_1:
 						BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_8 = V_1;
 						NullCheck(L_8);
 						uint8_t L_9;
-						L_9 = VirtualFuncInvoker0< uint8_t >::Invoke(10, L_8);
+						L_9 = VirtualFuncInvoker0< uint8_t >::Invoke(11, L_8);
 						V_2 = L_9;
 						uint8_t L_10 = V_2;
 						V_3 = (bool)((((int32_t)L_10) == ((int32_t)1))? 1 : 0);
@@ -26264,7 +26265,7 @@ IL_0156_1:
 						BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_14 = V_1;
 						NullCheck(L_14);
 						int32_t L_15;
-						L_15 = VirtualFuncInvoker0< int32_t >::Invoke(15, L_14);
+						L_15 = VirtualFuncInvoker0< int32_t >::Invoke(16, L_14);
 						NullCheck(L_13);
 						((IPayload_t623870586E14855228EEC736B1D2476DCFDA4C78*)L_13)->___version = L_15;
 						DebugDataPayload_t7CCA333AC79821F517BA5CE5043DC0927EC934D7* L_16 = V_4;
@@ -26305,7 +26306,7 @@ IL_0078_2:
 						BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_30 = V_1;
 						NullCheck(L_30);
 						String_t* L_31;
-						L_31 = VirtualFuncInvoker0< String_t* >::Invoke(22, L_30);
+						L_31 = VirtualFuncInvoker0< String_t* >::Invoke(23, L_30);
 						NullCheck(L_29);
 						L_29->___graphName = L_31;
 						Il2CppCodeGenWriteBarrier((void**)(&L_29->___graphName), (void*)L_31);
@@ -26313,7 +26314,7 @@ IL_0078_2:
 						BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_33 = V_1;
 						NullCheck(L_33);
 						int32_t L_34;
-						L_34 = VirtualFuncInvoker0< int32_t >::Invoke(15, L_33);
+						L_34 = VirtualFuncInvoker0< int32_t >::Invoke(16, L_33);
 						EntityId_t982FBD037EAC5CA077B1602A7EA40E3523AA0FC8 L_35;
 						L_35 = EntityId_op_Implicit_mE88DD4D900669408FA729FCFFCC9276386D6C953(L_34, NULL);
 						NullCheck(L_32);
@@ -26322,7 +26323,7 @@ IL_0078_2:
 						BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_37 = V_1;
 						NullCheck(L_37);
 						String_t* L_38;
-						L_38 = VirtualFuncInvoker0< String_t* >::Invoke(22, L_37);
+						L_38 = VirtualFuncInvoker0< String_t* >::Invoke(23, L_37);
 						DebugData_tF27E8FDE41C02923DE7F18E49228638A3B1B2AEE* L_39;
 						L_39 = DebugDataSerialization_FromJson_m17B8ED58AA66E254120C8DF73E00244AC90740B7(L_38, NULL);
 						NullCheck(L_36);
@@ -26355,7 +26356,7 @@ IL_00b8_2:
 						BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_47 = V_1;
 						NullCheck(L_47);
 						int32_t L_48;
-						L_48 = VirtualFuncInvoker0< int32_t >::Invoke(15, L_47);
+						L_48 = VirtualFuncInvoker0< int32_t >::Invoke(16, L_47);
 						NullCheck(L_46);
 						((IPayload_t623870586E14855228EEC736B1D2476DCFDA4C78*)L_46)->___version = L_48;
 						AnalyticsPayload_t5E7501FD7E63711F5D1D36008D6AE6B940F467C8* L_49 = V_8;
@@ -26385,21 +26386,21 @@ IL_00f4_2:
 						BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_56 = V_1;
 						NullCheck(L_56);
 						int32_t L_57;
-						L_57 = VirtualFuncInvoker0< int32_t >::Invoke(15, L_56);
+						L_57 = VirtualFuncInvoker0< int32_t >::Invoke(16, L_56);
 						NullCheck(L_55);
 						L_55->___graphicsDeviceType = L_57;
 						AnalyticsPayload_t5E7501FD7E63711F5D1D36008D6AE6B940F467C8* L_58 = V_8;
 						BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_59 = V_1;
 						NullCheck(L_59);
 						int32_t L_60;
-						L_60 = VirtualFuncInvoker0< int32_t >::Invoke(15, L_59);
+						L_60 = VirtualFuncInvoker0< int32_t >::Invoke(16, L_59);
 						NullCheck(L_58);
 						L_58->___deviceType = L_60;
 						AnalyticsPayload_t5E7501FD7E63711F5D1D36008D6AE6B940F467C8* L_61 = V_8;
 						BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_62 = V_1;
 						NullCheck(L_62);
 						String_t* L_63;
-						L_63 = VirtualFuncInvoker0< String_t* >::Invoke(22, L_62);
+						L_63 = VirtualFuncInvoker0< String_t* >::Invoke(23, L_62);
 						NullCheck(L_61);
 						L_61->___deviceModel = L_63;
 						Il2CppCodeGenWriteBarrier((void**)(&L_61->___deviceModel), (void*)L_63);
@@ -26407,7 +26408,7 @@ IL_00f4_2:
 						BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_65 = V_1;
 						NullCheck(L_65);
 						String_t* L_66;
-						L_66 = VirtualFuncInvoker0< String_t* >::Invoke(22, L_65);
+						L_66 = VirtualFuncInvoker0< String_t* >::Invoke(23, L_65);
 						NullCheck(L_64);
 						L_64->___gpuVendor = L_66;
 						Il2CppCodeGenWriteBarrier((void**)(&L_64->___gpuVendor), (void*)L_66);
@@ -26415,7 +26416,7 @@ IL_00f4_2:
 						BinaryReader_t9A6D85F0FE9AE4EBB5E8D66997DFD1D84939E158* L_68 = V_1;
 						NullCheck(L_68);
 						String_t* L_69;
-						L_69 = VirtualFuncInvoker0< String_t* >::Invoke(22, L_68);
+						L_69 = VirtualFuncInvoker0< String_t* >::Invoke(23, L_68);
 						NullCheck(L_67);
 						L_67->___gpuName = L_69;
 						Il2CppCodeGenWriteBarrier((void**)(&L_67->___gpuName), (void*)L_69);

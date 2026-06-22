@@ -18784,7 +18784,7 @@ IL_01ea_1:
 				int64_t L_77 = V_18;
 				NullCheck(L_75);
 				String_t* L_78;
-				L_78 = VirtualFuncInvoker3< String_t*, ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*, int32_t, int32_t >::Invoke(34, L_75, L_76, 0, ((int32_t)L_77));
+				L_78 = VirtualFuncInvoker3< String_t*, ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*, int32_t, int32_t >::Invoke(48, L_75, L_76, 0, ((int32_t)L_77));
 				V_20 = L_78;
 			}
 			try
