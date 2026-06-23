@@ -58,7 +58,7 @@ public class MapPathView : MonoBehaviour
     {
         lineSpritePrefab = await LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/Map/Line.prefab");
         roomViewPrefab = await LoadAssetAsync<GameObject>("Assets/Art/Prefab/UI/Map/MapRoomNode.prefab");
-        _atlas = await LoadAssetAsync<SpriteAtlas>("Assets/Art/Image/SpriteAtlas/MapUI.spriteatlasv2");
+        _atlas = await LoadAssetAsync<SpriteAtlas>("Assets/Art/Image/SpriteAtlas/UI.spriteatlasv2");
 
         Image nodeUI = roomViewPrefab.GetComponentInChildren<Image>();
         nodeSpacingX += nodeUI.rectTransform.sizeDelta.x * nodeUI.rectTransform.localScale.x;

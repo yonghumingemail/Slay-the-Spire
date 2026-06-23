@@ -34,7 +34,6 @@ public class Test : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log(1111111111);
     }
 
     private void Update()
@@ -42,7 +41,7 @@ public class Test : MonoBehaviour
     }
 
     [ContextMenu("Show")]
-    private async void Start22()
+    private void Start22()
     {
         testInfos=new List<TestInfo>();
         var dataArray = StringToBinaryConverter.ReadCsvWithoutComments(text);

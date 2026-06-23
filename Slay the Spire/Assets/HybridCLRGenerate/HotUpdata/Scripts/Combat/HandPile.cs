@@ -6,9 +6,7 @@ using HybridCLRGenerate.HotUpdata.Scripts.Tools.Event.EventArgs;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Splines;
-using UnityEngine.Sprites;
 using UnityGameFramework.Runtime;
-using Z_Tools;
 
 public class HandPile : MonoBehaviour, IPointerEnterHandler
 {
@@ -32,10 +30,10 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler
 
         GameEntry.Event.SubscribeAsync<OnRoundStart_EN>(OnRoundStart);
         GameEntry.Event.SubscribeAsync<OnRoundEnd_EN>(OnRoundEnd);
-        
+
         GameEntry.Event.Subscribe<OnMouseEnterEnemy_EA>(OnMouseEnterEnemy);
-        GameEntry.Event.Subscribe<OnMouseExitEnemy_EA>( OnMouseExitEnemy);
-        
+        GameEntry.Event.Subscribe<OnMouseExitEnemy_EA>(OnMouseExitEnemy);
+
         GameEntry.Event.Subscribe<GetObject_EventArgs<HandPile>>(Get);
     }
 
@@ -76,8 +74,22 @@ public class HandPile : MonoBehaviour, IPointerEnterHandler
     {
         if (!card)
         {
-            SelectedCard?.UnSelectCard();
+            foreach (var VARIABLE in cardInstances)
+            {
+                VARIABLE.CardInteraction.IsInteractable = true;
+            }
         }
+        else
+        {
+            foreach (var VARIABLE in cardInstances)
+            {
+                if (card != VARIABLE)
+                {
+                    VARIABLE.CardInteraction.IsInteractable = false;
+                }
+            }
+        }
+        
 
         SelectedCard = card;
     }
