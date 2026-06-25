@@ -35,7 +35,7 @@ public class SimpleHealth : IHealth
     }
 
     [SerializeField] private int healthValue;
-    [SerializeField] private int maxHealthValue;
+    [SerializeField] private int maxHealthValue=999;
 
     public SimpleHealth(Action<IHealth> UpdateView,  IPriorityEventManager priorityEventManager)
     {

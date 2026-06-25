@@ -8,7 +8,7 @@ public class SimpleShield : IShield
 {
     private  IPriorityEventManager _priorityEventManager;
     private Action<IShield> _updateView;
-    public int MaxValue;
+    public int MaxValue = 999;
 
     public int ShieldValue
     {

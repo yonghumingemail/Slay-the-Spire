@@ -13,7 +13,7 @@ public class MainMenu : MonoBehaviour
 
     private void Awake()
     {
-        Init().Forget();
+        // Init().Forget();
     }
 
     private async UniTask Init()

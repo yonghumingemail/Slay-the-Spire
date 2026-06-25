@@ -7,8 +7,8 @@ using UnityEngine.UI;
 /// </summary>
 public abstract class UIFormLogic : MonoBehaviour
 {
-    private bool m_Available = false;
-    private bool m_Visible = false;
+    private bool m_Available;
+    private bool m_Visible;
 
     private Transform m_CachedTransform = null;
     private int m_OriginalLayer = 0;

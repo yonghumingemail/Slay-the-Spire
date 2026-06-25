@@ -48,8 +48,7 @@ public class RoleCore
 
         _health.MaxHealth = data.MaxHealthValue;
         _health.HealthValue = data.HealthValue;
-        _shield.ShieldValue = data.ShieldValue;
-        _shield.MaxValue = data.MaxShieldValue;
+
 
         health_V.UpdateView(_health);
         shield_V.UpdateView(_shield);

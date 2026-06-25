@@ -132,7 +132,7 @@ public class AddressablesMgr : SingletonBase<AddressablesMgr>
         try
         {
             if (locationHandle.Status != AsyncOperationStatus.Succeeded)
-                return new List<T>(); // 或抛出异常
+                 throw new ArgumentNullException(); // 抛出异常
 
             var locations = locationHandle.Result;
             var tasks = new List<UniTask<T>>(locations.Count);
@@ -153,6 +153,7 @@ public class AddressablesMgr : SingletonBase<AddressablesMgr>
         }
     }
     
+  
     
     /// <summary>
     /// 释放单个资源（引用计数减一，计数归零时真正释放）

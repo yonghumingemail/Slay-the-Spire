@@ -14,5 +14,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: HotUpdate::RoleCoreData
   HealthValue: 80
   MaxHealthValue: 80
-  ShieldValue: 0
-  MaxShieldValue: 999

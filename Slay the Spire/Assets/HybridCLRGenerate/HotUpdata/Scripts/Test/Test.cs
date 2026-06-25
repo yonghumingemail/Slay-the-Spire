@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 [Serializable]
 public struct TestInfo
@@ -43,13 +46,15 @@ public class Test : MonoBehaviour
     [ContextMenu("Show")]
     private void Start22()
     {
-        testInfos=new List<TestInfo>();
+        testInfos = new List<TestInfo>();
         var dataArray = StringToBinaryConverter.ReadCsvWithoutComments(text);
         List<byte[]> byteDatas = new List<byte[]>();
         for (int i = 1; i < dataArray.Count; i++)
         {
             byteDatas.Add(StringToBinaryConverter.Convert(dataArray[i], dataArray[0]));
-            testInfos.Add(TestInfo.Convert(byteDatas[i-1]));
+            testInfos.Add(TestInfo.Convert(byteDatas[i - 1]));
         }
     }
+
+  
 }

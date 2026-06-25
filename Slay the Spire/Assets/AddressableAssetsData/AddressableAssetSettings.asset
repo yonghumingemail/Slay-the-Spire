@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 468a46d0ae32c3544b7d98094e6448a9, type: 3}
   m_Name: AddressableAssetSettings
   m_EditorClassIdentifier: 
-  m_DefaultGroup: 52f2b72a0b62ffe4ca3037635341fcd0
+  m_DefaultGroup: b8c05736529a36943aa2972c54d1f5e5
   m_currentHash:
     serializedVersion: 2
-    Hash: ca93eac9631c390f873a0f2e223b27a8
+    Hash: 1ac375d09a31af01dfde9f8ceba6ae30
   m_DisableWriteTypeTree: 0
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 1
@@ -111,6 +111,7 @@ MonoBehaviour:
     - GamePlayScene_theForest
     - test
     - MataDataDllText
+    - CharacterSelectionInfo
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 63f0f7265a33a2b449e03cd25787c476, type: 2}
